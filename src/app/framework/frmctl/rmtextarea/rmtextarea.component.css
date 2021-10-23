@@ -1,0 +1,71 @@
+﻿
+.setWidth-Textarea{
+    width:91%;
+  }
+
+.auditquality-textarea{
+    width: 92%;
+}
+
+.auditqualitynogrid-textarea{
+  width: 95%;
+}
+
+@media (min-width: 360px) and (max-width: 639.98px) {
+      .auditquality-textarea{
+        width: 91%;
+      }
+
+    .setWidth-Textarea{
+      width: 84%;
+      }
+      .auditqualitynogrid-textarea{
+        width: 89%;
+      }
+}
+
+  @media (min-width: 768px) and (max-width: 1023.98px) {
+    .setWidth-Textarea{
+        width: 75%;
+      }
+      .auditquality-textarea{
+        width: 78%;
+    }
+    .auditqualitynogrid-textarea{
+      width: 92%;
+    }
+}
+  @media (min-width: 1024px) and (max-width: 1279.98px) {
+    .setWidth-Textarea{
+        width: 83%;
+      }
+      .auditquality-textarea{
+        width: 86%;
+    }
+    .auditqualitynogrid-textarea{
+      width: 93%;
+    }
+  } 
+  @media (min-width: 1280px) and (max-width:1439.98px) {
+  .setWidth-Textarea{
+    width: 86%;
+  }
+      .auditquality-textarea{
+        width: 88%;
+        }
+        .auditqualitynogrid-textarea{
+          width: 93%;
+        }
+    }
+  
+    @media (min-width:1440px) and (max-width:1919.98px) {
+        .setWidth-Textarea{
+            width: 88%;
+          }
+          .auditquality-textarea{
+            width: 89%;
+        }
+        .auditqualitynogrid-textarea{
+          width: 94%;
+        }
+    }

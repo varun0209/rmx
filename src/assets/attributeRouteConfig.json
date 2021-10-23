@@ -1,0 +1,28 @@
+{
+  "Operators": {
+    "in": {
+      "startOperator": "{",
+      "endOperator": "}"
+    }
+  },
+  "Attributes": {
+    "boolean": {
+      "startOperator": "",
+      "endOperator": ""
+    },
+    "default": {
+      "startOperator": "\"",
+      "endOperator": "\""
+    }
+  },
+  "group": {
+    "startOperator": "(",
+    "endOperator": ")"
+  },
+  "rank":{
+    "startingRank": 100,
+    "incrementGap": 10
+  },
+  "displayColumns":  ["POSITION", "PRIORITY", "RESULT_ROUTE", "ACTIVE", "RANK","REVIEWED", "RULE"],
+  "finalDisplayColumns":  ["PRIORITY", "RESULT_ROUTE", "ACTIVE", "RANK","REVIEWED", "RULE"]
+}

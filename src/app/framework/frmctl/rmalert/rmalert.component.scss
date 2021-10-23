@@ -1,0 +1,126 @@
+@import './../../../../styles/_variables';
+
+.xpo-Notification {
+  $_snackBar-marginTop: 8px;
+  $_snackBar-body-lineHeight: 22px;
+  $_statusBar-width: 4px;
+  $_snackBar-button-minWidth: 32px;
+
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+  border-radius: 0;
+  border: 1px solid rgba(0, 0, 0, .12);
+  color: $xpo-fontColor--primary;
+  margin-top: $_snackBar-marginTop;
+  background: $xpo-white;
+
+  &-status--success {
+    border-left: $_statusBar-width solid $xpo-color--success;
+  }
+
+  &-status--warn {
+    border-left: $_statusBar-width solid $xpo-color--warn;
+
+  }
+
+  &-status--error {
+    border-left: $_statusBar-width solid $xpo-color--error;
+  }
+
+  &-status--info {
+    border-left: $_statusBar-width solid $xpo-color--info;
+  }
+
+  &-status--null {
+    background-color: transparent;
+  }
+
+
+  &-message {
+    display: flex;
+    flex-grow: 1;
+    font-weight: $xpo-fontWeight--bold;
+    margin-left: $xpo-contentSpacing / 2;
+    padding: $xpo-contentSpacing 0;
+
+    &-textWrapper {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-mainMessage {
+      font-weight: $xpo-fontWeight--bold;
+    }
+
+    &-detailedMessage {
+      color: $xpo-grey--900;
+      font-weight: $xpo-fontWeight--normal;
+      line-height: $_snackBar-body-lineHeight;
+      margin-top: $xpo-contentSpacing / 2;
+    }
+
+    >.mat-icon {
+      font-size: 24px;
+      margin-right: $xpo-contentSpacing / 2;
+    }
+
+    &--success {
+      color: $xpo-green--900;
+
+      >.mat-icon {
+        color: $xpo-color--success;
+      }
+    }
+
+    &--warn {
+      color: $xpo-yellow--900;
+
+      >.mat-icon {
+        color: $xpo-color--warn;
+      }
+    }
+
+    &--error {
+      color: $xpo-red--900;
+      line-height: 24px;
+
+      >.mat-icon {
+        color: $xpo-color--error;
+      }
+    }
+
+    &--info {
+      color: $xpo-grey--900;
+
+      >.mat-icon {
+        color: $xpo-color--info;
+      }
+    }
+  }
+
+  &-actionWrapper {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    padding: 0 $xpo_contentSpacing / 2;
+
+    &--large {
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 0;
+    }
+  }
+
+  &-action {
+    &--noPadding {
+      padding: 0;
+    }
+
+    &.mat-button {
+      min-width: $_snackBar-button-minWidth;
+    }
+  }
+}

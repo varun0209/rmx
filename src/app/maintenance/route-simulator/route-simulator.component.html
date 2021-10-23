@@ -1,0 +1,128 @@
+<div class="" [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'">
+  <fieldset>
+
+    <div class="form-row">
+      <div class="form-group col text-right">
+        <!-- <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'Test' | translate"
+          (onclick)="getRouteFromAPI()" id="testies" [iconstyle]="'far fa-grimace'"></rmbutton> -->
+
+        <rmbutton [class]="'btn btn-round-black'" [buttonname]="'COMMON.RESET' | translate"
+          (onclick)="onResetSimulator()" id="reset" [iconstyle]="'fas fa-redo'"></rmbutton>
+
+        <rmbutton [class]="'btn btn-round-black ml-1'" [buttonname]="'COMMON.SAVE' | translate" [disabled]="true"
+          (onclick)="onSaveChanges()" id="save" [iconstyle]="'fas fa-check'"></rmbutton>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="routeSimulator form-group col">
+        <fieldset class="routeSimulator-fieldset m-0">
+          <legend class="routeSimulator-legend">{{'Device Criteria' | translate}}</legend>
+
+          <div class="form-row">
+
+            <div class="tag-box col ml-1 mr-1">
+              <div class="tag" [ngClass]="{'tag-selected': editingIndex === idx}"
+                *ngFor="let item of formulaArray; let idx = index">
+                <span class="pl-0 tag-font" (click)="onEditFormula(idx)">
+                  {{item}}
+                </span>
+                <span *ngIf="item.startsWith(this.currentStepText) === false"  class="tag-right" (click)="onRemoveFormula(idx)">
+                  <i class="far fa-times-circle tag-icon"></i>
+                </span>
+                <span *ngIf="item.startsWith(this.currentStepText) === true" class="tag-right">
+                  <i *ngIf="item.startsWith(this.currentStepText) === true" class="far fa-times-circle tag-icon-disabled"></i>
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-row">
+            <div class="routeSimulator form-group col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4">
+              <rmlabel [label]="'ATTRIBUTEROUTESETUP.ATTRIBUTE' | translate"></rmlabel>
+              <ng-select [items]="attributeList" name="attributeList" [multiple]="false" [closeOnSelect]="true"
+                bindLabel="TEXT" placeholder="Select Attribute" (change)="onAttributeChange()"
+                [(ngModel)]="selectedAttribute">
+              </ng-select>
+            </div>
+            <div class="routeSimulator form-group col-xl-3 col-lg-3 col-md-4 col-sm-4 col-4">
+              <rmlabel [label]="'ATTRIBUTEROUTESETUP.VALUE' | translate"></rmlabel>
+              <ng-container [ngSwitch]="selectedControlType">
+                <ng-container *ngSwitchCase="'DROPDOWN'">
+                  <ng-select [items]="valueList" name="valueList" [multiple]="false" [closeOnSelect]="true"
+                    bindValue="Id" bindLabel="Text"
+                    placeholder="Select Value" [disabled]="!selectedAttribute" [(ngModel)]="selectedValue"></ng-select>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'TEXTBOX'">
+                  <rmtextarea name="attributeValue" [rows]="1" [placeholder]="'Enter Value' | translate"
+                    [(ngModel)]="selectedValue" [placeholder]="''" [id]="'value'" [disabled]="!selectedAttribute"
+                    #valueTextBox></rmtextarea>
+                </ng-container>
+              </ng-container>
+            </div>
+
+            <div class="ruleMaster form-group col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 mt-4">
+              <rmbutton [class]="'btn btn-round-black ml-2 mr-2 mt-1'" [buttonname]="'Apply' | translate"
+                [disabled]="!selectedAttribute || !selectedValue" (onclick)="onApplyFormula()" id="applyFormula"
+                [iconstyle]="'fas fa-plus'">
+              </rmbutton>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+
+    <div class="form-row">
+
+      <div class="routeSimulator form-group col mt-5">
+
+        <legend *ngIf="!rxRoute">{{'ROUTESIMULATOR.NO_DEVIATION_PATH_FOUND' | translate}}</legend>
+
+        <ng-container *ngIf="rxRoute">
+
+          <div class="form-row">
+            <div class="routeSimulator form-group col">
+              <legend>{{rxRoute.ROUTEID | translate}}</legend>
+              <br>
+              <rmlabel [label]="(rxRoute.DESCRIPTION && rxRoute.DESCRIPTION.trim() !== '') ? rxRoute.DESCRIPTION : 'No Description' | translate"></rmlabel>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="routeFlow col" *ngIf="operationCodes && operationCodes.length">
+              <div #routeFlow class="wizard-inner d-flex align-content-center flex-wrap">
+                <ul>
+                  <li class="active" *ngFor="let item of operationCodes; index as i">
+                    <div class="items-align-center">
+                      <div class="items-id-size">{{item.ID}}</div>
+                      <div class="items-text-size">{{item.TEXT}}</div>
+                    </div>
+
+                  </li>
+                </ul>
+                <div class="positionAbsolute cursorPointer">
+                  <span class="pr-2">
+                    <i class="fas fa-chevron-circle-left fa-2x iconColor" aria-hidden="true" (mousedown)="scrollLeft()"></i>
+                  </span>
+                  <span>
+                    <i class="fas fa-chevron-circle-right fa-2x iconColor" aria-hidden="true" (mousedown)="scrollRight()"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col mt-2">
+              <rmlabel [label]="'Rule' | translate"></rmlabel>
+              <rmtextarea [rows]="3" id="ruleString" [placeholder]="" name="ruleString" [disabled]="true" [(ngModel)]="rxRule" ></rmtextarea>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+  </fieldset>
+</div>

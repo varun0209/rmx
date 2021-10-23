@@ -1,0 +1,21 @@
+<xpo-dialog-title>
+    Rule Setup
+</xpo-dialog-title>
+<xpo-dialog-content>
+    <ul>
+        <li class="pb-2"> <i class="fas fa-chevron-circle-right mr-2"></i> Condition: Object -> Property -> Operator ->
+            value <strong>(Device.Step = “2100”)</strong> </li>
+        <li class="pb-2"> <i class="fas fa-chevron-circle-right mr-2"></i> Multiple conditions can be append with OR /
+            AND <strong>(Device.Step = “2100” AND Device.OEM_CD = “APPLE”)</strong> </li>
+        <li class="pb-2"> <i class="fas fa-chevron-circle-right mr-2"></i> Adding Multiple Rules:
+            <ol>
+                <li class="pb-1"> Group the conditions with “(“ and “)” - 1st rule </li>
+                <li class="pb-1"> Append OR </li>
+                <li class="pb-1"> Add another group of Conditions – 2nd rule </li>
+                <li class="pb-1"> Example: (Device.Step = “2100” AND Device.OEM_CD = “APPLE”) OR (Device.Step = “3140”
+                    AND
+                    Device.OEM_CD = “LG”) </li>
+            </ol>
+        </li>
+    </ul>
+</xpo-dialog-content>

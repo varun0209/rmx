@@ -1,0 +1,22 @@
+// TODO: Rename this so it doesn't get confused with the page's header
+
+@import '../variables';
+
+@mixin header--primary() {
+  $_header-height: 56px;
+
+  align-items: center;
+  background-color: $xpo-grey--1000;
+  color: $xpo-white;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-shrink: 0;
+  font-size: $xpo-header-fontSize--medium;
+  font-weight: $xpo-fontWeight--medium;
+  height: $_header-height;
+  justify-content: space-between;
+  letter-spacing: 2px;
+  padding: $xpo-contentSpacing / 2 $xpo-contentSpacing;
+  text-transform: uppercase;
+}

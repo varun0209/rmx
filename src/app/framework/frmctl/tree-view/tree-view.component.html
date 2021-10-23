@@ -1,0 +1,35 @@
+<fieldset class="esn-fieldset m-0" *ngIf="dataSource">
+    <mat-tree class="overflow-auto" [dataSource]="dataSource" [treeControl]="treeControl">
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding class="p-0">
+            <button mat-icon-button disabled></button>
+            <div class="d-flex w-100">
+                <div class="d-flex key--width">
+                    <span > {{node.name}}  </span>
+                </div>
+                <div class="d-flex ">
+                    <span>:</span>
+                </div>
+                <div class="d-flex pl-2 text-break">
+                    <span > {{node.value}}</span>
+                </div>
+            </div>
+        </mat-tree-node>
+        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+            <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.name">
+                <i [class]="treeControl.isExpanded(node) ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"
+                    aria-hidden="true"></i>
+            </button>
+            <div class="d-flex w-100">
+                <div class="d-flex key--width">
+                    <span > {{node.name}}  </span>
+                </div>
+                <div class="d-flex ">
+                    <span>:</span>
+                </div>
+                <div class="d-flex pl-2 text-break dd">
+                    <span > {{node.value}}</span>
+                </div>
+            </div>
+        </mat-tree-node>
+    </mat-tree>
+</fieldset>

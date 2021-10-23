@@ -1,0 +1,33 @@
+        <div class="mx-auto mt-3" *ngIf="showAlert && !appErrService.specialCharErrMsg">
+            <rmalert [class]="'w-50'" [text]="text"></rmalert>
+        </div>
+        <div class="mx-auto mt-3" *ngIf="appErrService.specialCharErrMsg">
+            <rmalert [class]="'w-50'" [text]="appErrService.specialCharErrMsg"></rmalert>
+        </div>
+
+        <section>
+            <div class="row mt-4">
+                <div class="col-md-12  mb-3">
+                    <label>{{'COMMON.SERIALNUMBER' | translate}}</label>
+                    <rmtextarea [name]="'scanSerialNo'" #scanSerialNo [(ngModel)]="barCode" [rows]="'3'" [id]="'scanSerialNo'"
+                        [widthInput]="'autoResize'" [allowAutoResize]="true" [textAreaPattern]="scanSerialNoPattern"
+                        [allowUppercase]="true" [allowMaxlengthTextarea]="false" (onChangeVal)="scanSerialNumber($event);"
+                        [placeholder]="''" (enter)="save(scanSerialNo);">
+                    </rmtextarea>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="row">
+                <div class="col-md-12 mb-3 d-flex justify-content-between">
+                    <rmbutton [class]="'btn btn-round-black'" [id]="'Clear'" [disabled]="isClearDisabled"
+                        [buttonname]="'COMMON.CLEAR'| translate" (onclick)="clear(scanSerialNo)"
+                        [iconstyle]="'fas fa-times-circle'">
+                    </rmbutton>
+                    <rmbutton [class]="'btn btn-round-black'" [id]="'save'" [disabled]="isSaveDisabled"
+                        [buttonname]="'COMMON.SAVE'| translate" [iconstyle]="'fas fa-check-circle'" (onclick)="save()">
+                    </rmbutton>
+                </div>
+            </div>
+        </section>

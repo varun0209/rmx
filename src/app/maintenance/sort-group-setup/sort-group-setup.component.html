@@ -1,0 +1,211 @@
+﻿  <div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+ <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+          <form #nciForm="ngForm">
+              <fieldset class="rm-card mt-2">
+                <tabset #staticTabs>
+                  <tab heading="Formula" id="tab-main">
+                    <div class="tab-pane pb-2">
+                      <div class="container-fluid">
+                        <form>
+                          <div class="p-2" ngModelGroup="formulaCatSetup" #formulaCatControls="ngModelGroup">
+                            <div class="row">
+                              <div class="col-md-12 mb-2 col-sm-12 pr-1 mt-1 mr-1 ">
+                                <div class="float-right">
+                                  <rmbutton [class]="'btn btn-round-black mx-1'" [buttonname]="'COMMON.CLEAR' | translate"
+                                    [iconstyle]="'far fa-times-circle'" [disabled]="isCatClearDisabled"
+                                    (click)="clearCatFormula()">
+                                  </rmbutton>
+                                  <rmbutton [class]="'btn btn-round-black add-btn-padding'" [id]="'Add'"
+                                    *ngIf="formulaCatControls" [disabled]="!formulaCatControls.valid"
+                                    (onclick)="addOrUpdateCatFormula()" [buttonname]="catBtnName"
+                                    [iconstyle]="catBtnName=='Add' ?'fas fa-plus':'far fa-save'"></rmbutton>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-3 col-sm-12  remove-mb-padding pl-2 pr-2">
+                                <div class="form-group">
+                                  <rmlabel [label]="'SORTGROUPSETUP.FORMULANAME' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.formulaName?.Required">
+                                  </rmlabel>
+                                  <rmtextbox [maxlength]="appConfig.sortgroupsetup.formulaNameTextboxLength"
+                                    [(ngModel)]="rxCatFormula.FORMULANAME" name="formulaName" [class]="'form-control'"
+                                    #formulaInput [disabled]="isFormulaNameDisabled" [isAllowEmptyValue]="true"
+                                    [id]="'formulaName'" [placeholder]="''" [searchIconBtnDisabled]="isFormulaSearchDisabled"
+                                    [divClass]="'input-group'" (onChangeVal)="changeInput()" [hideSearchIcon]="true"
+                                    (searchEventEmit)="getCatFormula()"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.formulaName?.Required">
+                                  </rmtextbox>
+                                </div>
+                              </div>
+                              <div class="col-md-3 col-sm-12  remove-mb-padding pr-2 pl-2">
+                                <div class="form-group">
+                                  <rmlabel [label]="'SORTGROUPSETUP.FORMULA' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.formula?.Required"></rmlabel>
+                                  <rmtextarea [maxlength]="appConfig.sortgroupsetup.formulaTextareaLength" [rows]="1"
+                                    [id]="'formula'" name="formula" [(ngModel)]="rxCatFormula.FORMULA" [placeholder]="''"
+                                    [disabled]="isFormulaDisabled" (onChangeVal)="changeInput()"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.formula?.Required">
+                                  </rmtextarea>
+                                </div>
+                              </div>
+                              <div class="col-md-3 col-sm-12  remove-mb-padding d-flex pl-2">
+                                <rmtoggle class="mr-3" name="active" [label]="'COMMON.ACTIVE'| translate"
+                                  [togglelblClass]="'mt-0'" [id]="'active'" [toggleval]="rxCatFormula.ACTIVE == 'Y'? true:false"
+                                  (onChangeVal)="onActiveChange($event)"></rmtoggle>
+                                 <rmtoggle class="ml-3" name="xpath" [label]="'SORTGROUPSETUP.XPATH' | translate" [togglelblClass]="'mt-0'" [id]="'xpath'" [toggleval]="rxCatFormula.ISXPATH == 'Y'? true:false"
+                                    (onChangeVal)="onXpathChange($event)"></rmtoggle>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                        <div class="row mt-3">
+                          <div class="col-12 pl-1 pr-1" *ngIf="catFormulaList">
+                            <rmgrid [(gridproperties)]="catFormulaList" [isCancelIconShow]="false"
+                              (emitEditDetails)="editCatFormulaListRow($event)"></rmgrid>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </tab>
+                  <!-- Another Tab -->
+                  <tab heading="Tracking Number Category" id="tab-category">
+                    <div class="tab-pane pb-2">
+                      <div class="container-fluid">
+                        <form>
+                          <div class="p-2" ngModelGroup="trkNbrCatSetup" #tkNbrCatControls="ngModelGroup">
+                            <div class="row">
+                              <div class="col-md-12 mb-2 col-sm-12 pr-1 mt-1 mr-1 ">
+                                <div class="float-right">
+                                  <rmbutton [class]="'btn btn-round-black mx-1'" [buttonname]="'COMMON.CLEAR' | translate"
+                                    [iconstyle]="'far fa-times-circle'" [disabled]="isTrknbrClearDisabled"
+                                    (click)="clearTkrnbrFormula()"></rmbutton>
+                                    <rmbutton [class]="'btn btn-round-black add-btn-padding '" [id]="'Add'" *ngIf="tkNbrCatControls"
+                                    [disabled]="!tkNbrCatControls.valid"
+                                    (onclick)="addOrUpdateTrkNbrCat()" [buttonname]="tkbrBtnName"
+                                    [iconstyle]="tkbrBtnName=='Add' ?'fas fa-plus':'far fa-save'"></rmbutton>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row  mt-2">
+                              <div class="col-lg-2 col-md-2 remove-mb-padding remove-mb-padding-l pr-2 ">
+                                <div class="form-group">
+                                  <rmlabel [label]="'SORTGROUPSETUP.CATEGORYNAME' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.categoryName?.Required">
+                                  </rmlabel>
+                                  <rmtextbox [(ngModel)]="rxTrknbrCat.CATEGORY_NAME" [name]="'categoryName'" [class]="'form-control'" 
+                                  #categoryNameInput [disabled]="isCategoryNameDisabled"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.categoryName?.Required"
+                                    [id]="'categoryName'" [isAllowEmptyValue]="true" (onChangeVal)="changeTrackingInput()"
+                                    [placeholder]="''" [divClass]="'input-group'" [hideSearchIcon]="true"
+                                    [searchIconBtnDisabled]="isTknbrCatSearchDisabled" (searchEventEmit)="getTrkNbrcat()">
+                                  </rmtextbox>
+                                </div>
+                              </div>
+                              <div class="col-lg-2 col-md-2 remove-mb-padding remove-mb-padding-l pr-2 pl-2">
+                                <div class="form-group">
+                                  <rmlabel [label]="'SORTGROUPSETUP.SORTGROUP' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.sortGroup?.Required">
+                                  </rmlabel>
+                                  <rmmultiselect [name]="'sortGroup'"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.sortGroup?.Required"
+                                    class="w-100" [id]="'sortGroup'" 
+                                     [disabled]="isSortGroupDisabled" [placeHolder]="''" [data]="sortGroups" [(ngModel)]="rxTrknbrCat.SORT_GROUP"
+                                     [dropdownSettings]="dropdownSettings" [selectedItems]="rxTrknbrCat.SORT_GROUP"  
+                                     (onSelectedItem)="changeSortGroup($event);" (onDeSelectItem)="onDeSelectItem()">
+                                  </rmmultiselect>
+                                </div>
+                              </div>
+                              <div class="col-lg-2 col-md-2 remove-mb-padding remove-mb-padding-l pr-2 pl-2">
+                                <div class="form-group">
+                                  <rmlabel [label]="'SORTGROUPSETUP.BOXSIZE' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.boxSize?.Required">
+                                  </rmlabel>
+                                  <rmdropdown [name]="'boxSize'" [id]="'boxSize'"
+                                    #boxSizeDropDown [class]="'form-control'"
+                                    [disabled]="isBoxSizeDisabled" [(ngModel)]="rxTrknbrCat.BOX_SIZE"
+                                    [value]="rxTrknbrCat.BOX_SIZE" (onChangeVal)="changeBoxSize($event.value)"
+                                    [dpOptions]="boxSizes"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.boxSize?.Required">
+                                  </rmdropdown>
+                                </div>
+                              </div>
+                              <div class="col-lg-2 col-md-2 remove-mb-padding remove-mb-padding-l pr-2 pl-2">
+                                <div class="form-group">
+                                  <rmlabel [label]="'SORTGROUPSETUP.FORMULANAME' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.catFormulaName?.Required">
+                                  </rmlabel>
+                                  <rmdropdown [name]="'categoryFormulaName'" [id]="'categoryFormulaName'"
+                                    #categoryFormulaNameDropDown [class]="'form-control'"
+                                    [disabled]="isCategoryFormulaNameDisabled" [(ngModel)]="rxTrknbrCat.FORMULANAME"
+                                    [value]="rxTrknbrCat.FORMULANAME" (onChangeVal)="changeCatFormulaName($event.value)"
+                                    [dpOptions]="formulaNames"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.catFormulaName?.Required">
+                                  </rmdropdown>
+                                </div>
+                              </div>
+                              <div class="col-lg-2 col-md-2 remove-mb-padding remove-mb-padding-l pr-2 pl-2">
+                                    <div class="form-group">
+                                      <rmlabel [label]="'SORTGROUPSETUP.CHANNEL' | translate">
+                                      </rmlabel>
+                                      <rmdropdown [name]="'channel'" [id]="'channel'"
+                                    #channelDropDown [class]="'form-control'"
+                                    [disabled]="isChannelDisabled" [(ngModel)]="rxTrknbrCat.CHANNEL"
+                                    [value]="rxTrknbrCat.CHANNEL" (onChangeVal)="changeChannel($event.value)"
+                                    [dpOptions]="channels">
+                                  </rmdropdown>
+                                    </div>
+                              </div>
+                              <div class="col-lg-2 col-md-2 remove-mb-padding remove-mb-padding-l pr-2 pl-2">
+                                <div class="form-group">
+                                  <rmlabel [label]="'SORTGROUPSETUP.DAYSTOKEEP'| translate">
+                                  </rmlabel>
+                                  <input type="number" [(ngModel)]="rxTrknbrCat.DAYS_TO_KEEP" (input)="changeTrackingInput()"
+                                    [class]="'form-control pl-1 pr-0 cat-rank'" #daysTokeepInput
+                                    [disabled]="isDaysTokeepDisabled" id="daysTokeep" name="daysTokeep" min="1" numbersOnly [numberPattern]="daytokeeppattern"
+                                    [max]="appConfig.sortgroupsetup.maxDaysToKeep" >
+                                </div>
+                              </div>
+                               
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 remove-mb-padding remove-mb-padding-l pr-2 pl-2">
+                                    <div class="form-group">
+                                      <rmlabel [label]="'SORTGROUPSETUP.CATEGORYRANK' | translate"
+                                        [isAsterisk]="masterPageService.hideControls.controlProperties?.categoryRank?.Required">
+                                      </rmlabel>
+                                      <input type="number" id="categoryRank" name="categoryRank" (input)="changeTrackingInput()"
+                                        [(ngModel)]="rxTrknbrCat.CAT_RANK" #categoryRankInput
+                                        [class]="'form-control pl-1 pr-0 cat-rank'" [disabled]="isCategoryRankDisabled" min="1"
+                                        [max]="appConfig.sortgroupsetup.maxCategoryRank" 
+                                        [requiredIf]="masterPageService.hideControls.controlProperties?.categoryRank?.Required">
+                                    </div>
+                                  </div>
+                                  <div class="col-lg-2 col-md-2 remove-mb-padding remove-mb-padding-l pr-2 pl-2">
+                                      <rmtoggle [label]="'COMMON.ACTIVE'| translate" (onChangeVal)="onTrkActiveChange($event)"
+                                            [togglelblClass]="'mt-0'" [id]="'catActive'"
+                                            [toggleval]="(rxTrknbrCat.ACTIVE == 'Y'? true:false)" name="catActive"></rmtoggle>
+                                  </div>
+                            </div>
+                            
+                            <div class="row">
+                              <div class="col-12 pl-1 pr-1" *ngIf="catTknbrList">
+                                <rmgrid [(gridproperties)]="catTknbrList" [isCancelIconShow]="false"
+                                  (emitEditDetails)="editTknbrFormulaListRow($event)"></rmgrid>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </tab>
+                </tabset>
+              </fieldset>
+            </form>
+      </div>
+    </div>
+ </div>
+
+</div>

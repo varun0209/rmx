@@ -1,0 +1,304 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? '' : 'pt-3'" class="padding-bottom col-lg-4 col-md-5 col-sm-6 mx-auto px-0">
+  <div class="container-fluid">
+    <div class="mode-selection-msg" *ngIf="!isModeSelected">
+      <strong>{{'M_RECEIVING.SELECTMODE' | translate}}</strong>
+    </div>
+    <div *ngIf="isModeSelected">
+      <div id="TrackingSection" *ngIf="isTrackingSection">
+        <div class="row">
+          <div class="col-sm-12 mt-3 mb-3 text-center">
+            <div class="custom-btn">
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" [iconstyle]="'fas fa-chevron-left'"
+                [disabled]="true"></rmbutton>
+              <rmbutton [class]="'btn btn-link btn-done'"></rmbutton>
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" (onclick)="showSkuSection()"
+                [iconstyle]="'fas fa-chevron-right'" [disabled]="trackingSectionNextBtn()"></rmbutton>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="isTrackingNumber">
+          <rmtextbox [divClass]="'input-group'" name="trackingNum" [(ngModel)]="trackingNumber" [id]="'trackingNum'"
+            [hidePrintIcon]="true" [iconstyle]="isTrackingNumbertoKeep ? 'fas fa-lock':'fas fa-lock-open'"
+            [placeholder]="'M_RECEIVING.TRACKING_BOL' | translate" (enter)="validateTrackingNumber()"
+            (onChangeVal)="onInputChange()" (iconEventEmit)="tackingNumberLock()"></rmtextbox>
+        </div>
+
+        <div class="form-group" *ngIf="selectedMode == '2Dbarcode' && isTwoDBarcode">
+          <rmtextarea [name]="'scanESN'" [(ngModel)]="barCode" [rows]="'3'" [id]="'scanESN'"
+            (enter)="validate2DBarcode()" [widthInput]="'autoResize'" [allowAutoResize]="true"
+            [textAreaPattern]="controlConfig?.recBarCodePattern" [errorMessage]="appService.getErrorText('2660080')"
+            [allowUppercase]="true" [allowMaxlengthTextarea]="false"
+            [placeholder]="'M_RECEIVING.TWODBARCODE' | translate">
+          </rmtextarea>
+        </div>
+        <div *ngIf="isPoOrRma">
+          <rmtextbox [divClass]="'input-group'" name="PoOrRma" #poOrRmaInput [(ngModel)]="authkeyOrExternKey" [id]="'PoOrRma'"
+            [placeholder]="getPoRMAOrMsnPlaceHolder() | translate" (enter)="searchKey()" [hidePrintIcon]="selectedMode != receivingModes.msn"
+            [iconstyle]="ispoOrrmaValuetoKeep ? 'fas fa-lock':'fas fa-lock-open'" (iconEventEmit)="poRMALock()">
+          </rmtextbox>
+        </div>
+        <!-- </div> -->
+        <div *ngIf="isTrackingReadonlySection">
+          <div *ngIf="isTrackingNumberReadOnly" class="divStyle">
+            <rmcontrol-display [label]="'M_RECEIVING.TRACKING_BOL' | translate" [value]="trackingNumber"
+              [isIconDisabled]="false" (iconEventEmit)="editTracking()"></rmcontrol-display>
+          </div>
+          <div *ngIf="isTwoDBarcodeReadOnly" class="divStyle">
+            <rmcontrol-display [label]="'M_RECEIVING.TWODBARCODE' | translate" [value]="getBarcode()"
+              [divStyle]="'barcode'"></rmcontrol-display>
+          </div>
+          <div *ngIf="isPoOrRmaReadOnly" class="divStyle">
+            <rmcontrol-display [label]="getPoRMAOrMsnPlaceHolder() | translate" [value]="authkeyOrExternKey"
+              [isIconDisabled]="selectedMode == receivingModes.twoDbarcode" (iconEventEmit)="editAuthkeyOrExternKey()">
+            </rmcontrol-display>
+          </div>
+        </div>
+      </div>
+      <div id="SkuSection" *ngIf="isSkuSection">
+        <div class="row">
+          <div class="col-sm-12  mt-3 mb-3  text-center">
+            <div class="custom-btn">
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" [iconstyle]="'fas fa-chevron-left'"
+                (onclick)="showTrackingSection()" [disabled]=""></rmbutton>
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn btn-done'" [buttonname]="'Done'"
+                [disabled]="isSKUSectionDoneBtn" (onclick)="doneOnSku()"></rmbutton>
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" (onclick)="skuSectiontoswVersion()"
+                [iconstyle]="'fas fa-chevron-right'" [disabled]="skuSectionNextBtn()"></rmbutton>
+            </div>
+          </div>
+        </div>
+        <div class="form-group" *ngIf="isSku">
+          <rmtypeahead name="skuInput" [typeaheadOptionField]="'Sku'" [(ngModel)]="selectedSKU" [id]="'skuInput'" (inputEvent)="getEligibleSKUs($event)" 
+            [placeholder]="'M_RECEIVING.SKU' | translate" [skus]="skuList" [waitTime]="appConfig.receiving.skuwaitTime" [SKU]="selectedSKU" [typeaheadPattern]="controlConfig.SKuPattern" [errorMessage]="appService.getErrorText('2660078')"
+            (typeaheadResponse)="typeaheadResponse($event)" (keyup.enter)="onSkuEnter($event)">
+          </rmtypeahead>
+        </div>
+        <div class="form-group" *ngIf="isConditionCode">
+          <rmlabel [for]="'conditionType'" [label]="'M_RECEIVING.CONDTIONTYPE' | translate"></rmlabel>
+          <rmdropdown name="conditionType" [(ngModel)]="conditionCode" [id]="'conditionType'" [value]="conditionCodeId"
+            (onChangeVal)="changeConditionCode($event)" [dpOptions]="conditionCodeOptions" [disabled]=""></rmdropdown>
+        </div>
+        <div class="form-group" *ngIf="isOpenQty">
+          <label class="mr-1" for="qty">{{'M_RECEIVING.OPEN_QTY' | translate}}</label>
+          <input type="number" [(ngModel)]="expectedQty" class="form-control pr-0" id="openQty" [disabled]="true"
+            [placeholder]="''" min="1" max="100" numbersOnly>
+        </div>
+        <ng-container>
+          <div class="form-group" *ngIf="isQuantity">
+            <input type="number" [(ngModel)]="nonSerializedQuantity" id="quantity" name="quantity"
+              class="form-control no-label" min="1" max="100" [placeholder]="'M_RECEIVING.QUANTITY' | translate"
+              numbersOnly (ngModelChange)="enableSkuDoneBtn()" [disabled]="">
+          </div>
+        </ng-container>
+        <div *ngIf="!isSku">
+          <div *ngIf="isSkuReadOnly" class="divStyle mt-0">
+            <rmcontrol-display [label]="'M_RECEIVING.SKU' | translate" [value]="selectedSKU"></rmcontrol-display>
+          </div>
+          <div *ngIf="isConditionCodeReadOnly" class="divStyle">
+            <rmcontrol-display [label]="'M_RECEIVING.CONDTIONTYPE' | translate" [value]="conditionCode"
+              [divStyle]="'condition-code'" [isIconDisabled]="selectedMode == receivingModes.twoDbarcode"
+              (iconEventEmit)="editCondtionType()">
+            </rmcontrol-display>
+          </div>
+          <div *ngIf="isOpenQtyReadOnly" class="divStyle">
+            <rmcontrol-display [label]="'M_RECEIVING.OPEN_QTY' | translate" [value]="'expectedQty'"></rmcontrol-display>
+          </div>
+          <div *ngIf="isQuantityReadOnly" class="divStyle">
+            <rmcontrol-display [label]="'M_RECEIVING.QUANTITY' | translate" [value]="'receivedQty'"></rmcontrol-display>
+          </div>
+
+        </div>
+      </div>
+      <div id="SwVersionSection" *ngIf="isSwVersionSection">
+        <div class="row">
+          <div class="col-sm-12  mt-3 mb-3 text-center">
+            <div class="custom-btn">
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" [iconstyle]="'fas fa-chevron-left'"
+                [disabled]="" (onclick)="swVersionToSKUSection()"></rmbutton>
+              <rmbutton [class]="'btn btn-link btn-done'"></rmbutton>
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" (onclick)="swVersionToSerialNumber()"
+                [iconstyle]="'fas fa-chevron-right'" [disabled]="!isSwVersionReadOnly"></rmbutton>
+            </div>
+          </div>
+        </div>
+        <div class="form-group py-2 mb-0" *ngIf="!isSwVersionReadOnly">
+          <rmtextbox name="softwareVersion" [(ngModel)]="softwareVersion" [id]="'softwareVersion'"
+            [textBoxPattern]="controlConfig.softwareVersion" [errorMessage]="appService.getErrorText('2660079')" [placeholder]="'M_RECEIVING.SOFTWAREVERSION' | translate"
+            (enter)="validateSoftwareVersion()">
+          </rmtextbox>
+        </div>
+        <div *ngIf="isSwVersionReadOnly">
+          <div class="divStyle mt-0">
+            <rmcontrol-display [label]="'M_RECEIVING.SOFTWAREVERSION' | translate" [value]="softwareVersion"
+              (iconEventEmit)="editSWVersion()" [isIconDisabled]="selectedMode == receivingModes.twoDbarcode">
+            </rmcontrol-display>
+          </div>
+        </div>
+
+
+      </div>
+      <div id="SerialNumberSection" *ngIf="isSerialNumberSection">
+        <div class="row">
+          <div class="col-sm-12  mt-3 mb-3 text-center">
+            <div class="custom-btn">
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" [iconstyle]="'fas fa-chevron-left'"
+                (onclick)="serialNumberToSWVersion()" [disabled]=""></rmbutton>
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn btn-done'" [buttonname]="'Done'"
+                [disabled]="isPostDisabled" (onclick)="processDevices()"></rmbutton>
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" [iconstyle]="'fas fa-chevron-right'"
+                [disabled]="true"></rmbutton>
+            </div>
+          </div>
+        </div>
+        <div class="pb-1">
+          <div class="position-relative" *ngIf="showSerialNumber">
+            <rmtextbox name="serialNumber" [(ngModel)]="serialNumber" [id]="'serialNumber'"
+              [placeholder]="getPlaceHolder() | translate" (enter)="validateSerialNumber()"
+              [disabled]="isSerialnumberDisabled" [uiData]="uiData" [isSerialNumber]="true"
+              [textBoxPattern]="controlConfig?.barCodePattern">
+            </rmtextbox>
+          </div>
+          <div class="position-relative" *ngIf="showMSNValue">
+            <rmtextbox name="msn" [(ngModel)]="msnValue" [id]="'msn'" [placeholder]="'MSN'"
+              (enter)="validateMSNValue() " [disabled]="">
+            </rmtextbox>
+          </div>
+          <div [ngClass]="receivingDevicesList.length>0 ? 'mt-4' : 'mt-1'" class="row position-relative">
+            <div class="esn-msn-list">
+              <span class="sku-badge-left">
+                <rmbadge [badgenumber]="selectedSKU"></rmbadge>&nbsp;
+                <rmbadge [badgenumber]="disposition"></rmbadge>
+              </span>
+              <span class="qtyWidth-under" *ngIf="expectedQty">
+                <span class="qty-rec-under">{{receivedQty}}</span> <span class="qty-exp-under">{{expectedQty}}</span>
+              </span>
+              <table class="table table-bordered sn-table" *ngIf="receivingDevicesList.length>0">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">{{'M_RECEIVING.SERIALNUMBER'| translate}}</th>
+                    <th scope="col" *ngIf="isMSNvalidated">MSN</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let receivingDevice of receivingDevicesList">
+                    <td>{{receivingDevice.SerialNumber}}</td>
+                    <td *ngIf="isMSNvalidated">{{receivingDevice.MSN}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="ColorCodeSection" *ngIf="isColorCodeSection">
+        <div class="row">
+          <div class="col-sm-12  mt-3 mb-3 text-center">
+            <div class="custom-btn">
+              <rmbutton [class]="'btn btn-link'"></rmbutton>
+              <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn btn-done'" [buttonname]="'Done'" [disabled]=""
+                (onclick)="doneReceiving()"></rmbutton>
+              <rmbutton [class]="'btn btn-link'"></rmbutton>
+            </div>
+          </div>
+        </div>
+        <!-- Showing Color Dot on Box -->
+        <p class="text-center" *ngIf="colorText">Place a <strong class="text-bg-color"
+            [ngStyle]="{'color': colorCode}">{{colorText}}</strong> dot on this box
+        </p>
+        <div *ngIf="colorCode" [ngStyle]="{'background': colorCode}" class="dot-on-box"></div>
+        <div class="divStyle mt-3">
+          <div class="row align-middle pt-2">
+            <ng-container>
+              <div class="move-right ">
+                <rmlabel [label]="'COMMON.CONTAINERID' | translate" class="mr-2"></rmlabel>:
+              </div>
+              <div class="move-left">
+                <p class="ml-2 mb-0"><strong>{{container?.ContainerID}}</strong></p>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="divStyle mt-3" *ngIf="!isTrackingSection && !isColorCodeSection">
+          <div class="row align-middle pt-2">
+            <ng-container *ngIf="isTrackingNumberReadOnly">
+              <div class="move-right ">
+                <rmlabel [label]="'M_RECEIVING.TRACKING_BOL' | translate" class="mr-2"></rmlabel>:
+              </div>
+              <div class="move-left">
+                <p class="ml-2 mb-0"><strong>{{trackingNumber}}</strong></p>
+              </div>
+            </ng-container>
+          </div>
+          <div class="row align-middle">
+            <ng-container *ngIf="selectedMode === this.receivingModes.msn">
+              <div class="move-right">
+                <rmlabel [label]="'M_RECEIVING.MSN' | translate" class="mr-2"></rmlabel>:
+              </div>
+              <div class="move-left">
+                <p class="ml-2 mb-0"><strong>{{authkeyOrExternKey}}</strong></p>
+              </div>
+            </ng-container>
+          </div>
+          <div class="row align-middle">
+            <ng-container *ngIf="isPoOrRmaReadOnly">
+              <div class="move-right">
+                <rmlabel [label]="'M_RECEIVING.AUTHKEY' | translate" class="mr-2"></rmlabel>:
+              </div>
+              <div class="move-left">
+                <p class="ml-2 mb-0"><strong>{{poOrrmaValue}}</strong></p>
+              </div>
+            </ng-container>
+          </div>
+          <div class="row align-middle" *ngIf="externKey">
+            <ng-container>
+              <div class="move-right">
+                <rmlabel [label]="'M_RECEIVING.PO_RMA' | translate" class="mr-2"></rmlabel>:
+              </div>
+              <div class="move-left">
+                <p class="ml-2 mb-0"><strong>{{externKey}}</strong></p>
+              </div>
+            </ng-container>
+          </div>
+          <div class="row align-middle">
+            <ng-container *ngIf="isSwVersionSection || isSerialNumberSection">
+              <div class="move-right">
+                <rmlabel [label]="'M_RECEIVING.CONDTIONTYPE' | translate" class="mr-2"></rmlabel>:
+              </div>
+              <div class="move-left">
+                <p class="ml-2 mb-0"><strong>{{conditionCode}}</strong></p>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="row" *ngIf="!isColorCodeSection">
+          <div class="col-sm-12  mt-3">
+            <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn float-right'"
+              [disabled]="isClearDisabled" (onclick)="reset()" [buttonname]="'Clear'"></rmbutton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #swVersionCheck>
+    <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+      {{modeltitle | translate}}
+      <button mat-icon-button (click)="dialogRef.close()">
+        <xpo-icon iconName="clear"></xpo-icon>
+      </button>
+    </h4>
+    <xpo-dialog-content>
+    <div class="modal-body m-body">
+      <span>
+        <i class="fas fa-question-circle ques-icon float-left"></i>{{swVersionMessage}}
+      </span>
+      </div>
+    </xpo-dialog-content>
+
+    <mat-dialog-actions>
+      <button mat-button type="button" (click)="dialogRef.close()">Close</button>
+          <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'"
+            (onclick)="closeSWVersionConfirmation()"></rmbutton>
+    </mat-dialog-actions>
+  </ng-template>

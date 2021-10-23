@@ -1,0 +1,90 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+    <div class="col-md-6">
+    <div class="row mb-3">
+      <div class="col-md-6 col-sm-12">
+        <rmlabel [label]="'Inbound Container' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.inboundContainer?.Required"></rmlabel>
+        <rmtextbox [(ngModel)]="containerId" #jitContainerId [id]="'jitContainerId'" [disabled]="isContainerDisabled"
+          [placeholder]="''" (enter)="validateJITHoldContainer(jitContainerId)" (onChangeVal)="changeContainerInput()"
+          [id]="'containerId'"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.inboundContainer?.Required"></rmtextbox>
+      </div>
+      <div class="col mt-4">
+        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'" [disabled]="isResetBtnDisabled"
+          (onclick)="reset()" [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'"></rmbutton>
+          <rmbutton [class]="'btn btn-round-black mr-2'" [id]="'removeFromHold'" (onclick)="removeFromJITHold()"
+          [disabled]="isRemoveFromHoldBtnDisabled" tooltip="{{ 'JITHOLDREMOVAL.REMOVEFROMHOLD' | translate }}" [buttonname]="'COMMON.REMOVE' | translate"
+          [iconstyle]="'fas fa-trash-alt'">
+        </rmbutton>
+      </div>
+    </div>
+    <div class="row pl-1 mb-3 pl-3" *ngIf="selectedContainerProperties.length">
+      <div class="d-flex align-content-end flex-wrap" *ngFor="let header of selectedContainerProperties">
+        <div class="py-3 px-1" [ngClass]="containerObj[header]=='' ? 'pt-4':''">
+          {{header}} : <rmbadge [badgenumber]="containerObj[header]"></rmbadge>
+        </div>
+      </div>
+    </div>
+    <div class="row mb-1">
+      <div class="col-md-6 cols-m-12 mb-3">
+        <div *ngIf="isLocationShow">
+          <rmlabel [label]="'COMMON.LOCATION' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.location?.Required"></rmlabel>
+          <rmtextbox [(ngModel)]="locationId" #inputLocation [placeholder]="''" [disabled]="isLocationDisabled"
+            (enter)="validateJITHoldToLoc(inputLocation,$event)" (onChangeVal)="changeLocation()" [id]="'locationId'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.location?.Required">
+          </rmtextbox>
+        </div>
+        <div class="dot-on-box-div" *ngIf="colorCodeDetails.ColorCode" >
+          <div *ngIf="colorCodeDetails.ColorCode" [ngStyle]="{'background': colorCodeDetails.ColorCode}"
+            class="dot-on-box"></div>
+          <p class="text-center mt-4 pb-3" *ngIf="colorCodeDetails.Color"> {{ 'COMMON.PLACEA' | translate }} <strong
+              class="text-bg-color" [ngStyle]="{'color': colorCodeDetails.Color}">{{colorCodeDetails.Color}}</strong>
+            {{ 'COMMON.DOTBOX' | translate }}
+          </p>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row mb-3 remove-fieldset-mt" *ngIf="jitHoldListGrid">
+          <div class="col-md-12 mt-4 mb-3 text-right">
+            <rmbutton [class]="'btn btn-round-black'" [id]="'printReport'" (onclick)="printReport(exportModal)"
+              [disabled]="!jitHoldList.length" tooltip="{{ 'JITHOLDREMOVAL.PRINTREPORT' | translate }}" [buttonname]="'COMMON.PRINT' | translate"
+              [iconstyle]="'fas fa-print'">
+            </rmbutton>
+          </div>
+          <div class="col-12">
+            <rmgrid [(gridproperties)]="jitHoldListGrid" (pageIndex)="pageChanged($event)" [p]="pageIndex">
+            </rmgrid>
+          </div>
+        </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #exportModal>
+  <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    {{'COMMON.EXPORTDATAPREVIEW' | translate}}
+    <button mat-icon-button (click)="dialogRef.close()">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h4>
+<xpo-dialog-content>
+  <div class="modal-body m-body">
+    <div class="row mb-3 remove-fieldset-mt" *ngIf="exportGridList">
+      <div class="col-12">
+        <rmgrid [(gridproperties)]="exportGridList" [hideRearrangeIcon]="hideGridRearrangeIcon">
+        </rmgrid>
+      </div>
+    </div>
+    <div class="pr-2 float-right">
+      <rmbutton [iconstyle]="'fas fa-lg fa-print'" [id]="'print'"  [class]="'btn btn-round-black'" (onclick)="exportData()">
+      </rmbutton>
+    </div>
+  </div>
+</xpo-dialog-content>
+</ng-template>

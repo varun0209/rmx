@@ -1,0 +1,11 @@
+{
+    "comUrl": "http://tsgvm01805.newbreed.com:8010/",
+    "utlUrl": "http://tsgvm01805.newbreed.com:8015/",
+    "secUrl": "http://tsgvm01805.newbreed.com:8020/",
+    "recUrl": "http://tsgvm01805.newbreed.com:8025/",
+    "tstUrl": "http://tsgvm01805.newbreed.com:8030/",
+    "wtUrl": "http://tsgvm01805.newbreed.com:8035/",
+    "env":"QA",
+    "errorMsg":"7320011: Site configuration is missing in RMX",
+	"invalidUser" :"Different user already loggedin."
+}

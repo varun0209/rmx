@@ -1,0 +1,12 @@
+.rmchildpadding{
+    padding: 0px 2px;
+    margin-right: 7px;
+}
+
+i.disabled {
+    pointer-events: none;
+    cursor: default;
+ }
+ .noborder{
+     border:unset !important;
+ }

@@ -1,0 +1,38 @@
+﻿<div class="mx-auto mt-3" *ngIf="showAlert && !appErrService.specialCharErrMsg">
+  <rmalert [class]="'w-50'" [text]="text"></rmalert>
+</div>
+<div class="mx-auto mt-3" *ngIf="appErrService.specialCharErrMsg">
+  <rmalert [class]="'w-50'" [text]="appErrService.specialCharErrMsg"></rmalert>
+</div>
+<form [formGroup]="closeContainerForm">
+  <div class="mt-4">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-12 mb-1 px-0">
+      <label>{{'COMMON.CONTAINERID' | translate}}</label>
+      <rmtextbox [(ngModel)]="containerID" [disabled]="isContainerDisabled" #inputContainer
+        formControlName="containerId" [placeholder]="''" [id]="'containerID'" (isInputValueEmpty)="isAttributeIDInputValueEmpty()"
+        (onChangeVal)="changeInput(inputContainer)" (onControllerChange)="onControllerChange(inputContainer)"
+        (clearEmit)="clearEmit($event)" (enter)="validateCloseContainer(inputContainer,$event)" [flag]="flag">
+      </rmtextbox>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-12 mb-5">
+      <span class="float-left" *ngIf="showCategory">Cat: <rmbadge [badgenumber]="category"></rmbadge></span>
+      <span class="float-right" *ngIf="showQuantity">Qty: <rmbadge [badgenumber]="quantity"></rmbadge></span>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-12" [hidden]="isInboundContainer">
+      <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'clear'" [disabled]="isClearDisabled"
+        [buttonname]="'COMMON.CLEAR' | translate" (onclick)="Clear()" [iconstyle]="'fas fa-times-circle'"></rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'close'" [disabled]="isCloseDisabled"
+        [buttonname]="'COMMON.CLOSE' | translate" (onclick)="validateCloseContainer(inputContainer, containerID)"
+        [iconstyle]="'fa fa-archive'"></rmbutton>
+    </div>
+
+    <div class="alert alert-container-close" [hidden]="!isInboundContainer">
+      <span class="info-icon align-self-center">?</span>
+      <p class="mb-0 p-0 col align-self-center">{{'COMMON.CONTAINERCLOSE' | translate}}</p>
+      <rmbutton [class]="'btn btn-round-black mr-1'" (onclick)="Clear()" [iconstyle]="'fa fa-times'"></rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'confirmClose'"  [disabled]="isCloseDisabled" [iconstyle]="'fa fa-check'" 
+      (onclick)="closeContainer(inputContainer)"></rmbutton>
+    </div>
+
+  </div>
+</form>

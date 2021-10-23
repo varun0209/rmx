@@ -1,0 +1,124 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+            <form>
+                    <div  ngModelGroup="auditCheckSetup" #auditResultControls="ngModelGroup">
+                        <div class="row">
+                            <div [ngClass]="masterPageService.tempQueList? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'">
+                                <rmlabel [label]="'QUALITYAUDIT.AUDITPOINT'| translate"[isAsterisk]="masterPageService.hideControls.controlProperties?.auditPoint?.Required"></rmlabel>
+                                <rmdropdown [name]="'audit Point'" [id]="'audit'" #AuditCodeInput [class]="'form-control'" [(ngModel)]="auditPoint.Audit_Id"
+                                    (onChangeVal)="onAuditChange($event)" [dpOptions]="auditList" [value]="auditPoint.Audit_Id"></rmdropdown>
+                            </div>
+                            <div [ngClass]="masterPageService.tempQueList? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'">
+                                <rmlabel [label]="'QUALITYAUDIT.AUDITDESCRIPTION'| translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.auditDescription?.Required"></rmlabel>
+                                <rmtextarea [rows]="1" [id]="'auditDescription'" [name]="'auditDescription'" [disabled]="'true'" [(ngModel)]="auditPoint.AuditDescription"
+                                    [placeholder]="''">
+                                </rmtextarea>
+            
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div [ngClass]="masterPageService.tempQueList? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'">
+                                <rmlabel [label]="'QUALITYAUDIT.SERIALNUMBERUPC' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"></rmlabel>
+                                <rmtextbox [name]="'serialnumber'" [(ngModel)]="auditResult.SerialNumber" #serialnumberInput [divClass]="'input-group'" [requiredIf]="true"
+                                    [disabled]="isSerialnumberDisabled" [id]="'serialnumber'" [placeholder]="''" (enter)="validateSerialnumber($event, serialnumberInput)"
+                                    [uiData]="uiData" [isSerialNumber]="true" [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+                            </div>
+                            <div class="setcylcewidth">
+                                <rmlabel [label]="'QUALITYAUDIT.CYCLE'| translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.cycle?.Required"></rmlabel>
+                                <input type="number" id="cycleNumber" name="cycleNumber" [(ngModel)]="auditResult.CycleNumber" readonly [class]="'form-control'"
+                                    [requiredIf]="true" #cycleNumber min="1" max="100" numbersOnly [numberPattern]="numberPattern">
+                            </div>
+                        </div>
+            
+                        <div class="row mt-3">
+                            <div [ngClass]="masterPageService.tempQueList? 'col-md-12 col-sm-12 mb-2':'col-md-12 col-sm-12 mb-2'">
+                                <fieldset class="record-fieldset m-0">
+                                    <legend class="record-legend">{{'QUALITYAUDIT.RECORDAUDIT' | translate}}</legend>
+                                    <div class="row">
+                                        <div [ngClass]="masterPageService.tempQueList? 'col-md-6 col-sm-12 mb-2':'col-md-6 col-sm-12 mb-2'">
+                                            <rmlabel [label]="'QUALITYAUDIT.CHECKLIST'| translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.checkList?.Required"></rmlabel>
+                                            <rmlistbox [listBox]="auditCheckList" [id]="'auditCheck'" #auditCheck [disabled]="isAuditCheckDisabled" [value]="seletedAuditCheck"
+                                                name="auditCheck" [requiredIf]="masterPageService.hideControls.controlProperties?.checkList?.Required" (onChangeVal)="onChangeAuditCheck($event)"></rmlistbox>
+                                        </div>
+                                        <div [ngClass]="masterPageService.tempQueList? 'col-md-6 col-sm-12' : 'col-md-6 col-sm-12'">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <rmlabel [label]="'QUALITYAUDIT.CHECKDESCRIPTION'| translate"[isAsterisk]="masterPageService.hideControls.controlProperties?.checkDescription?.Required"></rmlabel>
+                                                    <rmtextarea [rows]="1" [id]="'checkDescription'" [name]="'checkDescription'" [disabled]="'true'" [(ngModel)]="recordAuditDesc" [placeholder]="''">
+                                                    </rmtextarea>
+                                                </div>
+                                                <div class="col-12 mt-3 clearfix auditposition-relative" *ngIf="((detailType == 'NULL') || (detailType == 'REGEXP'))">
+                                                    <rmlabel [label]="'QUALITYAUDIT.ADDITIONALAUDITDETAIL' | translate"[isAsterisk]="(detailType == 'NULL')?'':masterPageService.hideControls.controlProperties?.additionalAuditDetail?.Required"></rmlabel>
+                                                   
+                                                    <rmtextarea [rows]="1" [widthInput]="masterPageService.tempQueList? 'auditquality-textarea float-left' : 'auditqualitynogrid-textarea float-left'" [id]="'additionalDescription'" [requiredIf]="masterPageService.hideControls.controlProperties?.additionalAuditDetail?.Required" [name]="'Description'" [disabled]="isAddtionalDetailsDisabled"
+                                                          [(ngModel)]="addtionalAuditDetails" (onChangeVal)="auditValidateChange($event)" [placeholder]="''">
+                                                    </rmtextarea>
+                                                 
+                                                   <div class="auditposition-absolute">
+                                                    <rmbutton [class]="'btn btn-outline-secondary float-right'" [id]="'validate'" [disabled]="isValidateDisabled" [buttonname]="''" [iconstyle]="'fas fa-check'"
+                                                    (onclick)="validateRegExpression()"></rmbutton>
+                                                   </div> 
+                                                   
+                                                </div>
+                                                <div class="col-12 mt-3" *ngIf="detailType == 'LIST'">
+                                                    <rmlabel [label]="'QUALITYAUDIT.ADDITIONALAUDITDETAIL' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.additionalAuditDetail?.Required"></rmlabel>
+                                                    <rmdropdown [name]="'detailValue'" [id]="'detailValue'" #AuditCodeInput [class]="'form-control'" [(ngModel)]="detailValues" [requiredIf]="true"
+                                                        (onChangeVal)="onAddtionalDetailsChange($event.value)" [dpOptions]="auditDetailValues" [value]="detailValues"></rmdropdown>
+                                                </div>
+            
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </fieldset>
+                                <div class="row pt-4">
+                                        <div class="col-6">
+                                            <div class="float-left">
+                                                <rmbutton [class]="'btn btn-round-black'" [id]="'clear'" [disabled]="isClearDisabled" [buttonname]="'COMMON.CLEAR'| translate" [iconstyle]="'fas fa-times-circle'"
+                                                    (onclick)="clearAuditRecords()"></rmbutton>
+                                                <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'reset'" [disabled]="isResetDisabled" [buttonname]="'COMMON.RESET'| translate" 
+                                                    [iconstyle]="'fas fa-redo'" (onclick)="resetAuditRecords()"></rmbutton>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="float-right">
+                                                <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'complete'" [disabled]="isCompleteDisabled" [buttonname]="'COMMON.COMPLETE'| translate"
+                                                    [iconstyle]="'far fa-save'" (onclick)="saveAuditResults()"></rmbutton>
+            
+                                                <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'add'" [buttonname]="'COMMON.ADD'| translate" [disabled]="!auditResultControls.valid || isAddAuditCheckDisabled"
+                                                    (onclick)="addAuditRecord()" [iconstyle]="'fas fa-plus'"></rmbutton>
+                                            </div>
+                                        </div>
+            
+                                    
+                            </div>
+                            <div class="row pt-3 " *ngIf="recordAuditList">
+                                <div class="col-12">
+                                    <rmgrid [(gridproperties)]="recordAuditList" (emitEditDetails)="editAuditRecordDetailRow($event)" (emitDeleteDetails)="deleteAuditRecordDetailRow($event,deleteModal)"></rmgrid>
+                                </div>
+                            </div>
+                            <ng-template #deleteModal>
+                                <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+                                    {{modeltitle | translate}}
+                                    <button mat-icon-button (click)="dialogRef.close()">
+                                        <xpo-icon iconName="clear"></xpo-icon>
+                                    </button>
+                                </h1>
+                                <xpo-dialog-content>
+                                  <span>
+                                    <i class="fas fa-question-circle ques-icon">  </i> {{'QUALITYAUDIT.DELETECONFIRMRECORD' | translate }}
+                                  </span>
+                                </xpo-dialog-content>
+
+                                <mat-dialog-actions>
+                                <button mat-button type="button" (click)="dialogRef.close()">Close</button>
+                                      <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="deleteAudit()"></rmbutton>
+                                </mat-dialog-actions>
+                              </ng-template>
+                        </div>
+                        </div>
+                    </div>
+                </form>
+    </div>  
+</div>
+<button hidden id="stopProcessQueue"></button>

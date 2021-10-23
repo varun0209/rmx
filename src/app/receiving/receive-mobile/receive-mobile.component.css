@@ -1,0 +1,175 @@
+.padding-bottom {
+  padding-bottom: 7vh;
+}
+
+.divStyle {
+  box-shadow: 0 0 5px #cccccc;
+  border-left: 4px #2c90d6 solid;
+  background: #f0f3fa;
+  padding: 5px;
+  border-radius: 4px;
+  margin-top: 12px;
+}
+
+.container-noalert {
+  margin-top: 2%;
+}
+
+.container-onalert {
+  margin-top: 1%;
+}
+
+.skuWidth {
+  width: 84%;
+  padding-left: 4px;
+  padding-right: 9px;
+  position: relative;
+}
+
+.sku-badge {
+  position: absolute;
+  right: 8px;
+  top: 26px;
+}
+
+.qtyWidth {
+  position: relative;
+  width: 11%;
+  height: 28px;
+  background: linear-gradient( -45deg, rgb(204, 0, 0), rgb(204, 0, 0) 49%, white 49%, white 51%, rgb(40, 167, 69) 51%);
+  border-radius: 50%;
+  color: rgb(255, 255, 255)
+}
+
+.qty-rec {
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  font-size: 9px;
+}
+
+.qty-exp {
+  position: absolute;
+  top: 12px;
+  right: 6px;
+  font-size: 9px;
+}
+
+ul.list-group>li {
+  border-bottom: 1px solid rgb(221, 221, 221);
+  padding: 10px 5px;
+  margin: 6px 5px 0px 6px;
+  box-shadow: 1px 1px 5px -2px #888888;
+  border-radius: 9px;
+}
+
+.fa-check-color {
+  color: rgb(8, 104, 172);
+  font-weight: bold;
+}
+
+.dot-on-box {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto;
+  border-radius: 50px;
+  border: 1px #bdbdbd solid;
+  margin-top: 10px;
+}
+
+.esn-msn-list {  
+  width: 94%;
+  height: auto;
+  max-height: 150px;
+  overflow-y: scroll;
+  margin: 13px auto 6px;
+}
+
+.list-item {
+  padding: .50rem .50rem !important;
+}
+
+.no-label {
+  margin-top: 1rem !important;
+}
+
+.sku-badge-left {
+  position: absolute;
+  left: 20px;
+  top: -10px;
+  margin-top: 4px;
+}
+
+.span-pre-btn {
+  width: 41%;
+  display: block;
+  text-align: right;
+}
+
+.span-done-btn {
+  width: 18%;
+  display: block;
+  text-align: center;
+}
+
+.span-next-btn {
+  width: 41%;
+  display: block;
+  text-align: left;
+}
+
+
+.final-done-btn {
+  text-align: right !important;
+  padding-top: 5px;
+}
+
+
+
+.position-relative {
+  position: relative;
+}
+
+/*large Screens*/
+
+.mode-selection-msg {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  text-align: center;
+  margin: 45px 0px auto;
+  border: 0px solid #cccccc;
+  box-shadow: 0 0 10px #cccccc;
+  line-height: 26px;
+  padding: 4px 4px;
+}
+
+.border-radius {
+  border-radius: 50% !important;
+}
+
+.sn-table{
+  width:98% !important;
+  margin: 2% 1% !important;
+}
+.text-bg-color{
+  background: #cccccc;
+  padding:5px;
+}
+
+
+@media (max-width: 1280px) {
+  .container-noalert {
+    margin-top: 3%;
+  }
+}
+
+
+
+@media (max-width: 360px) {
+
+  .header-mt .nocontentPadding {
+    padding-left: 0px !important;
+    margin-top: 15px !important;
+  }
+}

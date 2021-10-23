@@ -1,0 +1,23 @@
+{
+   "comUrl":"https://api-rmx02.sc.xpo.com:8223/",
+   "utlUrl":"https://api-rmx02.sc.xpo.com:8333/",
+   "secUrl":"https://api-rmx02.sc.xpo.com:8553/",
+   "recUrl":"https://api-rmx02.sc.xpo.com:8663/",
+   "tstUrl":"https://api-rmx02.sc.xpo.com:8773/",
+   "wtUrl":"https://api-rmx02.sc.xpo.com:8883/",
+   "conUrl":"https://api-rmx02.sc.xpo.com:8227/",
+   "mntUrl":"https://api-rmx02.sc.xpo.com:8225/",	
+  "env":"PROD",
+    "errorMsg":"7320011: Site configuration is missing in RMX",
+    "invalidUser":"User is already logged in.",
+    "sharedSecurity":{
+    "DataType": "WAREHOUSE",
+    "Application": "RMX"
+  },
+  "clients": [
+    {
+      "clientName": "VERIZON",
+      "siteIds": ["DFW004", "DFW005"]
+  }
+  ]
+}

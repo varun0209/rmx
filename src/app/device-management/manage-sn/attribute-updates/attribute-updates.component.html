@@ -1,0 +1,35 @@
+<div class="col-md-12 col-sm-12 p-0" *ngIf="isEnableDataElements">
+  <fieldset class="attr-fieldset m-0">
+    <legend class="attr-legend">{{'DEVICEMANAGEMENT.VALUE' | translate}}</legend>
+    <form>
+      <div ngModelGroup="attributeUpdate" #attributeControls="ngModelGroup" class="row">
+        <div class="mb-3 col-md-6" *ngFor="let prop of editDeviceData; let i = index">
+          <div class="d-flex justify-content-between" *ngIf="prop.ShowDefault">
+            <rmlabel [label]="prop.lableName" [isAsterisk]="prop.Required == 'Y' ? true : false"></rmlabel>
+          </div>
+          <rmtextbox *ngIf="prop.ControlType == 'textbox' && prop.ShowDefault" [id]="prop.lableName" [disabled]="isDisableControls" [class]="'form-control'" [name]="prop.lableName" class="w-100" 
+            [placeholder]="''" [requiredIf]="prop.Required == 'Y' ? true : false" [(ngModel)]="prop.newValue" (change)="changeInput(prop.newValue, i)"></rmtextbox>
+          <rmdropdown [id]="prop.lableName" [class]="'form-control'" [disabled]="isDisableControls" [name]="prop.lableName" class="w-100" #deviceDropdown 
+          *ngIf="prop.ControlType == 'dropdown' && prop.ShowDefault"
+            [requiredIf]="prop.Required == 'Y' ? true : false" [(ngModel)]="prop.newValue" [dpOptions]="prop.Values" [value]="prop.newValue"
+            (onChangeVal)="changeInput(deviceDropdown.value, i, prop.lableName)"></rmdropdown>
+          <rmtoggle class="w-100" [id]="prop.lableName" name="prop.lableName" [disabled]="isDisableControls" *ngIf="prop.ControlType == 'toggle' && prop.ShowDefault" #deviceToggle  (onChangeVal)="onToggleChange(prop.newValue, i)" [toggleval]="prop.newValue == 'Y'? true:false"></rmtoggle>
+          <span class="suggested-conatiner-badge" >
+            <rmbadge class="d-flex justify-content-end" [badgenumber]="prop.oldValue"></rmbadge>
+          </span>
+        </div>
+      </div>
+    </form>
+  </fieldset>
+  <div class="row mt-3 mb-4">
+    <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+      <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'"  [buttonname]="'COMMON.CLEAR' | translate"
+        [iconstyle]="'fas fa-times-circle'" (onclick)="attrClear(); serialNumberFocus();"></rmbutton>
+    </div>
+    <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+      <rmbutton [class]="'btn btn-round-black  float-right'" [id]="'Save'" (onclick)="onSaveDeviceData()" [disabled]="!attributeControls.valid"
+        [buttonname]="'Save'" [iconstyle]="'far fa-save'"></rmbutton>
+    </div>
+
+  </div>
+</div>

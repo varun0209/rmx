@@ -1,0 +1,28 @@
+<div class="row mb-3">
+  <div  class="col-md-12"
+     *ngIf="!masterPageService.hideControls.controlProperties.daysToExpire?.Hidden && selectedDeviceMode==deviceModes.esnRemove">
+    <rmlabel [label]="'DEVICEMANAGEMENT.DAYSTOEXPIRE' | translate" [isAsterisk]="'true'"></rmlabel>
+    <div class="mb-2">
+      <rmdropdown [name]="'daysToExpire'" [id]="'daysToExpire'" [disabled]="isDaysToExpireDisabled"
+        [value]="selectedDay" [(ngModel)]="selectedDay" [dpOptions]="daysToExpire" (onChangeVal)="changeDaysToExpire($event)" 
+        [class]="'form-control'"></rmdropdown>
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <rmlabel [label]="'COMMON.COMMENTS' | translate"></rmlabel>
+    <rmtextarea #reasons [rows]="'rows'" [name]="'Reason'" [id]="'Reason'" [placeholder]="''"
+      (onChangeVal)="onSelectedReason()" [(ngModel)]="comments"> </rmtextarea>
+  </div>
+</div>
+<div class="row mb-3">
+  <div class="col-md-6">
+    <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [buttonname]="'COMMON.CLEAR' | translate"
+      [iconstyle]="'fas fa-times-circle'" (onclick)="esnRemoveReviveClear()"></rmbutton>
+  </div>
+  <div class="col-md-6">
+    <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'routeProcess'" (onclick)="process()"
+      [disabled]="isProcessDisabled" [buttonname]="'DEVICEMANAGEMENT.PROCESS' | translate" [iconstyle]="'fas fa-cogs'">
+    </rmbutton>
+  </div>
+</div>

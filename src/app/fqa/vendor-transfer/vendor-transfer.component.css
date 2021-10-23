@@ -1,0 +1,41 @@
+.containerinfo-fieldset{
+  display: block;
+  margin-inline-start: 2px;
+  margin-inline-end: 2px;
+  padding-block-start: 0.20em;
+  padding-inline-start: 0.50em;
+  padding-inline-end: 0.50em;
+  padding-block-end: 0.45em;
+  min-inline-size: min-content;
+  border: 1px solid #cccccc;
+  }
+
+.containerinfo-legend{
+  display: block;
+  width: unset;
+  max-width: 100%;
+  padding: 0px 4px;
+  margin-bottom: -.5rem;
+  font-size: 0.8rem;
+  white-space: normal;
+  border-radius: 5px;
+  font-weight: bold !important;
+  color: rgb(0, 0, 0) !important;
+}
+
+.negativeMargin{
+  margin-top: -6px;
+}
+
+
+@media (min-width: 576px) and (max-width: 1899px) {
+  .flexBasis{
+    flex-basis: 100% !important;
+  }
+}
+
+@media (min-width: 1900px) {
+  .flexBasis{
+    flex-basis: 50% !important;
+  }
+}

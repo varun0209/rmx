@@ -1,0 +1,179 @@
+/*
+    This is the CSS for the general look and feel of the screen
+*/
+
+.routeSimulator.form-group {
+    margin-bottom: 0rem !important;
+}
+
+.routeSimulator-fieldset {
+    display: block;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+    min-inline-size: min-content;
+    border: 2px solid #cccccc;
+    box-shadow: 2px 2px 8px #cccccc;
+}
+
+.routeSimulator-legend {
+    display: block;
+    width: unset;
+    max-width: 100%;
+    padding: 2px 4px;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    color: rgb(255, 255, 255);
+    white-space: normal;
+    border-radius: 5px;
+    background-color: rgb(8, 104, 172);
+}
+
+/*
+    This is the CSS for the Formula's in Device Criteria
+*/
+
+.tag-box {
+    border-style: solid;
+    border-color: #CCD1D7;
+    border-radius: .25rem;
+    border-width: 1px;
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: #FFF;
+    min-height: 36px;
+}
+
+.tag {
+    border: 1px #0868AC solid;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f3f7f9;
+    margin: 2px;
+    padding: 5px;
+}
+
+.tag-font {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.tag-right {
+    border-left: 1px #0868ac solid;
+    border-left-width: 1px;
+    margin-left: 5px;
+    padding-left: 5px;
+    padding: 7px 1px 7px 7px;
+    line-height: 18px;
+}
+
+.tag-icon {
+    margin-top: 3px;
+    color: red;
+}
+
+.tag-icon-disabled {
+    margin-top: 3px;
+    color: slategray;
+}
+
+.tag-selected {
+    background-color: #0868AC;
+    color: #D6D8D9;
+}
+
+.tag-selected .tag-icon {
+    color: #fff;
+}
+
+.tag-selected .tag-icon-disabled {
+    color: #fff;
+}
+
+/*
+    This is the CSS for the Route Operation Circles
+*/
+
+.wizard-inner {
+    background: #fff; 
+    padding: 15px;
+    height: 160px;
+    border: 1px #ddd solid;
+    border-radius: 3px;
+    overflow-x: hidden;
+    align-content: normal !important;
+}
+
+.wizard-inner ul {
+    display: flex;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+    height: 100px;
+}
+
+.wizard-inner ul li {
+    width: 140px;
+    height: 100px;
+    border: 2px rgb(223 225 226) solid;
+    border-radius: 5%;
+    background: #f3f7f9;
+    z-index: 1;
+    margin: 0px 23px;
+    float: left;
+    position: relative;
+}
+
+.wizard-inner ul li::before {
+    content: url("assets/images/next-arrow.png");
+    padding-left: 5px;
+    margin-left: -55px;
+    margin-top: 41px;
+    display: block;
+}
+
+.wizard-inner ul li:first-child:before {
+    content: ".";
+}
+
+.items-align-center {
+    position: absolute;
+    width: 138px;
+    top: 0;
+    padding-top: 18px;
+    height: 98px;
+    text-align: center;
+}
+
+.items-id-size {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0868AC;
+    margin-bottom: 5px;
+}
+
+.items-text-size {
+    font-size: 14px;
+}
+
+.positionAbsolute {
+    position: absolute;
+    bottom: 10px;
+    left: 65px;
+}
+
+.iconColor {
+    color: rgb(8, 104, 172);
+}
+
+.breakWord {
+    word-break: break-word;
+}

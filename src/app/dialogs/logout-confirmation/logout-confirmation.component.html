@@ -1,0 +1,12 @@
+<xpo-dialog-title>
+    {{'COMMON.CONFIRMDELETE' | translate}}
+</xpo-dialog-title>
+<xpo-dialog-content>
+    <span>
+        <i class="fas fa-question-circle ques-icon"></i> {{'COMMON.LOGOUTALERT' | translate}}
+    </span>
+</xpo-dialog-content>
+<xpo-dialog-actions>
+    <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="logout()">
+    </rmbutton>
+</xpo-dialog-actions>

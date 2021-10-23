@@ -1,0 +1,76 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+        <form>
+            <div class="row" #genericReleaseForm="ngModelGroup" ngModelGroup="genericReleaseForm">
+                <div [ngClass]="checkOperationList() ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12"
+                            *ngIf="!masterPageService.hideControls.controlProperties?.inboundContainer?.Hidden">
+                            <container-summary [inbContainerDisabled]="masterPageService.disabledContainer"
+                                [isDynamicButton]="!masterPageService.hideControls.controlProperties?.newRoute?.Hidden"
+                                [dynamicButtonName]="'New route'" [id]="'ClearContainer'"
+                                (emitSerialNumber)="getAutoPopulatedSerailNum($event)" [isDynamicButtonDisabled]="false"
+                                [dynamicButtonIcon]="'fas fa-cogs'" (emitcontainerID)="getinbContainerID($event)"
+                                (emitContainerSummaryProperties)="containerSummaryProperties($event)"
+                                (emitCurrentOperationId)="setCurrentOperationId($event)"
+                                (dynamicButtonClick)="newRouteModel()" (containerList)="getContainerList($event)"
+                                (clear)="resetClear()" [uiData]="uiData">
+                            </container-summary>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12 mb-3">
+                            <rmlabel [label]="'Override Route'"
+                                [isAsterisk]="masterPageService.hideControls.controlProperties?.nextRoutes?.Required">
+                            </rmlabel>
+                            <rmdropdown [name]="'nextRoutes'" [id]="'nextRoutes'" [class]="'form-control'"
+                                [dpOptions]="masterPageService.nextRoutesList"
+                                [disabled]="masterPageService.isNextRoutesDisabled" [(ngModel)]="overRideRouteId"
+                                [value]="overRideRouteId" (onChangeVal)="onNextRoutersChange($event)"
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.nextRoutes?.Required">
+                            </rmdropdown>
+                        </div>
+                        <div class="d-flex justify-content-between align-self-center ml-3 mt-1">
+                            <rmbutton [class]="'btn btn-round-black '" [disabled]="isProcessDisabled"
+                                [buttonname]="'COMMON.PROCESS' | translate" [iconstyle]="'fas fa-cogs'" [id]="'process'"
+                                (onclick)="checkContainerDeviceHold()">
+                            </rmbutton>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- Hold confirmation popup -->
+<ng-template #holdPopTemplate>
+    <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+        {{'Device Hold' | translate}}
+        <button mat-icon-button (click)="dialogRef.close()">
+            <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+    </h4>
+    <xpo-dialog-content>
+        <div class="modal-body m-body">
+            <span>
+                <i class="fas fa-question-circle ques-icon emp-center"></i>
+                {{deviceHoldMessage}}
+            </span>
+        </div>
+        <div class="d-flex justify-content-center log-btn-position">
+            <div class="pr-2">
+                <rmbutton [buttonname]="'COMMON.YES' | translate" [class]="'btn btn-round-black'"
+                    (onclick)="processManualRouteOverride('Y')"></rmbutton>
+            </div>
+            <div>
+                <rmbutton [buttonname]="'COMMON.NO' | translate" [class]="'btn btn-round-black'"
+                    (onclick)="processManualRouteOverride()"></rmbutton>
+            </div>
+        </div>
+    </xpo-dialog-content>
+
+</ng-template>

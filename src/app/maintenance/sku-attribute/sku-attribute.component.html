@@ -1,0 +1,67 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-4 mb-3 form-group">
+                <rmlabel [label]="'COMMON.SKU' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.attrSku?.Required">
+                </rmlabel>
+                <rmmultiselect name="attrSku"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.attrSku?.Required" class="w-100"
+                    [id]="'attrSku'" [disabled]="isAttrSkuDisabled" [placeHolder]="''" [data]="attrSkuList"
+                    [dropdownSettings]="dropdownSettings" [selectedItems]="attrSkuValue"
+                    (onSelectedItem)="getRuleList($event);" (onDeSelectItem)="attrSKUClear()">
+                </rmmultiselect>
+            </div>
+            <div class="col mb-3 d-flex justify-content-end align-self-center">
+                <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Clear'" [buttonname]="'COMMON.CLEAR'| translate"
+                    [iconstyle]="'far fa-times-circle'" [disabled]="isClearBtnDisabled" (click)="attrSKUClear()">
+                </rmbutton>
+
+                <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'saveOrUpdate'" [disabled]="isSaveOrUpdateDisabled"
+                    (onclick)="addOrUpdateSkuAttr()" [buttonname]="skuAttrBtnName"
+                    [iconstyle]="skuAttrBtnName == commonEnum.yes ?'fas fa-plus':'far fa-save'">
+                </rmbutton>
+            </div>
+        </div>
+
+
+        <ng-container *ngIf="attrJsonObj.length">
+            <form>
+                <fieldset class="attrSKu__fieldset m-0 " ngModelGroup="parameterForm" #parameterForm="ngModelGroup">
+                    <legend class="attrSKu__legend"> {{ "COMMON.ATTRIBUTES" | translate }} </legend>
+                    <div class="row sku-row py-2" *ngFor="let parameter of attrJsonObj; let i=index; trackBy:customTrackBy">
+                        <div class="col-md-4 col-sm-12">
+                            <rmdropdown [dpOptions]="parameterNameList" [hidden]="(attrJsonObj.length - 1) !== i"
+                                name="parameterName{{ i }}" [id]="'batchReason'" [value]="parameter.TagName" 
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.tagName?.Required"
+                                [(ngModel)]="parameter.TagName" (onChangeVal)="onParameterNameChange($event, 'TagName', i)">
+                            </rmdropdown>
+                            <span class="parameter-name" [hidden]="(attrJsonObj.length - 1) === i" > {{ parameter.TagName }}</span>
+                        </div>
+                        <div class="col-md-4 col-sm-12">
+                            <rmtextbox [(ngModel)]="parameter.TagValue" name="parameterValue{{ i }}"
+                                [class]="'form-control'" [textBoxPattern]="textBoxPattern"
+                                [id]="'tagValue'" [isAllowEmptyValue]="true"
+                                (onChangeVal)="onParameterChange(parameter.TagValue, 'TagValue', i)"
+                                [placeholder]="''">
+                            </rmtextbox>
+                        </div>
+                        <div class="col-md-auto" *ngIf="(attrJsonObj.length - 1) !== i">
+                            <rmbutton [class]="'btn btn-round-black mr-1 floatRight'" [id]="'delete'" [buttonname]="''"
+                                (onclick)="deleteParamterInfo(i)" [iconstyle]="'fas fa-minus-circle'">
+                            </rmbutton>
+                        </div>
+                        <div class="col-md-auto" *ngIf="(attrJsonObj.length - 1) === i">
+                            <rmbutton [class]="'btn btn-round-black floatRight'" [id]="'add'"
+                                [disabled]="!parameterForm.valid" [buttonname]="''" (onclick)="addParamterInfo()"
+                                [iconstyle]="'fas fa-plus-circle'">
+                            </rmbutton>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </ng-container>
+
+    </div>
+</div>

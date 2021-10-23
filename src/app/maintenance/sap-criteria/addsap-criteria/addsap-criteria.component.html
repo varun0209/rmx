@@ -1,0 +1,276 @@
+<div class="addNewSapCriteria">
+  <div class="row criteria-controls mb-4 mt-3">
+    <span class="section-control-title">SAP trans criteria</span>
+    <div class="col my-1">
+      <rmlabel [label]="'Operationid' | translate"
+               [isAsterisk]="masterPageService.hideControls.controlProperties?.operationid?.Required">
+      </rmlabel>
+      <rmdropdown [name]="'operationids'" [id]="'operationids'" [dpOptions]="operationidsList"
+        [value]='newSapCriteriaData.OPERATIONID'
+        (onChangeVal)="onOperationChange($event)">
+      </rmdropdown>
+    </div>
+    <div class="col my-1">
+      <rmlabel [label]="'SAPCRITERIA.CHANGELEVEL' | translate"
+      [isAsterisk]="masterPageService.hideControls.controlProperties?.sapchangelevel?.Required"></rmlabel>      
+      <rmdropdown tabindex="0" [name]="'changelevel'" [id]="'changelevel'" [dpOptions]="sapChangeLevelList"
+        [value]="newSapCriteriaData.CHANGE_LEVEL" 
+        (onChangeVal)="onChangeLevelChange($event)">
+      </rmdropdown>
+    </div>
+    <div class="col my-1">
+      <rmlabel [label]="'SAPCRITERIA.SAPCHANGETYPE' | translate"
+      [isAsterisk]="masterPageService.hideControls.controlProperties?.sapchangetype?.Required"></rmlabel>      
+      <rmdropdown tabindex="0" [name]="'sapchangetype'" [id]="'sapchangetype'" [dpOptions]="sapChangeTypeList" 
+        [value]="newSapCriteriaData.SAP_CHANGE_TYPE"
+        (onChangeVal)="onChangeTypeChange($event)">
+      </rmdropdown>
+    </div>
+    <div class="col-1 my-1">
+      <rmlabel [label]="'SAPCRITERIA.RANK' | translate"> 
+    </rmlabel>  
+      <input type="number" [class]="'form-control pl-1 pr-0'"  [name]="'newrank'" #rank [id]="'newrank'"        
+      [(ngModel)]="newSapCriteriaData.RULE_RANK" [numberPattern] = "rankPattern" numbersOnly > 
+    </div>
+    <div class="col-1 my-1">
+      <rmtoggle [label]="'SAPCRITERIA.ACTIVE' | translate" [togglelblClass]="'mt-1'" class="d-block"
+        [toggleval]="newSapCriteriaData.ACTIVE == commonEnum.yes? true:false" (onChangeVal)="onToggleChange($event)">
+      </rmtoggle>
+    </div>
+    <div class="col-4 my-1">
+      <rmlabel [label]="'SAPCRITERIA.RULE' | translate"
+      [isAsterisk]="masterPageService.hideControls.controlProperties?.rule?.Required">
+    </rmlabel> 
+      <span class="key-value d-block add-rule-text" >{{newSapCriteriaData.RULE}}</span>
+      <div class="add-criteria-edit-rule-text" (click)="editRule(editRuleModel)">{{'SAPCRITERIA.ADDRULE' | translate}}</div>
+    </div>
+  </div>
+  <div class="row criteria-key-value slime-scroll">
+    <span class="section-key-title">SAP change type fields</span>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'KEY1'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newkey1'" [id]="'newkey1'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.KEY1" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'KEY2'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newkey2'" [id]="'newkey2'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.KEY2" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'KEY3'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newkey3'" [id]="'newkey3'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.KEY3" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'SKU_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newskufrom'" [id]="'newskufrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SKU_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'SKU_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newskuto'" [id]="'newskuto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SKU_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'ESN_CYCLE_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newesncyclefrom'" [id]="'newesncyclefrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.ESN_CYCLE_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'ESN_CYCLE_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newesncycleto'" [id]="'newesncycleto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.ESN_CYCLE_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+        <rmlabel [label]="'SAP_CHANGE_TYPE'"></rmlabel>
+        <rmtextbox class="d-block" [name]="'newsapchangetype'" [id]="'newsapchangetype'" [class]="'form-control'" 
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_CHANGE_TYPE"   [textBoxPattern]="namePattern"    [placeholder]="''" >
+        </rmtextbox>
+      </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'SAP_ESN_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapesnfrom'" [id]="'newsapesnfrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_ESN_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'SAP_ESN_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapesnto'" [id]="'newsapesnto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_ESN_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'SAP_ARTICLE_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsaparticlefrom'" [id]="'newsaparticlefrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_ARTICLE_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'SAP_ARTICLE_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsaparticleto'" [id]="'newsaparticleto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_ARTICLE_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class="col-3 my-1">
+      <rmlabel [label]="'SAP_DISP_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapdispfrom'" [id]="'newsapdispfrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_DISP_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_DISP_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapdispto'" [id]="'newsapdispto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_DISP_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_STATUS_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapstatusfrom'" [id]="'newsapstatusfrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_STATUS_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_STATUS_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapstatusto'" [id]="'newsapstatusto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_STATUS_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_LOC_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsaplocfrom'" [id]="'newsaplocfrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_LOC_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_LOC_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsaplocto'" [id]="'newsaplocto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_LOC_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_REASON_CODE_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapreasoncodefrom'" [id]="'newsapreasoncodefrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_REASON_CODE_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_REASON_CODE_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapreasoncodeto'" [id]="'newsapreasoncodeto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_REASON_CODE_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_COMMENTS_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapcommentsfrom'" [id]="'newsapcommentsfrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_COMMENTS_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_COMMENTS_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapcommentsto'" [id]="'newsapcommentsto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_COMMENTS_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SECTIONKEY_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsectionkeyfrom'" [id]="'newsectionkeyfrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SECTIONKEY_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SECTIONKEY_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsectionkeyto'" [id]="'newsectionkeyto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SECTIONKEY_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'VALUE_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newvaluefrom'" [id]="'newvaluefrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.VALUE_FROM" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'VALUE_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newvalueto'" [id]="'newvalueto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.VALUE_TO" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'WKSTN'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newwkstn'" [id]="'newwkstn'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.WKSTN" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'REFERENCEKEY'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newreferencykey'" [id]="'newreferencykey'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.REFERENCEKEY" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'REFCHAR1'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newrefchar1'" [id]="'newrefchar1'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.REFCHAR1" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'REFCHAR2'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newrefchar2'" [id]="'newrefchar2'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.REFCHAR2" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'REFCHAR3'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newrefchar3'" [id]="'newrefchar3'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.REFCHAR3" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'TRANSMIT_STATUS'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newtransmitstatus'" [id]="'newtransmitstatus'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.TRANSMIT_STATUS" [textBoxPattern]="namePattern" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_SITE_FROM'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapsitefrom'" [id]="'newsapsitefrom'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_SITE_FROM" [placeholder]="''">
+      </rmtextbox>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_QTY'"></rmlabel>
+      <!-- <rmtextbox class="d-block" [name]="'newsapqty'" [id]="'newsapqty'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_QTY" [textBoxPattern]="sapqty" [placeholder]="''">
+      </rmtextbox> -->
+      <input type="number" id="newsapqty"
+            name="newsapqty"
+            [(ngModel)]="newSapCriteriaFeildsData.SAP_QTY"
+            [class]="'form-control pl-1 pr-0'" 
+            [numberPattern]="quantityPattern" numbersOnly>
+    </div>
+    <div class=" col-3 my-1">
+      <rmlabel [label]="'SAP_SITE_TO'"></rmlabel>
+      <rmtextbox class="d-block" [name]="'newsapsiteto'" [id]="'newsapsiteto'" [class]="'form-control'"
+        [(ngModel)]="newSapCriteriaFeildsData.SAP_SITE_TO" [placeholder]="''">
+      </rmtextbox>
+    </div>
+  </div>
+  <div class="row">
+    <div class=" col-12 text-right my-1 mt-3">
+      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'clear'" [buttonname]="'COMMON.CLEAR'| translate"
+        [iconstyle]="'far fa-times-circle'" (click)="clear()">
+      </rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'" [buttonname]="'COMMON.SAVE'| translate"
+        [iconstyle]="'fas fa-save'" [disabled]="isSaveBtnDisabled" (click)="addnewsave()">
+      </rmbutton>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+﻿.padding-bottom {
+  padding-bottom: 7vh;
+}
+
+
+ul.list-group>li {
+  border-bottom: 1px solid rgb(221, 221, 221);
+  padding: 10px 5px;
+  margin: 6px 5px 0px 6px;
+  box-shadow: 1px 1px 5px -2px #888888;
+  border-radius: 9px;
+}
+
+.fa-check-color {
+  color: rgb(8, 104, 172);
+  font-weight: bold;
+}
+
+.esn-msn-list {
+  width: 94%;
+  height: auto;
+  max-height: 150px;
+  overflow-y: scroll;
+  margin: 13px auto 6px;
+}
+
+.list-item {
+  padding: .50rem 1.25rem !important;
+}
+
+.sku-badge-left {
+  position: absolute;
+  left: 20px;
+  top: -10px;
+  margin-top: 4px;
+}
+
+.position-relative {
+  position: relative;
+}
+
+.mt-26{
+  margin-top:26px;
+}
+
+.dot-on-box {
+  width: 70px;
+  height: 70px;
+  margin: 0 auto;
+  border-radius: 50px;
+}
+
+.text-bg-color{
+  background: #cccccc;
+  padding:5px;
+}

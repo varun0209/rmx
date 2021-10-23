@@ -1,0 +1,35 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="container-fluid padding-bottom">
+  <div class="row operations">
+    <div class="col-md-12">
+      <div class="row mx-0 justify-content-between">
+        <div class="col-3 my-2 px-0">
+          <rmlabel [label]="'OPERATION.OPERATIONID' | translate"></rmlabel>
+          <rmtextbox [(ngModel)]="searchOperationID" [name]="'operatioid'" [id]="'operatioid'" [class]="'form-control'"
+            (enter)="getOperation()" [id]="'operationid'" [isAllowEmptyValue]="true" (isInputValueEmpty)="changeInput()"
+            [placeholder]="''" [divClass]="'input-group'" [hideSearchIcon]="true" (onChangeVal)="changeInput()"
+            [searchIconBtnDisabled]="this.isSearchDisabled" (searchEventEmit)="getOperation();">
+          </rmtextbox>
+        </div>
+        <div class="col-3 text-right my-2 px-0 align-self-center">
+          <rmbutton [class]="'btn btn-round-black mr-1'" [disabled]=""
+            [buttonname]="'OPERATION.OPERATIONADD'| translate" [id]="'save'" (click)="addOperation()"
+            [iconstyle]="'far fa-plus'"></rmbutton>
+        </div>
+      </div>
+      <mat-accordion aria-expanded="true">
+        <mat-expansion-panel class="group-name" *ngFor="let module of distinctModules"
+          (opened)="getOperationByModule(module)">
+          <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px" class="group-name">
+            <mat-panel-title class="justify-content-between w-100">{{module.Name}}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="col-md-12 mb-3" *ngIf="module.GridList">
+            <rmgrid [(gridproperties)]="module.GridList" [isCancelIconShow]="false"
+              (emitEditDetails)="getOperationbyCategory($event)">
+            </rmgrid>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </div>
+</div>

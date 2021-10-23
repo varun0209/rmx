@@ -1,0 +1,103 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="row m-0">
+        <div class="col-lg-12 col-md-12 col-sm-12 p-0">
+            <div class="container-fluid">
+                <div class="row p-3">
+                    <div class="col-md-6">
+
+                        <div class="row mb-2">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <rmlabel [label]="controlConfig.inboundContainer | translate"
+                                        [isAsterisk]="masterPageService.hideControls.controlProperties?.inboundBatchContainer?.Required">
+                                    </rmlabel>
+                                    <rmtextbox [(ngModel)]="batchId" #inboundBatchCon [id]="'inboundBatchContainer'"
+                                        [placeholder]="''"
+                                        [requiredIf]="masterPageService.hideControls.controlProperties?.inboundBatchContainer?.Required"
+                                        (enter)="ValidateTransferSerialnumbers(inboundBatchCon);"
+                                        (onChangeVal)="onChangeBatchId();" [disabled]="isBatchIdDisabled"></rmtextbox>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 d-flex align-items-center mt-2">
+                                <rmbutton [class]="'btn btn-round-black'" [id]="'reset'" [disabled]="isResetDisabled"
+                                    [buttonname]="'COMMON.RESET' | translate" (onclick)="resetBatchId();"
+                                    [iconstyle]="'fas fa-redo'">
+                                </rmbutton>
+                            </div>
+
+                        </div>
+
+                        <div class="row  mb-2">
+                            <div class="col-md-6 col-sm-12 mt-2">
+                                <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.batchSerialNumber?.Required">
+                                </rmlabel>
+                                <div class="mb-2">
+                                    <rmtextbox [(ngModel)]="batchSerialNumber" [disabled]="isBatchSerialNoDisabled"
+                                        #batchSerialNo [id]="'batchSerialNumber'" [placeholder]="''"
+                                        (enter)="validateTransferSerialnumber(batchSerialNo);" [uiData]="uiData" [isSerialNumber]="true"
+                                        [textBoxPattern]="controlConfig?.barCodePattern"
+                                        [requiredIf]="masterPageService.hideControls.controlProperties?.batchSerialNumber?.Required">
+                                    </rmtextbox>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12 mt-4 d-flex align-items-center">
+                                <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'processAll'"
+                                    *ngIf="!(masterPageService.hideControls.controlProperties?.containerLevelCheck?.Hidden)"
+                                    [buttonname]="'Process All Serials' | translate" [disabled]="isProcessAllDisabled"
+                                    [iconstyle]="'fas fa-times-circle'" (onclick)="getTransferedDetail();"></rmbutton>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 col-sm-12 mt-2">
+                                <rmlabel [label]="'DEVICEMANAGEMENT.REASON' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.batchReason?.Required">
+                                </rmlabel>
+                                <rmdropdown [dpOptions]="reasonsList" [disabled]="isBatchReasonDisabled"
+                                    [name]="'batchReason'" [id]="'batchReason'" [value]="selectedBatchReason.Id"
+                                    [(ngModel)]="selectedBatchReason.Text"
+                                    (onChangeVal)="onSelectedBatchReason($event)"></rmdropdown>
+                            </div>
+                            <div class="col-md-6 col-sm-12 mt-2"
+                                *ngIf="!masterPageService.hideControls.controlProperties.batchContainerSuggestion?.Hidden">
+                                <container-suggestion *ngIf="controlConfig?.containerInputId"
+                                    [csLabel]="'Container ID' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.batchContainerSuggestion?.Required"
+                                    [class]="'form-control'" [id]="'containerBatchInputId'"
+                                    [isContainerDisabled]="isContainerDisabled"
+                                    (focusContainer)="containerSuggestion($event)"
+                                    (validateContainerValue)="validateContainer($event)"
+                                    (emitCheckContainer)="checkContainer($event)"
+                                    (emitvalidateContainer)="validateContainerResponse($event)"
+                                    (getSuggestContainerResponse)="getSuggestContainerResponse($event)"
+                                    (emitValidateContainerFailResponse)="emitValidateContainerFailResponse($event)"
+                                    [uiData]="uiData">
+                                </container-suggestion>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6 mt-3" *ngIf="transferDeviceList">
+                        <rmgrid [(gridproperties)]="transferDeviceList" [isCancelIconShow]="false">
+                        </rmgrid>
+                    </div>
+
+                    <div class="col-md-12 mt-3">
+                        <app-rollback *ngIf="(serailNumberSnapList.length > 0 && isFullCaseEnbale != null)"
+                            (clearRollbackData)="clearBatchSerialNo(true);"
+                            (checkedIndex)="getSelectedBatchIndex($event)" [gridProperties]="serailNumberSnapList"
+                            [buttonName]="'COMMON.PROCESS' | translate" [isRollbackDisabled]="isBatchRollbackDisabled"
+                            (emitSaveOperation)="batchRollback()">
+                        </app-rollback>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

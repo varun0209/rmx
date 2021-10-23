@@ -1,0 +1,143 @@
+<div class="dynamic-survey">
+  <div class="form-row dynamic-survey-header">
+    <div class="col">
+      <span class="title">{{'COMMON.SURVEY' |translate}}</span>
+    </div>
+    <div class="col text-right">
+      <rmbutton *ngIf="surveyResponse.ReSurveyVisible === commonEnum.yes" [class]="'btn btn-round-black float-right'"
+        [buttonname]="'COMMON.RESURVEY'| translate" [id]="'resurvey'" (onclick)="reSurvey()"
+        [iconstyle]="'fas fa-redo'"></rmbutton>
+      <!-- <button class="btn btn-clear mr-2"><i class="fa fa-times"></i> Clear</button> -->
+      <rmbutton *ngIf="!(surveyResponse.ReSurveyVisible === commonEnum.yes)" [class]="'btn btn-round-black float-right'"
+        [buttonname]="'COMMON.DONE'| translate" [id]="'done'" (onclick)="doneSurvey()"
+        [disabled]="!(surveyResponse.DoneEnable === commonEnum.yes)" [iconstyle]="'fa fa-check'"></rmbutton>
+    </div>
+  </div>
+  <mat-horizontal-stepper linear>
+    <mat-step *ngFor="let surveyTransaction of surveyResponse.SurveyTrans; surveyTransIndex as i; trackBy: trackItem">
+      <ng-template matStepLabel>{{surveyTransaction.Title}}</ng-template>
+      <ng-container *ngFor="let surveyQuestion of surveyTransaction.SurveyQuestions; surveyQtnIndex as j ">
+        <div class="dynamic-survey-body">
+          <div class="dynamic-survey-qustion-section d-flex">
+            <i class="fas fa-question-circle suvey-qustion-icon"></i>
+            <p>{{surveyQuestion.Text}}<p></p>
+          </div>
+          <div class="dynamic-survey-controls-section">
+            <div class="form-row d-flex">
+              <ng-container
+                *ngFor="let questionControl of surveyQuestion.QuestionControls; questionCtrlIndex as k; trackBy: trackItem"
+                [ngSwitch]="questionControl.Property.controlType">
+                <ng-container *ngSwitchCase="'label'">
+                  <div class="col" *ngFor="let AttributeValue of questionControl.AttributeValues">
+                    <p class="survey-content pl-3 wordwrap mt-2"
+                      *ngFor="let AttributeValue of questionControl.AttributeValues; let i=index">
+                      {{AttributeValue.Text}}</p>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'dropdown'">
+                  <div class="col pt-2" *ngIf="(questionControl.AttributeValues.length > 0 && questionControl.Property.controlVisible == commonEnum.yes)">
+                    <div [ngClass]="dynamicFormClass" class="mb-display-flex pl-3  align-baseline">
+                      <rmlabel [lblStyle]="'mr-2 lable-padding'" [label]="questionControl.AttributeName"></rmlabel>
+                      <rmdropdown [name]="questionControl.AttributeName" #attrname
+                        [id]="getElementId(questionControl.Property.controlId,surveyQuestion.TransId)"
+                        [class]="'mx-0 min-width-dropdown'" [disabled]="questionControl.Disable" 
+                        [(ngModel)]="questionControl.SelectedValue" [value]="questionControl.SelectedAttributeValue.Id" [description]="'Description'"
+                        (onChangeVal)="changeDropDown(questionControl,$event, attrname)"
+                        [dpOptions]="questionControl.AttributeValues" tabindex="2"></rmdropdown>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'multiSelectDropDown'">
+                  <div class="col pt-2"  *ngIf="(questionControl.AttributeValues.length > 0 && questionControl.Property.controlVisible == commonEnum.yes)">
+                    <div [ngClass]="dynamicFormClass" class="align-baseline">
+                      <rmlabel [lblStyle]="'mr-2 lable-padding'"
+                        [for]="getElementId(questionControl.Property.controlId,surveyQuestion.TransId)"
+                        [label]="questionControl.AttributeName"></rmlabel>
+                      <rmmultiselect [name]="questionControl.AttributeName"
+                        [id]="getElementId(questionControl.Property.controlId,surveyQuestion.TransId)" [disabled]="questionControl.Disable"
+                        [placeHolder]="''" [data]="questionControl.AttributeValues" class="w-50"
+                        [dropdownSettings]="questionControl.Property.dropdownSettings"
+                        [selectedItems]="questionControl.SelectedAttributeValues"
+                        (onSelectedItem)="getSelectedList(questionControl,$event, surveyQuestion.TransId);"
+                        (onDeSelectItem)="onDeSelectItem(questionControl, $event)">
+                      </rmmultiselect>
+                      <button class="btn btn-round-black btn-sm add-btn"
+                        (click)="multiSelectInput(questionControl, surveyQuestion.TransId)"
+                        [disabled]="(!(questionControl.SelectedAttributeValues.length > 0)) || questionControl.Disable">
+                        <i class="fa fa-check" aria-hidden="true"></i></button>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'textbox'">
+                  <div class="col pt-2">
+                    <div [ngClass]="dynamicFormClass" class="align-baseline"
+                      *ngIf="questionControl.Property.controlVisible == 'Y'">
+                      <rmlabel [lblStyle]="'mr-2 lable-padding'" [label]="questionControl.AttributeName"></rmlabel>
+                      <rmtextbox [name]="questionControl.Property.ControlId"
+                        [id]="getElementId(questionControl.Property.controlId, surveyQuestion.TransId)" #textbox
+                        (enter)="enterInput(questionControl, $event, textbox)"
+                        [ngModel]="questionControl.SelectedValue" [placeholder]="''"
+                        [disabled]="questionControl.Disable"></rmtextbox>
+                    </div>
+                    <!-- (onChangeVal)="changeInput(questionControl, textbox)" -->
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'textarea'">
+                  <div class="col">
+                    <div [ngClass]="dynamicFormClass" class=" align-baseline">
+                      <rmlabel [lblStyle]="'mr-2'" [label]="questionControl.AttributeName"></rmlabel>
+                      <rmtextarea [id]="getElementId(questionControl.Property.controlId, surveyQuestion.TransId)"
+                        #textarea [placeholder]="questionControl.Property.placeholder"
+                        (enter)="enterInput(questionControl, $event, textarea)"
+                         [ngModel]="questionControl.SelectedValue"
+                        [disabled]="questionControl.Disable"></rmtextarea>
+                    </div>
+                    <!-- (onChangeVal)="changeInput(questionControl, $event)" -->
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'radiobutton'">
+                  <div class="">
+                    <div [ngClass]="dynamicFormClass" class="align-baseline">
+                      <ng-container *ngFor="let AttributeValue of questionControl.AttributeValues; let i=index">
+                        <fieldset [disabled]=questionControl.Disable>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" [name]="getElementId(questionControl.AttributeName,surveyQuestion.TransId)"
+                              [id]="getElementId(AttributeValue.Text, surveyQuestion.TransId)"
+                              (change)="changeRadioBtn(questionControl, AttributeValue)"
+                              [checked]="AttributeValue.Text == questionControl.SelectedValue"
+                              value="{{AttributeValue.Id}}">
+                            <label class="form-check-label"
+                              [for]="getElementId(AttributeValue.Text, surveyQuestion.TransId)">{{AttributeValue.Text}}</label>
+                          </div>
+                        </fieldset>
+                      </ng-container>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-container *ngSwitchCase="'checkbox'">
+                  <div class="col">
+                    <div [ngClass]="dynamicFormClass">
+                      <rmtoggle [label]="questionControl.AttributeName" [disabled]="questionControl.Disable"
+                        [(ngModel)]="questionControl.SelectedValue" [togglelblClassLabel]="'pl-3'"
+                        [id]="getElementId(questionControl.Property.controlId,surveyQuestion.TransId)"
+                        [toggleval]="questionControl.SelectedValue == 'True' ? true : false"
+                        (onChangeVal)="changeCheckBox(questionControl, $event)"></rmtoggle>
+                    </div>
+                  </div>
+
+                </ng-container>
+                <!-- <ng-container *ngSwitchCase="'label'">
+                        <div class="col" *ngFor="let AttributeValue of cardelement.AttributeValues">
+                            <p class="wordwrap mt-2" *ngFor="let AttributeValue of cardelement.AttributeValues">
+                                {{AttributeValue.Text}}</p>
+                        </div>
+                    </ng-container>-->
+
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </mat-step>
+  </mat-horizontal-stepper>
+</div>

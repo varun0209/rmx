@@ -1,0 +1,17 @@
+.modal-dialog{
+    padding-top: 6%;
+    padding-bottom: 0%;
+}
+.modal-footer.bgfooter{
+    background-color: black;
+    color: white;
+}
+.modal-header.bgheader{
+    background-color: black;
+    color: white;
+}
+.move-badge{
+    position: absolute;
+    top:3px;
+    right: 0px;
+}

@@ -1,0 +1,153 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+
+    <fieldset class="rm-card">
+      <tabset #staticTabs>
+        <tab heading="{{'COMMON.FILE' | translate }} {{'COMMON.IMPORT' | translate }}" id="fileImport" active="true">
+
+          <div class="row mt-3 justify-content-md-center">
+            <div class="col-lg-3 col-md-6">
+              <div class="uploadfilecontainer position-relative background--color mb-4" appDragDrop
+                (onFileDropped)="onFileChange($event)">
+                <input hidden type="file"
+                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  #fileInput (click)="fileInput.value = null" value="" (change)="onFileChange($event.target.files)">
+                <div class="file--contant">
+                  <strong class="mb-1"> {{'FILEUPLOAD.DRAGANDDROP' | translate }} </strong>
+                  <span class="mb-2"> {{'COMMON.OR' | translate }} {{'COMMON.CLICK' | translate }} </span>
+                  <rmbutton [class]="'btn btn-round-black'" [id]="'search'" [iconstyle]="'fas fa-upload'"
+                    [buttonname]="'FILEUPLOAD.IMPORTFILE' | translate" (click)="fileInput.click()"></rmbutton>
+                </div>
+              </div>
+
+
+              <div class="mb-3">
+                <rmlabel [label]="'FILEUPLOAD.UPLOADTYPE' | translate"></rmlabel>
+                <rmdropdown [name]="'uploadType'" [id]="'uploadType'" [class]="'form-control'"
+                  (onChangeVal)="uploadTypeSelect($event)" [(ngModel)]="selectedUploadType"
+                  [dpOptions]="importTypesList" [value]="selectedUploadType" [disabled]="isUploadDisabled">
+                </rmdropdown>
+              </div>
+
+              <div class="d-flex justify-content-md-between">
+                <rmbutton [class]="'btn btn-round-black mr-2'" [id]="'Clear'" [disabled]="isClearDisabled"
+                  (onclick)="clearUploadedFile()" [buttonname]="'COMMON.CLEAR' | translate"
+                  [iconstyle]="'fas fa-times-circle'">
+                </rmbutton>
+                <rmbutton [class]="'btn btn-round-black'" [id]="'process'" [disabled]="isProcessDisabled"
+                  (onclick)="processFile()" [buttonname]="'COMMON.PROCESS' | translate"  [iconstyle]="'fas fa-cogs'">
+                </rmbutton>
+              </div>
+
+            </div>
+            <div class="col-lg-9 col-md-12 m-lg-0 m-md-2">
+              <div class="border">
+                <div class="d-flex justify-content-end border-bottom p-2">
+                  <div class="w-25 d-flex align-items-center">
+                    <rmlabel [label]="'FILEUPLOAD.SHEETS' | translate" class="mr-2">:</rmlabel>
+                    <rmdropdown [name]="'sheets'" [id]="'sheets'" [class]="'form-control'"
+                      (onChangeVal)="changeData($event)" [(ngModel)]="selectedSheet" [dpOptions]="columns"
+                      [value]="selectedSheet" class="w-100"></rmdropdown>
+                  </div>
+                </div>
+                <div class="mb-2" *ngIf="gridData;  else showNoDataFound">
+                  <rmgrid [(gridproperties)]="gridData"  [isCancelIconShow]="false"></rmgrid>
+                </div>
+                <ng-template #showNoDataFound>
+                  <div class="img--height d-flex justify-content-center align-items-center">
+                    <div>
+                      <img width=96 height=115 src="assets/images/no-data-found.png">
+                      <h3>NO DATA FOUND</h3>
+                    </div>
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+
+        </tab>
+        <tab heading="{{'COMMON.FILE' | translate }} {{'COMMON.EXPORTDATAPREVIEW' | translate }}" id="fileExport">
+
+
+          <div class="row mt-3">
+
+            <div class="col-lg-3  col-md-12 ">
+
+              <div class="mb-2 col-lg-12 col-md-6 p-0">
+                <rmlabel [label]="'FILEUPLOAD.UPLOADTYPE' | translate"></rmlabel>
+                <rmdropdown [name]="'uploadType'" [id]="'uploadType'" [class]="'form-control'"
+                  (onChangeVal)="exportTypeSelect($event)" [(ngModel)]="selectedExportType"
+                  [dpOptions]="exportTypesList" [value]="selectedExportType" [disabled]="isExportTypeDisabled">
+                </rmdropdown>
+              </div>
+
+              <div>
+                <form>
+                  <div ngModelGroup="exportFileForm" #exportFileControls="ngModelGroup"
+                    class="row scrollbar bg-light rounded">
+                    <div class="mb-3 col-lg-12 col-md-3 pt-lg-0 pt-md-2"
+                      *ngFor="let prop of exportInputParametersList; let i = index;">
+                      <rmlabel [label]="prop.DisplayName" [isAsterisk]="prop.Required == 'Y' ? true : false"></rmlabel>
+                      <rmtextbox *ngIf="prop.ControlType == 'textbox'" [id]="prop.PropertyName" [class]="'form-control'"
+                        [name]="prop.PropertyName" class="w-100" [placeholder]="''"
+                        [requiredIf]="prop.Required == 'Y' ? true : false" [(ngModel)]="prop.value"
+                        (change)="changeInput(prop.value, i); enableReset();">
+                      </rmtextbox>
+                      <rmdropdown [id]="prop.PropertyName" [name]="prop.PropertyName" class="w-100" #deviceDropdown
+                        *ngIf="prop.ControlType == 'dropdown'" [requiredIf]="prop.Required == 'Y' ? true : false"
+                        [class]="'form-control'" [(ngModel)]="prop.value" [dpOptions]="prop.Options"
+                        [value]="prop.value" (onChangeVal)="changeInput(deviceDropdown.value, i); enableReset();">
+                      </rmdropdown>
+                      <div class="input-group input-append date"  *ngIf="prop.ControlType == 'date'">
+                        <input autocomplete="off" [requiredIf]="prop.Required == 'Y' ? true : false"
+                          name="{{ prop.PropertyName }}" id="{{ prop.PropertyName }}" [minDate]="prop.minDate" (keydown)="$event.preventDefault()"
+                          type="text" class="form-control" bsDatepicker #stDp="bsDatepicker" [bsConfig]="bsConfig"
+                          ngModel [value]="prop.value" (bsValueChange)="changeDatePicker($event, i)"  />
+                        <div class="input-group-append" >
+                          <fieldset class="btn btn-sm input-group-text" (click)="stDp.show()">
+                            <a>
+                              <i class="fas fa-calendar-alt"></i>
+                            </a>
+                          </fieldset>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+
+
+                <div class="d-flex justify-content-lg-between my-2">
+                  <rmbutton [class]="'btn btn-round-black mr-2'" [id]="'Clear'" [disabled]="isExportClearDisabled"
+                    (onclick)="clearExportFile()" [buttonname]="'COMMON.CLEAR' | translate"
+                    [iconstyle]="'fas fa-times-circle'">
+                  </rmbutton>
+                  <rmbutton [class]="'btn btn-round-black mr-2'" [id]="'process'"  [iconstyle]="'fas fa-cogs'"
+                    [disabled]="(!exportFileControls.valid) || isExportProcessDisabled" (onclick)="processExportFile()"
+                    [buttonname]="'COMMON.PROCESS' | translate">
+                  </rmbutton>
+                </div>
+              </div>
+
+
+            </div>
+            <div class="col-lg-9 col-md-12 ">
+              <div class="mb-2" *ngIf="gridExportData;  else showExportNoDataFound">
+                <rmgrid [(gridproperties)]="gridExportData" [isCancelIconShow]="false"></rmgrid>
+              </div>
+              <ng-template #showExportNoDataFound>
+                <div class="img--height d-flex justify-content-center align-items-center border">
+                  <div>
+                    <img width=96 height=115 src="assets/images/no-data-found.png">
+                    <h3> {{'COMMON.NOTDATAFOUND' | translate }} </h3>
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+
+        </tab>
+      </tabset>
+    </fieldset>
+
+  </div>
+</div>

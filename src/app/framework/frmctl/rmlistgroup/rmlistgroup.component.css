@@ -1,0 +1,45 @@
+
+.mb-list-item {
+    display: table;
+}
+.mb-list-item .list-group-line1 div{
+    display: inline-block;
+}
+.mb-list-item .list-group-line2 div{
+    display: inline-block;
+}
+.mb-list-item div span{
+    font-size: 12px;
+}
+.list-group-scroll{
+    overflow-y:scroll;
+    max-height:251px;
+}
+
+/*  list details styles  */
+.list-details-wrap{
+    padding-top: 100px;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: #fff;
+    z-index: 1001;
+    right: 0;
+    top: 0;
+    transform: translateX(0%);
+    transition: all 1s;
+}
+.mb-list-item .list-group-custom-item{
+    width: 32%;
+}
+.mb-list-item .list-group-custom-item:nth-child(2n+4) {
+    width: 70%;
+}
+
+.list-details-item {
+    width: 40%;
+    float: left;
+}
+.list-details-item:nth-child(odd) {
+    width: 75%;
+}

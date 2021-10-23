@@ -1,0 +1,25 @@
+.card {
+    position: absolute;
+    left: 33%;
+    right: 33%;
+    top: 20%;   
+}
+.card-header {  
+    background-color: rgba(204,0,0);
+    color: white;   
+}
+
+.img-position{
+float: left;
+width: 87px;
+height: 87px;
+margin-right: 10px;
+}
+
+@media screen and (max-width: 651px) {
+    .card {        
+        left: 36px;
+        right:36px;
+        top: 20%;   
+    }
+}

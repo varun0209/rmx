@@ -1,0 +1,78 @@
+<div class="" [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'">
+    <fieldset>
+        <div class="row">
+            <div class="col-3 mb-3 form-group">
+                <rmlabel [label]="'APILOGVIEWER.SERIALNUMBER' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.SerialNumber?.Required"></rmlabel>
+                <rmtextarea [allowMaxlengthTextarea]="false"
+                    (keydown.enter)="search();false"
+                    [maxlength]="appConfig.programCriteria.description_maxLength" [rows]="'1'" [placeholder]="''"
+                    [(ngModel)]="this.serialNumber" [id]="'serialNumber'" name="'serialNumber'"
+                    (onChangeVal)="changedSerialNumber()"></rmtextarea>
+            </div>
+
+            <div class="col-3 mb-3 form-group">
+                <rmlabel [label]="'APILOGVIEWER.PARSER' | translate"></rmlabel>
+                <rmdropdown [value]="this.selectedParser" [dpOptions]="parserList"
+                    (onChangeVal)='changedParser($event)'>
+                </rmdropdown>
+            </div>
+
+            <div class="col-4 mt-2 form-group">
+                <rmbutton [class]="'btn btn-round-black mt-3 mr-2'" [disabled]="!this.serialNumber" (click)='search()'
+                    [buttonname]="'COMMON.SEARCH' | translate" [iconstyle]="'fas fa-search'"></rmbutton>
+                <rmbutton [class]="'btn btn-round-black mt-3'" (click)='loadData()'
+                    [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'"></rmbutton>
+            </div>
+
+
+        </div>
+
+        <div class="row">
+            <rmgrid [(gridproperties)]="rmGrid_ApiLogsData" 
+                    class="mr-4 ml-4"
+                    [isCancelIconShow]="false"
+                    *ngIf="this.apiLogList.length > 0" 
+                    (emitEditDetails)="showDialog($event, addEditDialog)">
+            </rmgrid>
+
+            <div class="text-center col-12 mb-3 form-group" *ngIf="this.apiLogList.length === 0">
+                <img class="nodata-img" src="assets/images/no-data-found.png" alt=""><br>
+                {{'COMMON.NODATAFOUND' | translate}}
+            </div>
+        </div>
+    </fieldset>
+
+    <ng-template #addEditDialog>
+        <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+            {{'APILOGVIEWER.TITLE' | translate }}
+            <button mat-icon-button (click)="dialogRef.close()">
+              <xpo-icon iconName="clear"></xpo-icon>
+            </button>
+          </h4>
+          <xpo-dialog-content>
+        <div class="modal-body">
+            <div class="form-group position-relative">
+                <div class='container-fluid'>
+                    <mat-tab-group>
+
+                        <mat-tab [label]="'APILOGVIEWER.TESTRESULTTAB' | translate">
+                            <pre>
+{{selectedRow.TestResult}}
+                            </pre>
+                        </mat-tab>
+
+                        <mat-tab [label]="'APILOGVIEWER.RESULTTAB' | translate">
+                            <pre>
+{{selectedRow.Result}}
+                            </pre>
+                        </mat-tab>
+                    </mat-tab-group>
+                    
+                </div>
+            </div>
+        </div>
+    </xpo-dialog-content>
+    </ng-template>
+
+</div>

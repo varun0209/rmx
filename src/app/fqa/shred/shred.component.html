@@ -1,0 +1,133 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+        <div class="row">
+            <div [ngClass]="batchQueData.length > 0 ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12' ">
+                <container-summary [inbContainerDisabled]="masterPageService.disabledContainer" [id]="'ClearContainer'"
+                    (emitSpinner)="appService.hideSpinner()" (emitSerialNumber)="getAutoPopulatedSerailNum($event)"
+                    (emitContainerSummaryProperties)="containerSummaryProperties($event)"
+                    (containerList)="getContainerList($event)" (emitCurrentOperationId)="setCurrentOperationId($event)"
+                    (clear)="Reset()" [uiData]="uiData">
+                </container-summary>
+            </div>
+        </div>
+        <div class="row" *ngIf="inboundProperties">
+            <div class="d-flex align-content-end flex-wrap" *ngFor="let header of headingsobj">
+                <div class="p-3" [ngClass]="inboundProperties[header] == '' ? 'pt-4' : 'p-3'">
+                    {{ header }} :
+                    <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row pt-2">
+            <ng-container>
+                <div [ngClass]="batchQueData.length > 0 ? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'">
+                    <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required">
+                    </rmlabel>
+                    <rmtextbox [(ngModel)]="serialNumber" #serialNumberInput
+                        [disabled]="transactionService.disabledSerialNumber" [id]="'serialNumber'"
+                        (enter)="shredSerialNumber($event, serialNumberInput)" [placeholder]="''"
+                        (onChangeVal)="onChangeSerialNumber(serialNumberInput)" [uiData]="uiData"
+                        [isSerialNumber]="true" [textBoxPattern]="controlConfig?.barCodePattern"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumber?.Required">
+                    </rmtextbox>
+                </div>
+            </ng-container>
+        </div>
+        <div class="form-group row">
+            <div [ngClass]=" batchQueData.length > 0 ? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'">
+                <div class="row" *ngIf="!masterPageService.hideControls.controlProperties.batchId?.Hidden">
+                    <div class="col-12 mb-2">
+                        <rmlabel [label]="'COMMON.BATCHID' | translate" class="pr-0 mt-2"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.batchId?.Required">
+                        </rmlabel>
+                        <rmtextbox [(ngModel)]="batchId" [disabled]="true" [id]="'batch'" [class]="'form-control'"
+                            [type]="'text'" [placeholder]="''"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.batchId?.Required">
+                        </rmtextbox>
+                    </div>
+                </div>
+            </div>
+            <div [ngClass]="batchQueData.length > 0 ? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'">
+                <rmlabel [label]="'Gaylord Id'"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.gayLordId?.Required"></rmlabel>
+                <rmtextbox [placeholder]="''" [divClass]="'input-group'" [prependiIconStyle]="'fas fa-plus'"
+                    [hidePrependIcon]="true" [prependiconBtnDisabled]="gayLordID || isAddGayLordBtnDisabled"
+                    (prependIconEevntEmit)="createGayLordId()" #gayLordIDRef
+                    (closeEventEmit)="closeGayLordIDConfirm(closeGayLordIDConfirmation)" [(ngModel)]="gayLordID"
+                    [showCloseIcon]="true" [id]="'gayLordID'" [disabled]="true" [closeIconBtnDisabled]="!gayLordID"
+                    [name]="'gayLordID'"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.gayLordId?.Required">
+                </rmtextbox>
+            </div>
+        </div>
+        <ng-container>
+            <div class="form-group row"></div>
+            <div class="row">
+                <div class="col" *ngIf="shredDeviceGridList">
+                    <rmgrid [(gridproperties)]="shredDeviceGridList"></rmgrid>
+                </div>
+            </div>
+
+            <div class="row">
+                <div [ngClass]=" batchQueData.length > 0  ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'" class="mb-4">
+                    <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'clear'"
+                        [disabled]="isShredClearDisabled" [buttonname]="'COMMON.CLEAR' | translate"
+                        (onclick)="serialNumberClear()" [iconstyle]="'fas fa-times-circle'"></rmbutton>
+                    <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'Process'"
+                        [disabled]="!(shredDeviceGridList && gayLordID)" [buttonname]="'COMMON.PROCESS' | translate"
+                        (onclick)="processTransfer(); isProcessDisabled = true" [iconstyle]="'fas fa-cogs'"></rmbutton>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<ng-template #closeGayLordIDConfirmation>
+    <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+        {{ "COMMON.CLOSEGAYLORDID" | translate }}
+        <button mat-icon-button (click)="dialogRef.close()">
+            <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+    </h1>
+    <xpo-dialog-content>
+        <div class="modal-body m-body">
+            <span>
+                <i class="fas fa-question-circle ques-icon"></i>
+                {{ "COMMON.CLOSECONTAINERALERT" | translate }}
+            </span>
+        </div>
+    </xpo-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button type="button" (click)="dialogRef.close()">Close</button>
+        <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="closeGayLordId()">
+        </rmbutton>
+    </mat-dialog-actions>
+</ng-template>
+
+
+<ng-template #serialNumberConfirm>
+    <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+        {{ "COMMON.BATTERYREMOVECHECK" | translate }}
+        <button mat-icon-button (click)="dialogRef.close()">
+            <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+    </h1>
+    <xpo-dialog-content>
+        <span>
+            <i class="fas fa-question-circle ques-icon"></i>
+            {{ confirmationMessage | translate }}
+        </span>
+        <div class="d-flex justify-content-center log-btn-position">
+            <div class="pr-2">
+                <rmbutton [buttonname]="'COMMON.YES' | translate" [class]="'btn btn-round-black'"
+                    (onclick)="addSerialNumberToProcess()" [iconstyle]="'fas fa-check-circle'"></rmbutton>
+            </div>
+            <div>
+                <rmbutton [buttonname]="'COMMON.NO' | translate" [class]="'btn btn-round-black'"
+                    (onclick)="removeSerialNumberFromProcess(serialNumber)" [iconstyle]="'fas fa-times-circle'">
+                </rmbutton>
+            </div>
+        </div>
+    </xpo-dialog-content>
+</ng-template>
+<button hidden id="stopProcessQueue"></button>

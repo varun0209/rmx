@@ -1,0 +1,46 @@
+<div class="col-md-12 col-sm-12 p-0">
+  <form>
+    <div ngModelGroup="skuSetup" #skuControls="ngModelGroup">
+      <fieldset class="esn-fieldset m-0">
+        <legend class="esn-legend">{{'DEVICEMANAGEMENT.SKUTRANSFER' | translate}}</legend>
+        <div class="row">
+          <div class="col-md-6 d-flex align-items-center" *ngIf="originalSku.length > 0">
+            <rmcard [class]="'w-100'" name="originalSku" [listGroupItems]="originalSku"></rmcard>
+          </div>
+          <div class="col-md-6">
+            <rmlabel [label]="'COMMON.SKU' | translate"></rmlabel>
+            <div class="mb-2">
+              <rmtypeahead [(ngModel)]="selectedSKU" [typeaheadOptionField]="'Sku'" [id]="'skuInputid'" name="skuInput" [skus]="skus" #skuinput=ngModel
+                [requiredIf]="true" [waitTime]="appConfig.receiving.skuwaitTime" [placeholder]="''" [skuDisabled]="skuDisabled"
+                (inputEvent)="getEligibleSKUs($event)" (keyup.enter)="validateSku($event)" [selectedSKUModel]="selectedSKUModel"
+                [SKU]="SKU" (typeaheadResponse)="typeaheadResponse($event)" [typeaheadPattern]="controlConfig.SKuPattern" [errorMessage]="appService.getErrorText('2660078')">
+              </rmtypeahead>
+              <div  *ngIf="selectedSkuData">
+                <div  class="lable-readonly d-flex justify-content-between">
+                  <span>{{'COMMON.MODEL' | translate}}</span> <span>{{selectedSkuData.Model}}</span>
+                </div> 
+                <div  class="lable-readonly d-flex justify-content-between">
+                  <span>{{'COMMON.DISPOSITION' | translate}}</span> <span>{{selectedSkuData.Dispsotion}}</span>
+                </div>
+                <div  class="lable-readonly d-flex justify-content-between">
+                  <span>{{'COMMON.CONDITIONCODE' | translate}}</span> <span>{{selectedSkuData.ConditionCode}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <div class="row mb-4 mt-3">
+        <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+          <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled" [buttonname]="'COMMON.CLEAR' | translate"
+            [iconstyle]="'fas fa-times-circle'" (onclick)="skuClear(); serialNumberFocus();"></rmbutton>
+        </div>
+        <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+          <rmbutton [class]="'btn btn-round-black  float-right'" [id]="'transfer'" (onclick)="skuTransfer()" [disabled]="disableSkuTransfer"
+            [buttonname]="buttonName | translate" [iconstyle]="'far fa-save'"></rmbutton>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,17 @@
+<div class="modal-header  bgheader">
+    <h4 class="modal-title pull-left">{{title}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="bsModalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="form-group row" *ngFor="let rowcolumn of rowcolumns;let k=index">
+        <label for="{{rowcolumn.name}}" class="col-sm-3 col-form-label pr-2">{{rowcolumn.name}}</label>
+        <div class="col-sm-9">
+            <input type="text" class="form-control" id="{{rowcolumn.name}}" [(ngModel)]="rowtoedit[rowcolumn.name]">
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn-round-black mx-auto" (click)="bsModalRef.hide()">{{submitBtnName}}</button>
+</div>

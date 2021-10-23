@@ -1,0 +1,35 @@
+table {
+  width: 100%;
+}
+
+.mat-column-key {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  flex: 0 0 15% !important;
+  width: 15% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+.grid-save-icon{
+  color: #086BAC;
+  margin-right: 5px; 
+  font-size: 15px;
+  cursor: pointer;
+}
+.grid-cancel-icon, .grid-delete-icon{
+  color:#CC0000;
+  font-size: 15px;
+  cursor: pointer;
+}
+.grid-edit-icon{
+  font-size: 14px;
+    color: #6f6f6f;
+    cursor: pointer;
+}

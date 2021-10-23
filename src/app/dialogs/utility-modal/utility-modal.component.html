@@ -1,0 +1,15 @@
+<xpo-dialog-title>
+    {{modeltitle|translate}}
+</xpo-dialog-title>
+<xpo-dialog-content>
+    <container-close [tittle]="modeltitle | translate" *ngIf="utilityTitle==operation.closecontainerRef">
+    </container-close>
+    <serial-number-move [tittle]="modeltitle | translate" *ngIf="utilityTitle==operation.serialnumbermoveRef">
+    </serial-number-move>
+    <container-move [tittle]="modeltitle | translate" *ngIf="utilityTitle==operation.containermoveRef"></container-move>
+    <serialnumber-recover [tittle]="modeltitle | translate" *ngIf="utilityTitle==operation.serialnumberrecoverRef">
+    </serialnumber-recover>
+    <app-container-information [tittle]="modeltitle | translate"
+        *ngIf="utilityTitle==operation.containerinformationRef">
+    </app-container-information>
+</xpo-dialog-content>

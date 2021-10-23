@@ -1,0 +1,13 @@
+
+<div class="input-group position-relative typeaheadStyle">
+    <input type="search" #typeaheadInput autocomplete="off" [(ngModel)]="typeaheadOption" (input)="getOptions()" [disabled]="typeaheadDisabled"
+    [typeaheadOptionField]="typeaheadOptionField" [id]="id" spellcheck="false" (keydown)="omit_special_char($event)"
+    (typeaheadOnSelect)="typeaheadOnSelect($event)" [placeholder]="placeholder" name="typeahead" [value]="typeaheadInput.value.toUpperCase().trim()"
+    [typeaheadScrollable]="true" [typeahead]="typeaheadOptions" class="form-control searchIcon" [typeaheadWaitMs]="waitTime"
+    [typeaheadOptionsLimit]="typeaheadOptionsLimit" [typeaheadItemTemplate]="''" class="form-control">
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary ml-1" type="button" [disabled]="typeaheadBtn">
+        <i class="far fa-window-restore"></i>
+      </button>
+    </div>
+  </div>

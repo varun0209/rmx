@@ -1,0 +1,127 @@
+<h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+  {{'PROGRAMCRITERIA.TITLE' | translate}}
+  <button mat-icon-button (click)="this.masterPageService.hideDialog();">
+      <xpo-icon iconName="clear"></xpo-icon>
+  </button>
+</h1>
+<!-- <div class="modal-body"> -->
+<xpo-dialog-content>
+  <div class="form-group position-relative">
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col mb-3 form-group">
+          <rmlabel [label]="'PROGRAMCRITERIA.PROGRAM_NAME' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.Program_Name?.Required"></rmlabel>
+
+          <rmdropdown [name]="'programId'" [id]="'programId'" [disabled]="rxData.addEditRule.ProgramRuleId > 0"
+            [value]="rxData.addEditRule.ProgramId" [dpOptions]="rxData.programNameList"
+            (onChangeVal)='changedProgramName($event)'
+            [requiredIf]="masterPageService.hideControls.controlProperties?.Program_Name?.Required"></rmdropdown>
+        </div>
+
+        <div class="col mb-3 form-group">
+          <rmlabel [label]="'PROGRAMCRITERIA.PROGRAM_GROUP' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.Program_Group?.Required"></rmlabel>
+
+          <rmdropdown [name]="'groupId'" [id]="'groupId'" [disabled]="rxData.addEditRule.ProgramRuleId > 0"
+            [value]="rxData.addEditRule.ProgramRuleGroupId" [dpOptions]="rxData.programGroupList"
+            (onChangeVal)='changedProgramGroup($event)'
+            [requiredIf]="masterPageService.hideControls.controlProperties?.Program_Group?.Required"></rmdropdown>
+        </div>
+
+        <div class="col mb-3 form-group">
+          <rmlabel [label]="'PROGRAMCRITERIA.OPERATIONID' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.OperationId?.Required"></rmlabel>
+          <rmdropdown [name]="'operationId'" [id]="'operationId'" [disabled]="rxData.addEditRule.ProgramRuleId > 0"
+            [value]="rxData.addEditRule.OperationId" [dpOptions]="rxData.operationList"
+            (onChangeVal)='changedOperationId($event)'
+            [requiredIf]="masterPageService.hideControls.controlProperties?.OperationId?.Required"></rmdropdown>
+        </div>
+
+        <div class="col mb-3 form-group">
+          <rmlabel [label]="'PROGRAMCRITERIA.RANK' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.Rank?.Required"></rmlabel>
+          <rmdropdown [name]="'rank'" [id]="'rank'" [value]="rxData.addEditRule.Rank" [dpOptions]="rxData.rankList"
+            (onChangeVal)='changedRank($event)'
+            [requiredIf]="masterPageService.hideControls.controlProperties?.Rank?.Required"></rmdropdown>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-10 mb-3 form-group">
+          <rmlabel [label]="'PROGRAMCRITERIA.DESCRIPTION' | translate"></rmlabel>
+          <rmtextarea [allowMaxlengthTextarea]="false" [maxlength]="appConfig.programCriteria.description_maxLength"
+            [rows]="'1'" [placeholder]="''" [(ngModel)]="this.rxData.addEditRule.Description" [id]="'description'"
+            name="'description'" (onChangeVal)="changedDescription()"></rmtextarea>
+        </div>
+
+        <div class="col mb-3 form-group">
+          <rmlabel [label]="'PROGRAMCRITERIA.ACTIVE' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.Active?.Required"></rmlabel>
+          <rmtoggle [toggleDivClass]="'d-flex py-2'" [toggleval]="rxData.addEditRule.Active === 'Y' ? true : false"
+            (onChangeVal)="onToggleChange($event)"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.Active?.Required"></rmtoggle>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 mb-3 form-group">
+          <app-rule-setup-editor #ruleSetup (emitEnableAddOrSave)="emitEnableAddOrSave_Rule($event)"
+            [excludeLogicalOr]='true'
+            [requiredIf]="masterPageService.hideControls.controlProperties?.ProgramRule?.Required">
+          </app-rule-setup-editor>
+        </div>
+      </div>
+
+      <fieldset class="assignValue-fieldset m-0 rule-setup-custom-coltrol">
+        <legend class="assignValue-legend">
+          {{'PROGRAMCRITERIA.ASSIGN_VALUES' | translate}}
+          <sup><i *ngIf="masterPageService.hideControls.controlProperties?.Assign_Values?.Required"
+              class="fas fa-asterisk required"></i></sup>
+        </legend>
+
+        <div class="row">
+          <div class="col mb-3 form-group">
+            <rmlabel [label]="'PROGRAMCRITERIA.NEWPROPERTY' | translate"></rmlabel>
+            <rmdropdown [disabled]="isEditing" [value]="this.newPropertyId" [dpOptions]="rxData.attributeMasterList"
+              (onChangeVal)='changedNewProperty($event)'></rmdropdown>
+          </div>
+
+          <div class="col mb-3 form-group">
+            <rmlabel [label]="'PROGRAMCRITERIA.NEWVALUE' | translate"></rmlabel>
+            <rmtextbox *ngIf="selectedControlType === 'TEXTBOX'" [placeholder]="''" [(ngModel)]="this.newValue"
+              [textBoxPattern]="textboxPattern" [textCase]="textCase.nocase" [id]="'value'" name="'value'"></rmtextbox>
+            <rmdropdown [name]="'programName'" [id]="'programName'" *ngIf="selectedControlType === 'DROPDOWN'"
+              [value]="this.newValue" [dpOptions]="valueList" (onChangeVal)='changedNewValue($event)'></rmdropdown>
+          </div>
+
+          <div class="col col-md-auto form-group mt-4">
+            <rmbutton [class]="'btn btn-round-black float-right'" [id]="'addUpdate'"
+              [disabled]="newPropertyId === '' || newValue === ''" [buttonname]="'PROGRAMCRITERIA.SETVALUE' | translate"
+              (onclick)="setValue()" [iconstyle]="'fas fa-plus'"></rmbutton>
+          </div>
+        </div>
+
+        <div class="row">
+          <rmgrid class="col-12 mb-3 form-group" *ngIf="this.assignValueList && this.assignValueList.length > 0"
+            [(gridproperties)]='rmGridData' [isCancelIconShow]='false' (emitDeleteDetails)='deleteGridItem($event)'
+            [requiredIf]="masterPageService.hideControls.controlProperties?.Assign_Values?.Required"></rmgrid>
+
+          <div class="text-center col-12 mb-3 form-group" *ngIf="this.assignValueList.length === 0">
+            <img class="nodata-img" src="assets/images/no-data-found.png" alt=""><br>
+            {{'COMMON.NODATAFOUND' | translate}}
+          </div>
+        </div>
+      </fieldset>
+
+      <div class="col text-right my-2">
+        <rmbutton [class]="'btn btn-round-black'" (click)='onSaveDialog()'
+          [disabled]="isDisableSaveFlag || isDisableSaveFlag_Rule" [buttonname]="'PROGRAMCRITERIA.SAVE' | translate"
+          [iconstyle]="'fas fa-save'">
+        </rmbutton>
+      </div>
+    </div>
+  </div>
+</xpo-dialog-content>
+

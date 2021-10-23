@@ -1,0 +1,43 @@
+<div class="login-wrap-body p-4 mb-n4">
+  <!-- <div class="mt-4 mb-1 progress-heading">{{'LOGIN.SIGNIN' | translate}}</div> -->
+  
+  <form #loginForm="ngForm" (ngSubmit)="validateLogin(loginForm.value)" novalidate>
+    <div class="col error-msg-section p-0">
+      <span [ngClass]="appErrService.alertMsg? '':'d-none'">
+        {{appErrService.alertMsg | translate}}
+      </span>
+    </div>
+    <div class="mt-4 mb-1">
+      <img class="text-bottom mt-n3" src="assets/images/RMx-logo.svg">
+    </div>
+    <div class="form-group mb-2 mt-2 pb-2">
+      <label>{{'LOGIN.USERNAME'|translate}}</label>
+      <input type="search" class="form-control searchIcon" name="UserName" autocomplete="off" id="UserName" ngModel
+        #UserName="ngModel" required (input)="changeInput($event)">
+      <div *ngIf="!UserName?.valid && (UserName?.dirty || UserName?.touched)">
+        <span class="error-text" *ngIf="UserName.errors?.required">
+          Username Required
+        </span>
+        <!-- <span class="error-text" *ngIf="UserName.errors?.pattern">
+          Alphabets only
+        </span> -->
+        <!-- [pattern]="userNamePattern"  -->
+      </div>
+    </div>
+    <div class="form-group mb-3 pb-2">
+      <div class="alert alert-info" *ngIf="isCapLockOn"><i class="fa fa-exclamation-triangle wrng-color"
+          aria-hidden="true"></i> Caps lock is ON</div>
+      <label>{{'LOGIN.PASSWORD'|translate}}</label>
+      <input type="password" autocomplete="off" class="form-control" name="Password" id="Password"
+        (keydown)="checkCapLock($event)" (input)="changeInput($event)" ngModel required>
+    </div>
+    <div class="text-center gxo-btn">
+      <button class="col" mat-flat-button xpoSmallButton color="primary" type="submit"
+        [disabled]="!loginForm.valid">{{'LOGIN.LOGIN'|translate}}</button>
+    </div>
+    <div class="col text-center pr-0 mt-4">
+      <span class="forgot-password-cli"><a (click)="forgotPassword()">{{'LOGIN.FORGOTPASSWORD'|translate}}</a>
+      </span>
+    </div>
+  </form>
+</div>

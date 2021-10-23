@@ -1,0 +1,65 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+        <form #configurationForm="ngForm">
+            <div ngModelGroup="carrierCodeConfig" #carrierCtrls="ngModelGroup">
+
+                <div class="mb-3 d-flex justify-content-end">
+
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'clear'"
+                        [buttonname]="'COMMON.CLEAR'| translate" [iconstyle]="'far fa-times-circle'"
+                        [disabled]="isClearBtnDisabled" (click)="clear()">
+                    </rmbutton>
+                    <rmbutton [class]="'btn btn-round-black ml-1'" [id]="'add'" *ngIf="carrierCtrls"
+                        [disabled]=" !(carrierCtrls.valid)" (onclick)="addOrUpdateCarrierCode()"
+                        [buttonname]="carrierBtnName"
+                        [iconstyle]="carrierBtnName == commonEnum.add ?'fas fa-plus':'far fa-save'">
+                    </rmbutton>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col-md-3 col-sm-12 mb-3 form-group">
+                        <rmlabel [label]="'CARRIER.CARRIERCODE' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.carrierCode?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="carrierCodeConfig.CarrierCode" [name]="'carrierCode'" [class]="'form-control'"
+                            [disabled]="isCodeDisabled" (enter)="getCarriers()" [maxlength]="appConfig.carrier.CarrierCode"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.carrierCode?.Required"
+                            [id]="'carrierCode'" [isAllowEmptyValue]="true" (onChangeVal)="changeInput()"
+                            [placeholder]="''" [divClass]="'input-group'" [hideSearchIcon]="true"
+                            [searchIconBtnDisabled]="isCarrierSearchBtnDisabled" (searchEventEmit)="getCarriers(); changeInput();">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col-md-3 col-sm-12 mb-3 form-group">
+                        <rmlabel [label]="'CARRIER.CARRIERNAME' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.carrierName?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="carrierCodeConfig.CarrierName" [textBoxPattern]="textBoxPattern"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.carrierName?.Required"
+                            [name]="'carrierName'" [class]="'form-control'"  [id]="'carrierName'" [maxlength]="appConfig.carrier.CarrierName"
+                            (onChangeVal)="changeInput()" [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col-md-3 col-sm-12 mb-3 form-group">
+                        <rmtoggle class="mr-3" name="active" [label]="'COMMON.ACTIVE'| translate"
+                            [togglelblClass]="'mt-0'" [id]="'active'"
+                            [toggleval]="carrierCodeConfig.Active == 'Y'? true:false"
+                            (onChangeVal)="onActiveChange($event)">
+                        </rmtoggle>
+                    </div>
+
+                    <div class="col-md-12 mb-3 form-group" *ngIf="carrierCodeList">
+                        <rmgrid [(gridproperties)]="carrierCodeList" [isCancelIconShow]="false"
+                            (emitEditDetails)="editCarrierCodeRow($event)"></rmgrid>
+                    </div>
+
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>

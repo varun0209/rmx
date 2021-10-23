@@ -1,0 +1,97 @@
+.padding-bottom {
+    padding-bottom: 22px;
+  }
+  
+  /* .db-mt {
+    margin-top: 40px;
+  } */
+  
+  .container {
+    float: left;
+  }
+
+
+  @media (min-width: 576px) {
+    .container {
+      max-width: unset;
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .container {
+      width: 46vw;
+      margin-left: 65px;
+    }  
+  }
+  
+ 
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .container {
+      width: 50vw;    
+    }
+  }
+  
+  
+  @media (max-width: 767px) {
+    .container {
+      width: 100%;
+    }
+  }
+  
+  
+  
+  
+  .noBorder td{
+    border: 0 !important;
+  }
+  .testTable {
+    width: 100%;
+    margin-bottom: 0em;  
+  }
+  .testTable tr td:first-child{
+    width:1%;
+  }
+  .testTable tr:first-child td{
+    border-top:0px;
+  }
+  .tdwhiteSpace{
+    white-space:nowrap;
+  }
+  
+  .testTable td {
+    white-space: nowrap;
+  }
+  
+  .testTable tr td:last-child {
+    width: 100%;
+  }
+  
+  /*scrollbar for table*/
+  .scrollbar {
+    /* max-height: 338px; */
+    max-width: auto;
+    overflow-x: scroll;
+    margin: auto;
+  }
+  
+  #style-4::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px;
+  }
+  
+  /* #style-4::-webkit-scrollbar-thumb {
+    background-color: #555555;
+     border: 1px solid #555555; 
+  } */
+  
+  .card-noborder {
+    border: 0px !important;
+    }
+    
+    .nopadding {
+    padding: 0px !important;    
+    }
+    .p-top{
+    padding-top: 5px;
+    }
+    

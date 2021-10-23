@@ -1,0 +1,36 @@
+﻿<div class="mx-auto mt-3" *ngIf="showAlert && !appErrService.specialCharErrMsg">
+    <rmalert [class]="'w-50'" [text]="text"></rmalert>
+  </div>
+  <div class="mx-auto mt-3" *ngIf="appErrService.specialCharErrMsg">
+    <rmalert [class]="'w-50'" [text]="appErrService.specialCharErrMsg"></rmalert>
+  </div>
+<form [formGroup]="recoverSerialNumberForm">
+  <section>
+    <label>{{'COMMON.SERIALNUMBER' | translate}}</label>
+    <rmtextbox [(ngModel)]="recoverSerialNumber" [disabled]="isRecoverSerNumDisable" [flag]="flag"   #inputRecoverSerial [placeholder]="''" formControlName="recoverSerialNumber" 
+      [id]="'recoverSerialNumber'" (onChangeVal)="changeInput(inputRecoverSerial)" (onControllerChange)="onControllerChange(inputRecoverSerial)" (clearEmit)="clearEmit($event)"
+      (enter)="validateDeleteSerialNumber(inputRecoverSerial,$event)" [uiData]="uiData" [isSerialNumber]="true"
+      [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+    <div class="pb-2">
+      <span class="float-left" *ngIf="recoverSKU">
+        {{'COMMON.SKU' | translate}}:
+        <rmbadge [badgenumber]="recoverSKU"></rmbadge>
+      </span>&nbsp;
+      <span class="float-right" *ngIf="recoverAuthorizationkey">
+        {{'COMMON.AUTHKEY' | translate}}:
+        <rmbadge [badgenumber]="recoverAuthorizationkey"></rmbadge>
+      </span>
+    </div>
+  </section>
+  <section>
+    <div class="text-center pt-2 recover-btn">
+      <button type="button" [disabled]="isRecoverdeletebtnDisable"  class="btn btn-round-black mr-1 float-right" [id]="'deleteSerialNumberInput'"
+        (click)="deleteSerialNumber()">
+        <i class="fas fa-trash-alt text-success mr-1"></i> {{'COMMON.DELETE' | translate}}
+      </button>
+      <button type="button" class="btn btn-round-black mr-1 float-left"  [disabled]="isClearBtnDisable" (click)="clearRecoverSerial()">
+        <i class="fas fa-times-circle text-danger mr-1"></i>{{'COMMON.CLEAR' | translate}}
+      </button>
+    </div>
+  </section>
+</form>

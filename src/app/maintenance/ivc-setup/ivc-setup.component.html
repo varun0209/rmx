@@ -1,0 +1,157 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <form>
+      <div class="d-flex justify-content-end">
+        <div class="form-inline">
+          <rmbutton [class]="'btn btn-round-black'" [buttonname]="'COMMON.SEARCH' | translate"
+            [iconstyle]="'fas fa-search'" [disabled]="isSearchDisabled" (onclick)="getIVCCodeList()"></rmbutton>
+          <rmbutton [class]="'btn btn-round-black mx-1'" [buttonname]="'COMMON.CLEAR' | translate"
+            [iconstyle]="'far fa-times-circle'" [disabled]="" (onclick)="Clear()"></rmbutton>
+          <rmbutton [class]="'btn btn-round-black'" [buttonname]="getBtnName() | translate" [iconstyle]="'far fa-save'"
+            [disabled]="!(IVCCodeCtrls.valid)" (onclick)="saveOrUpdateIVCCode()" *ngIf="IVCCodeCtrls">
+          </rmbutton>
+          <!-- <rmbutton [class]="'btn btn-round-black'" [buttonname]="'COMMON.UPDATE' | translate"
+            [iconstyle]="'far fa-save'" [disabled]="" *ngIf="">
+          </rmbutton> -->
+        </div>
+      </div>
+      <div ngModelGroup="IVCCodeConfig" #IVCCodeCtrls="ngModelGroup">
+        <div class="form-row mt-3">
+          <div class="col">
+            <div class="form-group">
+              <rmlabel [label]="'IVC.IVCCODE' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.ivcCode?.Required"></rmlabel>
+              <rmtextbox name="ivcCode" [class]="'form-control'" [disabled]="isIVCCodeDisable" [id]="'ivcCode'" #ivcCode
+                [placeholder]="''" [divClass]="'input-group'" [(ngModel)]="IVCCode.IVCCODE"
+                (onChangeVal)="changeInput(ivcCode)" (isInputValueEmpty)="isIVCCodeEmpty()"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.ivcCode?.Required">
+              </rmtextbox>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <rmlabel [label]="'IVC.CATEGORY' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.category?.Required"></rmlabel>
+              <ng-multiselect-dropdown tabindex="0" #category [settings]="dropdownSettings" [data]="categoryOptions"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.category?.Required"
+                [(ngModel)]="selectedCategory" name="category" id="category" (onSelect)="categoryChange($event)"
+                [disabled]="" (onDeSelect)="categoryDeSelect()">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <rmlabel [label]="'IVC.REPORTIVCCODE' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.reportIVCCode?.Required"></rmlabel>
+              <rmtextbox name="reportIVCCode" [class]="'form-control'" [disabled]="isReportIVCCodeDisabled"
+                [id]="'reportIVCCode'" [placeholder]="''" [divClass]="'input-group'"
+                [(ngModel)]="IVCCode.CLIENT_REPORTED_IVCCODE"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.reportIVCCode?.Required">
+              </rmtextbox>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <rmlabel [label]="'IVC.CLIENTCATEGORY' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.clientCategory?.Required"></rmlabel>
+              <ng-multiselect-dropdown tabindex="0" #clientCategory [settings]="dropdownSettings" [data]="clientCategoryOptions" 
+                [requiredIf]="masterPageService.hideControls.controlProperties?.clientCategory?.Required"
+                [(ngModel)]="selectedClientCategory" name="clientCategory" id="clientCategory"
+                (onSelect)="clientCategoryChange($event)" [disabled]="" (onDeSelect)="clientCategoryDeSelect()">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <rmlabel [label]="'IVC.CLIENTGROUPSUBCAT' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.clientGroupSubcat?.Required"></rmlabel>
+              <ng-multiselect-dropdown tabindex="0" #clientGroupSubcat [settings]="dropdownSettings"
+                [data]="clientGroupSubcatOptions"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.clientGroupSubcat?.Required"
+                [(ngModel)]="selectedClientGroupSubcat" name="clientGroupSubcat" id="clientGroupSubcat"
+                (onSelect)="clientGroupSubcatChange($event)" [disabled]="" (onDeSelect)="clientGroupSubcatDeSelect()">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class='col-md-6'>
+            <div class="form-row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <rmlabel [label]="'IVC.FAILURE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.failure?.Required"></rmlabel>
+                  <ng-multiselect-dropdown tabindex="0" #failure [settings]="dropdownSettings" [data]="failureOptions" 
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.failure?.Required"
+                    [(ngModel)]="selectedFailure" name="failure" id="failure" (onSelect)="failureChange($event)"
+                    [disabled]="" (onDeSelect)="failureDeSelect()">
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <rmlabel [label]="'IVC.CLNR_PROCESS_EXCLUDE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.clnrProcessExclude?.Required">
+                  </rmlabel>
+                  <ng-multiselect-dropdown tabindex="0" #clnrProcessExclude [settings]="dropdownSettings" 
+                    [data]="clnrProcessExcludeOptions"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.clnrProcessExclude?.Required"
+                    [(ngModel)]="selectedCLNRProcessExclude" name="clnrProcessExclude" id="clnrProcessExclude"
+                    (onSelect)="clnrProcessExcludeChange($event)" [disabled]=""
+                    (onDeSelect)="clnrProcessExcludeDeSelect()">
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <rmlabel [label]="'IVC.REPAIR_QARQAX_ELIGIBLE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.repairQARQAXEligible?.Required">
+                  </rmlabel>
+                  <ng-multiselect-dropdown tabindex="0" #repairQARQAXEligible [settings]="dropdownSettings" 
+                    [data]="repairQARQAXEligibleOptions"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.repairQARQAXEligible?.Required"
+                    [(ngModel)]="selectedRepairQARQAXEligible" name="repairQARQAXEligible" id="repairQARQAXEligible"
+                    (onSelect)="repairQARQAXEligibleChange($event)" [disabled]=""
+                    (onDeSelect)="repairQARQAXEligibleDeSelect()">
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <rmlabel [label]="'IVC.REPAIR_BOUNCE_ELIGIBLE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.repairBounceEligible?.Required">
+                  </rmlabel>
+                  <ng-multiselect-dropdown tabindex="0" #repairBounceEligible [settings]="dropdownSettings" 
+                    [data]="repairBounceEligibleOptions"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.repairBounceEligible?.Required"
+                    [(ngModel)]="selectedrepairBounceEligible" name="repairBounceEligible" id="repairBounceEligible"
+                    (onSelect)="repairBounceEligibleChange($event)" [disabled]=""
+                    (onDeSelect)="repairBounceEligibleDeSelect()">
+                  </ng-multiselect-dropdown>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <rmlabel [label]="'IVC.DESCRIPTION' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.description?.Required"></rmlabel>
+              <rmtextarea [rows]="5" [id]="'description'" name="description" [placeholder]="''" [disabled]=""
+                [(ngModel)]="IVCCode.DESCRIPTION"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.description?.Required">
+              </rmtextarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="form-row" *ngIf="IVCCodeList">
+      <div class="col-12">
+        <rmgrid [(gridproperties)]="IVCCodeList" (emitEditDetails)="editIVCCode($event)" [isCancelIconShow]="false">
+        </rmgrid>
+      </div>
+    </div>
+  </div>
+</div>

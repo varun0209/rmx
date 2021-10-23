@@ -1,0 +1,88 @@
+<div class="config-container padding-bottom pb-4 mb-4">
+  <section *ngIf="hideorshow && hidegrid">
+    <div class="row mb-4 mt-4">
+      <div class="col-sm-11 col-lg-11 col-md-11">
+        <div class="row">
+          <div class="col-lg-10">
+            <rmtextbox [(ngModel)]="transactionId" #TransactionId (onChangeVal)="onTransactionidChange($event)" [disabled]="istransactionIdDisabled"
+              [placeholder]="''" [id]="'TransactionId'"></rmtextbox>
+          </div>
+          <div class="col-lg-2 my-auto pl-0">
+            <i class="fa fa-search fa-lg" aria-hidden="true" (click)="search()"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-1 col-lg-1 col-md-1">
+        <rmbutton [class]="'btn btn-round-black float-right'" [id]="'Add'" (click)="addNew()" [disabled]="isAddDisabled" [buttonname]="'Add New'"
+          [iconstyle]="'fas fa-plus-circle'"></rmbutton>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-lg-12 col-md-12">
+        <rmgrid [(gridproperties)]="operationTrans" (emitEditDetails)="getEditrow($event)"></rmgrid>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Edit Section Starts Here -->
+  <section *ngIf="!hideorshow">
+    <div class="container-fluid border mb-4">
+      <div class="row py-3 bg-color">
+        <div class="col-4 pl-0 ">
+          <button type="button" class="btn btn-link btn-lg" (click)="onGoback()">
+            <i class="fas fa-arrow-circle-left mr-2"></i>Go Back</button>
+        </div>
+        <div class="col-md-8 text-right">
+          <rmbutton [class]="'btn btn-round-black'" [id]="'Save'" [disabled]="isAddDisabled" [buttonname]="'Save Details'" [iconstyle]="'fas fa-plus-circle'"></rmbutton>
+        </div>
+
+      </div>
+    </div>
+
+    <tabset>
+      <tab heading="Tab 1" id="tab1" class="border">
+        <div class="row mt-4 mx-1">
+          <div class="col-md-3 mb-4" *ngFor="let rowcolumn of rowcolumns;let k=index">
+            <label for="Active">{{rowcolumn.name}}</label>
+            <input type="text" class="form-control" id="{{rowcolumn.name}}" [(ngModel)]="rowtoedit[rowcolumn.name]">
+          </div>
+        </div>
+      </tab>
+      <!-- <tab heading="Tab 2" class="border">Some Content Here</tab> -->
+      <!-- <tab heading="Tab 3">Basic content 2</tab> -->
+    </tabset>
+
+  </section>
+
+
+
+  <section *ngIf="showadd">
+    <div class="container-fluid border mb-4">
+      <div class="row py-3 bg-color">
+        <div class="col-4 pl-0 ">
+          <button type="button" class="btn btn-link btn-lg" (click)="onGoback()">
+            <i class="fas fa-arrow-circle-left mr-2"></i>Go Back</button>
+        </div>
+        <div class="col-md-8 text-right">
+          <rmbutton [class]="'btn btn-round-black'" [id]="'Save'" [disabled]="isAddDisabled" [buttonname]="'Save Details'" [iconstyle]="'fas fa-plus-circle'"></rmbutton>
+        </div>
+
+      </div>
+    </div>
+
+    <tabset>
+      <tab heading="Tab 1" id="tab1" class="border">
+        <div class="row mt-4 mx-1">
+          <div class="col-md-3 mb-4" *ngFor="let rowcolumn of rowcolumns;let k=index">
+            <label for="Active">{{rowcolumn.name}}</label>
+            <input type="text" class="form-control" id="{{rowcolumn.name}}" [(ngModel)]="rowtoedit[rowcolumn.name]">
+          </div>
+        </div>
+      </tab>
+      <!-- <tab heading="Tab 2" class="border">Some Content Here</tab> -->
+      <!-- <tab heading="Tab 3">Basic content 2</tab> -->
+    </tabset>
+  </section>
+</div>

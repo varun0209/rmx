@@ -1,0 +1,36 @@
+<div class="routeFlow col-md-12 mb-3 p-0"
+    *ngIf="masterPageService.routeOperationList.length && !masterPageService.isNextRoutesDisabled">
+    <h3 class="p-2 wizard-header"> {{ 'GENERICRELEASE.CURRENTROUTE' | translate }}</h3>
+    <h3 class="routes-section-heading px-3 pt-3">{{masterPageService.RouteId}} </h3>
+    <div #routeFlow class="wizard-inner d-flex align-content-center flex-wrap slime-scroll p-3">
+        <ul>
+            <li class="active" *ngFor="let item of masterPageService.routeOperationList; index as i"
+                [ngClass]="item.color">
+                <div class="items-align-center">
+                    <div class="items-id-size">{{item.Id}}</div>
+                    <div class="items-text-size">{{item.Text}}</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div class="routeFlow col-md-12 mb-3 p-0"
+    *ngIf="masterPageService.nextRoutesList.length && !masterPageService.isNextRoutesDisabled">
+    <h3 class="p-2 wizard-header"> {{ 'GENERICRELEASE.ELIGIBLEROUTES' | translate }} </h3>
+    <div class="col  eligible-routes-section slime-scroll">
+        <div class="" *ngFor="let list of masterPageService.nextRoutesList">
+            <h3 class="routes-section-heading pt-2">{{list.Text}} </h3>
+            <div #routeFlow class="wizard-inner d-flex align-content-center flex-wrap">
+                <ul>
+                    <li class="active" *ngFor="let item of list.Operations; index as i">
+                        <div class="items-align-center">
+                            <div class="items-id-size">{{item.Id}}</div>
+                            <div class="items-text-size">{{item.Text}}</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

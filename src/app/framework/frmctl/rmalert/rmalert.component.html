@@ -1,0 +1,8 @@
+<div class="xpo-Notification xpo-Notification-status--{{ alertColor }}">
+  <span class="xpo-Notification-message xpo-Notification-message--{{ alertColor }}">
+    <mat-icon *ngIf="alertColor" [ngClass]="alertColor">{{ iconName }}</mat-icon>
+    <div class="xpo-Notification-message-textWrapper">
+      <span class="xpo-Notification-message-mainMessage">{{ text }}</span>
+    </div>
+  </span>
+</div>

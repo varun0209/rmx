@@ -1,0 +1,84 @@
+﻿<div  [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+      <fieldset class="rm-card mt-2">
+          <tabset #staticTabs>
+            <!--Code List-->
+            <tab heading="Code List" id="codeListSetup">
+              <div class="tab-pane">
+                <fieldset>
+                  <div class="d-flex justify-content-end mt-2">
+                <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.CLEAR'| translate"
+                  [iconstyle]="'far fa-times-circle'" [disabled]="isCodelistClearDisabled"
+                  (click)="clearCodelistSetup()"></rmbutton>
+                <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Add'" *ngIf="codeList"
+                  [disabled]="!codeList.valid  || (selectedGroupName != '' ? false : true)"
+                  [buttonname]="codeListBtnName" [iconstyle]="'far fa-save'" (onclick)="addOrUpdateCodeList(codeList)">
+                </rmbutton>
+                  </div>
+                  <div class="row p-2 mt-2">
+                    <div class="col-md-3 col-sm-12 margin-bottom">
+                  <rmlabel [label]="'CODELISTSETUP.GROUPNAME'| translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.groupName?.Required">
+                      </rmlabel>
+                      <div class="d-flex">
+                    <rmbutton [class]="'btn btn-outline-secondary'" [disabled]="isDisableGroupButton"
+                      (click)="onGroupButtonClick()" [iconstyle]="isEnableTextBox ? 'fa fa-plus' : 'fa fa-search'">
+                        </rmbutton>
+                    <rmmultiselect name="Groupname"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.groupName?.Required" class="w-100"
+                      *ngIf="isEnableTextBox" [id]="'Groupname'" [disabled]="isDisableGroupMultiselect"
+                      [placeHolder]="''" [data]="groupListData" [dropdownSettings]="dropdownSettings"
+                      [selectedItems]="groupListSelectedItem" (onSelectedItem)="getSelectedGroupnameList($event);"
+                      (onDeSelectItem)="onDeSelectItem()">
+                        </rmmultiselect>
+                        <rmtextbox [requiredIf]="masterPageService.hideControls.controlProperties?.groupName?.Required" 
+                      [(ngModel)]="selectedGroupName" [disabled]="isDisableGroupTextbox" [id]="'Groupname'"
+                      class="w-100" [class]="'form-control'" (onChangeVal)="enableClear();" [maxlength]="appConfig.codeList.groupName"
+                      (enter)="addToGroupList($event)" *ngIf="!isEnableTextBox" [placeholder]="'Add Group'"
+                          [textBoxPattern]="groupNamePattern" [requiredIf]="true">
+                        </rmtextbox>
+                      </div>
+                    </div>
+                    <div class="col-md-9">
+                      <form>
+                        <div class="row" ngModelGroup="codeListSetup" #codeList="ngModelGroup">
+                          <div class="col-md-3 col-sm-12 margin-bottom">
+                        <rmlabel [label]="'CODELISTSETUP.KEY'| translate"
+                          [isAsterisk]="masterPageService.hideControls.controlProperties?.key?.Required"></rmlabel>
+                        <rmtextbox name="Key" [id]="'key'" [class]="'form-control'"  [placeholder]="''"
+                          [requiredIf]="masterPageService.hideControls.controlProperties?.key?.Required"
+                          [(ngModel)]="codeListSetup.KEY" [disabled]="isKeyDisable" [maxlength]="appConfig.codeList.key"
+                          (onChangeVal)="enableClear()">
+                            </rmtextbox>
+                          </div>
+                          <div class="col-md-3 col-sm-12 margin-bottom">
+                        <rmlabel [label]="'CODELISTSETUP.VALUE'| translate"
+                          [isAsterisk]="masterPageService.hideControls.controlProperties?.value?.Required"></rmlabel>
+                        <rmtextbox [id]="'Value'" [placeholder]="''" [class]="'form-control'" name="Value"
+                          [requiredIf]="masterPageService.hideControls.controlProperties?.value?.Required"
+                          [(ngModel)]="codeListSetup.VALUE" [disabled]="isValueDisable" [maxlength]="appConfig.codeList.value"
+                          [textBoxPattern]="codeListValuePattern" (onChangeVal)="enableClear()">
+                            </rmtextbox>
+                          </div>
+                          <div class="col-md-3 col-sm-12 margin-bottom">
+                        <rmtoggle name="Active" [label]="'COMMON.ACTIVE'| translate" [disabled]="isActiveDisable"
+                          [togglelblClass]="'mt-0'"  [id]="'Active'" [toggleval]="codeListSetup.ACTIVE == 'Y'? true:false"
+                          (onChangeVal)="onCodeListActiveChange($event)"></rmtoggle>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+              <div class="p-2 mt-3" *ngIf="codeListGrid && codeListGrid?.Elements.length">
+                <rmgrid [gridproperties]="codeListGrid" (emitEditDetails)="editCodeListGrid($event)"
+                  (emitDeleteDetails)="deletePopup($event)" [isCancelIconShow]="false"></rmgrid>
+                  </div>
+                </fieldset>
+              </div>
+            </tab>
+            <!--Code List End-->
+          </tabset>
+        </fieldset>
+  </div>
+</div>
+<!--log out Confirmation-->

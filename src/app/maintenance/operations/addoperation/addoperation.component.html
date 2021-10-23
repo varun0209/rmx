@@ -1,0 +1,115 @@
+<div class="container-fluid">
+  <form #operationForm="ngForm">
+    <div class="operations" ngModelGroup="this.newOperationData" #operationCtrls="ngModelGroup">
+      <div class="row">
+        <div class="col-2 mb-3 form-group">
+          <rmlabel [label]="'OPERATION.OPERATIONID' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.operationid?.Required"></rmlabel>          
+        <input type="number" [class]="'form-control pl-1 pr-0'" [name]="'addoperationid'" #addoperationid [id]="'addoperationid'"        
+      [(ngModel)]="this.newOperationData.OPERATIONID" [numberPattern] = "operationIDPattern" numbersOnly >
+        </div>
+        <div class="col-2 mb-3 form-group">
+          <rmlabel [label]="'OPERATION.OPERATIONNAME' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.operationname?.Required"></rmlabel>
+          <rmtextbox [name]="'operationname'" [class]="'form-control'" [(ngModel)]="this.newOperationData.OPERATIONNAME"
+             [placeholder]="''" [maxlength]="appConfig.operation.operationName" [textBoxPattern] = "namePattern" [textCase]="textCase.nocase">
+          </rmtextbox>
+        </div>
+
+        <div class="col-4 mb-3 form-group">
+          <rmlabel [label]="'OPERATION.DESCRIPTION' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.description?.Required"></rmlabel>
+          <rmtextarea [maxlength]="appConfig.operation.operationDescription" [rows]="'1'" [placeholder]="''"
+            [(ngModel)]="this.newOperationData.DESCRIPTION" [allowMaxlengthTextarea]="false" [id]="'description'"
+            name="'description'" [requiredIf]="masterPageService.hideControls.controlProperties?.description?.Required">
+          </rmtextarea>
+        </div>
+
+        <div class="col-2 mb-3 form-group">
+          <rmlabel [label]="'OPERATION.MODULE' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.module?.Required"></rmlabel>
+          <rmtextbox [name]="'module'" [class]="'form-control'" [divClass]="'input-group'"
+            [(ngModel)]="this.newOperationData.MODULE"  [placeholder]="''"
+            [maxlength]="appConfig.operation.module" [textBoxPattern] = "namePattern" [textCase]="textCase.nocase"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.module?.Required">
+          </rmtextbox>
+        </div>
+        <div class="col-2 mb-3 form-group">
+          <rmlabel [label]="'OPERATION.PARENTNAME' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.parentname?.Required"></rmlabel>
+          <rmtextbox [name]="'parentname'"  [placeholder]="''" [class]="'form-control'"
+            [divClass]="'input-group'" [(ngModel)]="this.newOperationData.OperationConfigs.PARENTNAME"
+            [maxlength]="appConfig.operation.parentName" [textBoxPattern] = "namePattern" [textCase]="textCase.nocase"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.parentname?.Required">
+          </rmtextbox>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2 mb-3 form-group">
+          <rmlabel [label]="'OPERATION.ORIGINATION' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.origination?.Required"></rmlabel>
+          <rmtextbox [name]="'origination'" [class]="'form-control'" [(ngModel)]="this.newOperationData.ORIGINATION"
+             [placeholder]="''" [maxlength]="appConfig.operation.origination" [textBoxPattern] = "namePattern" [textCase]="textCase.nocase"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.origination?.Required"></rmtextbox>
+        </div>
+
+        <div class="col-2 mb-3 form-group">
+          <rmlabel [label]="'OPERATION.CATEGORY' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.category?.Required"></rmlabel>
+          <rmtextbox [name]="'category'" [class]="'form-control'" [divClass]="'input-group'"
+            [(ngModel)]="this.newOperationData.OperationConfigs.CATEGORY"  [textBoxPattern] = "namePattern" [textCase]="textCase.nocase"
+            [placeholder]="''" [maxlength]="appConfig.operation.category"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.category?.Required">
+          </rmtextbox>
+        </div>
+
+        <div class="col-2 mb-3 form-group">
+          <rmlabel [label]="'OPERATION.ROUTE' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.route?.Required"></rmlabel>
+          <rmtextbox [name]="'route'" [class]="'form-control'" [divClass]="'input-group'"
+            [(ngModel)]="this.newOperationData.OperationConfigs.ROUTE" 
+            [placeholder]="''" [maxlength]="appConfig.operation.route" [textBoxPattern] = "namePattern" [textCase]="textCase.nocase"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.route?.Required">
+          </rmtextbox>
+        </div>
+
+        <div class="col-1 pl-0 mb-3 form-group">
+
+          <rmlabel [label]="'OPERATION.RANK' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.rank?.Required"></rmlabel>         
+          <input type="number" [class]="'form-control pl-1 pr-0'" [name]="'rank'" #rank [id]="'rank'"        
+      [(ngModel)]="this.newOperationData.OperationConfigs.RANK" [numberPattern] = "rankPattern" numbersOnly >          
+        </div>
+        <div class="col-1 pl-0 mb-3 form-group">
+          <rmlabel [label]="'OPERATION.MAXCONTAINERS' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.maxcontainers?.Required"></rmlabel>         
+          <input type="number" [class]="'form-control pl-1 pr-0'" [name]="'maxcontainers'" #maxcontainers [id]="'maxcontainers'"        
+      [(ngModel)]="this.newOperationData.OperationConfigs.MAXCONTAINERS" [numberPattern] = "operationIDPattern" numbersOnly >
+        </div>
+        <div class="col mb-3 form-group d-flex">
+            <rmtoggle [label]="'OPERATION.APPENABLED' | translate" [togglelblClass]="'mt-1'" class="my-1 mx-4"
+              [id]="'Parser'" [toggleval]="this.newOperationData.APPENABLED == commonEnum.yes? true:false"
+              (onChangeVal)="onAppEnableChange($event)">
+            </rmtoggle>
+            <rmtoggle [label]="'OPERATION.ROUTEELIGIBLE' | translate" [togglelblClass]="'mt-1'" class="my-1 mx-4"
+              [id]="'RouteEligible'"
+              [toggleval]="this.newOperationData.OperationConfigs.ROUTE_ELIGIBLE == commonEnum.yes? true:false"
+              (onChangeVal)="onRouteEligibleChange($event)"></rmtoggle>
+            <rmtoggle [label]="'OPERATION.FORCEMOVEELIGIBLE' | translate" [togglelblClass]="'mt-1'" class="my-1"
+              [id]="'ForceMoveEligible'"
+              [toggleval]="this.newOperationData.OperationConfigs.FORCEMOVEELIGIBLE == commonEnum.yes? true:false"
+              (onChangeVal)="onForceMoveEligibleChange($event)"></rmtoggle>
+            <rmtoggle [label]="'OPERATION.ACTIVE' | translate" [togglelblClass]="'mt-1'" class="my-1 mx-4" [id]="'Active'"
+              [toggleval]="this.newOperationData.OperationConfigs.ACTIVE == commonEnum.yes? true:false"
+              (onChangeVal)="onActiveChange($event)">
+            </rmtoggle>
+  
+          </div>
+      </div>
+      <div class="col text-right my-2">
+        <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [buttonname]="'COMMON.SAVE'| translate"
+          [disabled]="!(operationCtrls.valid)" [id]="'save'" [iconstyle]="'far fa-save'" (onclick)=submit()></rmbutton>
+      </div>
+    </div>
+  </form>
+</div>

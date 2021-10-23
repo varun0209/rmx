@@ -1,0 +1,3 @@
+:host ::ng-deep ng-multiselect-dropdown .dropdown-list {
+    z-index: 999 !important;
+}

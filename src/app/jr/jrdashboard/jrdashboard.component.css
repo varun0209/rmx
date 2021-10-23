@@ -1,0 +1,26 @@
+.next-level-chart{
+    height: 650px !important;
+    width: 100%;
+    display:block;
+}
+.card{
+    border: 1px #4a4a4a solid;
+    border-radius: 10px;
+}
+.chart-title{
+    padding: 10px 15px;
+    background: #4a4a4a;
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    border-bottom: 1px #4a4a4a solid;
+    border-radius: 10px 10px 0 0;
+}
+.chart-body{
+    padding: 15px;
+    background: #fff;
+    min-height: 680px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

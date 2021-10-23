@@ -1,0 +1,39 @@
+﻿<!-- <div [ngClass]="showSearchIcon ? 'custom-dropdown-search' : ''" class="d-flex">
+    <select class="form-control" [name]="name" [ngClass]="class" [disabled]="disabled" (change)="onChangeData($event)" [(ngModel)]="value" [id]="id"  required>
+            <option hidden></option>        
+        <option [ngClass]="option?.Isdisable ? 'optionDisabled':''" class='option' *ngFor="let option of options" [value]="option.Id" [disabled]="option?.Isdisable">
+            <span *ngIf="option[description] && option[description] != '';else content">
+                {{option.Text}} - {{ option[description]  }}
+              </span>
+              <ng-template #content>{{option.Text}}</ng-template>
+           
+        </option>
+    </select>
+    <div class="input-group-append" *ngIf="showSearchIcon">
+        <button class="btn btn-outline-secondary" type="button" [disabled]="searchIconBtnDisabled" (click)="onSearchClick()"><i
+           class="fa fa-search"></i></button>
+    </div>
+</div> -->
+
+
+<div class="d-flex">
+    <mat-form-field>
+        <mat-select [name]="name" [disabled]="disabled" (selectionChange)="onChangeData($event)" [(ngModel)]="value" [id]="id" [multiple]="multiple"
+            [required]="required">
+            <input *ngIf="dpOptions.length > 5" class="form-control" placeholder="Seach here" (keyup)="onKey($event.value)">
+            <mat-option [ngClass]="option?.Isdisable ? 'optionDisabled':''" class='option' *ngFor="let option of options"
+                [value]="option.Id" [disabled]="option?.Isdisable">
+                <span *ngIf="option[description] && option[description] != ''; else content">
+                    {{option.Text}} - {{ option[description] }}
+                </span>
+                <ng-template #content>{{option.Text}}</ng-template>
+            </mat-option>
+        </mat-select>
+        <!-- <button type="button" mat-stroked-button [disabled]="searchIconBtnDisabled" *ngIf="showSearchIcon" (click)="onSearchClick()">
+            <xpo-icon color="warn" iconName="search" ></xpo-icon>
+        </button> -->
+    </mat-form-field>
+    <button type="button" mat-stroked-button [disabled]="searchIconBtnDisabled" *ngIf="showSearchIcon" (click)="onSearchClick()">
+        <xpo-icon color="warn" iconName="search" ></xpo-icon>
+    </button>
+    </div>

@@ -1,0 +1,152 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <form #configurationForm="ngForm">
+      <div ngModelGroup="supplementalSetupConfig" #supplementalCtrls="ngModelGroup">
+
+
+        <div class="mb-3 d-flex justify-content-end">
+
+          <rmbutton class="mr-1" [class]="'btn btn-round-black'" [id]="'search'"  (onclick)="searchSuplTransConfigs(); enableReset();" 
+          [buttonname]="'COMMON.SEARCH' | translate" [iconstyle]="'fas fa-search'" [disabled]="isSearchDisabled"></rmbutton>
+          <rmbutton class="mr-1" [class]="'btn btn-round-black'" [id]="'reset'" [disabled]="isResetDisabled"
+           (onclick)="reset()" [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'"></rmbutton>
+          <rmbutton class="ml-1" [class]="'btn btn-round-black'" [id]="'save'" [buttonname]="'COMMON.SAVE' | translate"
+            [iconstyle]="'fas fa-check'" [disabled]="isSaveDisabled" (click)="saveFormula()"></rmbutton>
+
+
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-3 col-sm-12 mb-3">
+            <rmlabel [label]="'SUPPLEMENTALSETUP.TRANSACTIONID' | translate"></rmlabel>
+            <rmmultiselect [placeHolder]="''" [data]="transactionIDOptions" [dropdownSettings]="dropdownSettings"
+              [name]="'transactionID'" [id]="'transactionID'" [selectedItems]="selectedTransID" (onSelectedItem)="onTransIDChange($event); enableReset();"
+              [disabled]="isTransationDisabled" (onDeSelectItem)="reset();">
+            </rmmultiselect>
+          </div>
+
+          <div class="col-md-4 col-sm-12 d-flex mb-3">
+            <rmtoggle class="mr-3" name="active" [label]="'COMMON.ACTIVE'| translate" [togglelblClass]="'mt-0'"
+              [id]="'active'" [toggleval]="supplementalSetupConfig.ACTIVE == commonButton.yes ? true:false"
+              (onChangeVal)="onActiveChange($event); enableReset();">
+            </rmtoggle>
+            <rmtoggle class="ml-3" name="allowdups" [label]="'SUPPLEMENTALSETUP.ALLOWDUPS' | translate"
+              [togglelblClass]="'mt-0'" [id]="'allowdups'"
+              [toggleval]="supplementalSetupConfig.ALLOWDUPS == commonButton.yes ? true:false"
+              (onChangeVal)="onAllowDupsChange($event); enableReset();">
+            </rmtoggle>
+          </div>
+
+
+
+        </div>
+
+        <div class="form-group">
+          <rmlabel [label]="'COMMON.DESCRIPTION' | translate"></rmlabel>
+          <rmtextarea [rows]="'rows'" [placeholder]="''" [disabled]="isDescriptionDisabled"
+                       (onChangeVal)="saveCheck(); enableReset();" [(ngModel)]="supplementalSetupConfig.DESCRIPTION" [id]="'description'"
+                       [name]="'description'"></rmtextarea>
+        </div>
+
+        <div class="form-row mt-2">
+
+          <div class="form-group col-sm-4 col-lg-4 col-md-4">
+            <rmlabel [label]="'SUPPLEMENTALSETUP.OBJECT' | translate"></rmlabel>
+            <rmdropdown [name]="'objectDropdown'" [id]="'objectDropdown'" [class]="'form-control'"
+              [disabled]="isObjectDisabled" (onChangeVal)="onObjectDropdownChange($event.value)"
+              [(ngModel)]="objectSelected" [dpOptions]="objectOptions" [value]="objectSelected" [requiredIf]="true">
+            </rmdropdown>
+          </div>
+
+          <div class="form-group col-sm-4 col-lg-4 col-md-4">
+            <rmlabel [label]="'SUPPLEMENTALSETUP.PROPERTY' | translate"></rmlabel>
+            <rmdropdown [name]="'propertyDropdown'" [id]="'propertyDropdown'" [class]="'form-control'"
+              [disabled]="isPropertydisabled" (onChangeVal)="onPropertyDropdownChange($event.value)"
+              [(ngModel)]="propertySelected" [dpOptions]="propertyOptions" [value]="propertySelected"
+              [requiredIf]="true">
+            </rmdropdown>
+          </div>
+
+          <div class="form-group col-sm-4 col-lg-4 col-md-4">
+            <rmlabel [label]="'SUPPLEMENTALSETUP.OPERATOR' | translate"></rmlabel>
+            <rmdropdown [name]="'operatorDropdown'" [id]="'operatorDropdown'" [class]="'form-control'"
+              [disabled]="isOperatorDisabled" (onChangeVal)="onOperatorChange($event.value)"
+              [(ngModel)]="selectedOperator" [dpOptions]="operatorOptions" [value]="selectedOperator"
+              [requiredIf]="true">
+            </rmdropdown>
+          </div>
+
+        </div>
+
+        <div class="form-row mt-3">
+
+          <div class="col-sm-12 col-lg-12 col-md-12">
+            <rmlabel [label]="'SUPPLEMENTALSETUP.RULEVALUE' | translate"></rmlabel>
+            <rmtextarea [id]="'ruleValue'" [name]="'ruleValue'" [placeholder]="''" [rows]="'rows'"
+              (onChangeVal)="ruleChange()" [disabled]="isRuleValueDisabled" [requiredIf]="true" [(ngModel)]="ruleValue">
+            </rmtextarea>
+          </div>
+
+        </div>
+
+        <div class="form-row mt-2">
+
+          <div class="form-group col-sm-4 col-lg-2 col-md-4">
+            <rmlabel [label]="'SUPPLEMENTALSETUP.APPENDWITH' | translate"></rmlabel>
+
+            <rmdropdown [name]="'logicaloperator'" [id]="'logicaloperator'" [class]="'form-control'"
+              [disabled]="enableElement()" (onChangeVal)="onLogicalOperatorChange($event.value)"
+              [(ngModel)]="selectedLogicalOperator" [dpOptions]="logicaloperatorOptions"
+              [value]="selectedLogicalOperator" [requiredIf]="!enableElement()"></rmdropdown>
+
+          </div>
+
+          <div class="form-group col-sm-2 col-lg-1 col-md-2 offset-lg-9 offset-md-6 mt-auto">
+
+            <rmbutton [class]="'btn btn-round-black float-right'" [id]="'add'" [disabled]="enableAdd(!supplementalCtrls.valid) || isDisabledAdd"
+                       [buttonname]="'COMMON.ADD' | translate" [iconstyle]="'fas fa-plus'" (click)="createRule()"></rmbutton>
+
+          </div>
+
+        </div>
+
+        <div class="form-row mt-3">
+
+          <div class="form-group col">
+            <div>
+              <rmlabel [label]="'SUPPLEMENTALSETUP.FORMULA' | translate"></rmlabel>
+            </div>
+            <rmtextarea [id]="'formula'" [name]="'formula'" [rows]="3" [placeholder]="''" #formula
+              [(ngModel)]="supplementalSetupConfig.STRULE" [disabled]="isFormulaDisabled"
+              (onChangeVal)="enableValidate(); enableReset();"></rmtextarea>
+
+          </div>
+          <div class="form-group btn-notes">
+            <i class="fa fa-info-circle" [ngClass]="!notesChecked ? 'btn-focus' : ''"
+              (click)="checkNotes();"></i>
+
+          </div>
+
+          <div class="col-md-12 d-flex justify-content-between">
+
+            <rmbutton [class]="'btn btn-round-black'" [id]="'clear'" [buttonname]="'COMMON.CLEAR' | translate"
+              [disabled]="isClearDisabled" (onclick)="onClear()" [iconstyle]="'fas fa-redo'"></rmbutton>
+
+            <rmbutton [class]="'btn btn-round-black '" [id]="'validate'" [buttonname]="'COMMON.VALIDATE' | translate"
+              [disabled]="isValidateDisabled" [iconstyle]="'fas fa-check'" (click)="validateFormula()"></rmbutton>
+
+          </div>
+
+        </div>
+
+        <div class="mt-3" *ngIf="supplementalSetupConfigList">
+          <rmgrid [(gridproperties)]="supplementalSetupConfigList"
+              (emitEditDetails)="editSuppConfigDetailRow($event)"
+              [isCancelIconShow]="false"></rmgrid>
+      </div>
+
+      </div>
+    </form>
+  </div>
+</div>

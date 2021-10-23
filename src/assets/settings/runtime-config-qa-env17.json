@@ -1,0 +1,21 @@
+﻿{
+    "comUrl": "http://tsgvm01805.newbreed.com:8011/",
+    "utlUrl": "http://tsgvm01805.newbreed.com:8016/",
+    "secUrl": "http://tsgvm01805.newbreed.com:8021/",
+    "recUrl": "http://tsgvm01805.newbreed.com:8026/",
+    "tstUrl": "http://tsgvm01805.newbreed.com:8031/",
+    "wtUrl": "http://tsgvm01805.newbreed.com:8036/",
+    "env":"QA",
+    "errorMsg":"7320011: Site configuration is missing in RMX",
+    "invalidUser":"User is already logged in.",
+    "sharedSecurity":{
+    "DataType": "WAREHOUSE",
+    "Application": "RMX"
+  },
+  "clients": [
+    {
+      "clientName": "iRobot",
+      "siteIds": ["SVI001", "RCI001", "MOI001"]
+  }
+  ]
+}

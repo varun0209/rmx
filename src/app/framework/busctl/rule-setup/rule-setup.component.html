@@ -1,0 +1,122 @@
+<form>
+  <fieldset class="ruleSetup-fieldset m-0 rule-setup-custom-coltrol" ngModelGroup="ruleSetup"
+    #ruleCtrls="ngModelGroup">
+    <legend class="ruleSetup-legend">{{'TRANSACTIONCONFIG.RULESETUP' | translate}}</legend>
+    <div class="form-row mt-2 pb-1">
+      <div class="form-group col">
+        <rmlabel [label]="'TRANSACTIONCONFIG.APPENDWITH' | translate"></rmlabel>
+        <rmdropdown [name]="'logicaloperator'" [id]="'logicaloperator'" [class]="'form-control'"
+          [disabled]="isLogicalOperatorDisabled" (onChangeVal)="onLogicalOperatorChange($event.value)"
+          [dpOptions]="logicaloperatorOptions" [value]="selectedLogicalOperator"
+          [requiredIf]="isLogicalOperatorRequired ? isLogicalOperatorRequired : null">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-4 col-sm-6">
+        <rmlabel [label]="'ATTRIBUTEROUTESETUP.ATTRIBUTE' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.attribute?.Required">
+        </rmlabel>
+        <ng-multiselect-dropdown tabindex="0" [settings]="attributeDropdownSettings" [data]="attributeList" 
+          [requiredIf]="masterPageService.hideControls.controlProperties?.attribute?.Required"
+          [(ngModel)]="selectedAttribute" name="attribute" id="attribute" (onSelect)="onAttributeChange($event)"
+          [disabled]="isAttributeDisabled">
+        </ng-multiselect-dropdown>
+
+      </div>
+      <div class="form-group col">
+        <rmlabel [label]="'ATTRIBUTEROUTESETUP.OPERATORS' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.operator?.Required"></rmlabel>
+        <ng-multiselect-dropdown tabindex="0" [settings]="operatorDropdownSettings" [data]="operatorList" 
+          [requiredIf]="masterPageService.hideControls.controlProperties?.operator?.Required"
+          [(ngModel)]="selectedOperator" name="operatorDropdown" id="operatorDropdown"
+          (onSelect)="onOperatorChange($event)" [disabled]="isOperatorDisabled">
+        </ng-multiselect-dropdown>
+      </div>
+      <div class="form-group col-lg-3 col-sm-6">
+        <ng-container [ngSwitch]="selectedControlType">
+          <ng-container *ngSwitchCase="'DROPDOWN'">
+            <rmlabel [label]="'ATTRIBUTEROUTESETUP.VALUE' | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.value?.Required">
+            </rmlabel>
+            <ng-multiselect-dropdown tabindex="0" [settings]="valueDropdownSettings" [data]="valueList" 
+              [requiredIf]="masterPageService.hideControls.controlProperties?.value?.Required"
+              [(ngModel)]="selectedValue" name="attributeValue" id="valueDropdown"
+              (onSelect)="onValueChangeDropdown($event)" (onDeSelect)="onValueChangeDropdown($event)"
+              [disabled]="isValueDisabled">
+            </ng-multiselect-dropdown>
+          </ng-container>
+          <ng-container *ngSwitchCase="'TEXTBOX'">
+            <rmlabel [label]="'ATTRIBUTEROUTESETUP.VALUE' | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.value?.Required">
+            </rmlabel>
+            <rmtextarea [(ngModel)]="attributeValue" name="attributeValue" [rows]="1"
+              [requiredIf]="masterPageService.hideControls.controlProperties?.value?.Required"
+              (onChangeVal)="onValueChange($event)" [disabled]="isValueDisabled" [id]="'value'" #valueTextBox
+              [placeholder]="''"></rmtextarea>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <div class="col-auto align-self-center pr-0 mt-1">
+        <rmbutton [class]="'btn btn-round-black mr-2'" [id]="'add'" [disabled]="isRuleAddDisabled"
+          [buttonname]="'Add Rule'" (onclick)="addRule()" [iconstyle]="'fas fa-plus'">
+        </rmbutton>
+      </div>
+
+    </div>
+
+    <div class="form-row mt-3 mb-2">
+      <div class="form-group col-sm-12">
+        <div class="row pl-0">
+          <div class="col py-1 mt-n2 pr-0 d-flex justify-content-between formula-grid-header">
+            <h3 class="pl-0 align-self-center"><strong>Formula</strong></h3>
+          <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'" [disabled]="groupList.length < 2"
+            [buttonname]="'Group Formula'" (onclick)="groupFeilds()" [iconstyle]="'fas fa-plus'">
+          </rmbutton>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="formula-grid slime-scroll">
+            <table class="table h-100 w-100 mb-0">
+              <tbody>
+                <tr *ngFor="let formula of formulaList; let i = index"
+                  [ngClass]="{'worning' : highLightindex == i, 'highlight' : highlightRow(i)  }" (click)="groupRow(i)">
+                  <td class="border-0">
+                    {{ formula.formula }}
+                  </td>
+                  <td class="border-0 text-right">
+                    <span class="pointer margin-right-p" (click)="deleteFieldValue(i)">
+                      <i class="fa fa-trash-alt "></i>
+                    </span>
+                  </td>
+                </tr>
+                <tr height="40" >
+                  <td class="border-0"> {{ newFormulaObject.formula }} </td>
+                  <td class="border-0"> </td>
+                </tr>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group col-sm-12">
+        <h3 class="mb-2">{{'COMMON.PREVIEW' | translate}}</h3>
+        <rmtextarea [id]="'rule'" name="rule" [rows]="'rows'" [placeholder]="''" disabled
+          [(ngModel)]="finalFormula">
+        </rmtextarea>
+      </div>
+      <div class="form-group col-sm-12">
+        <rmbutton [class]="'btn btn-round-black float-left'" [id]="'clear'" [disabled]="isResetDisabled"
+          [buttonname]="'COMMON.CLEAR' | translate" (onclick)="resetRuleSetup()" [iconstyle]="'fas fa-redo'">
+        </rmbutton>
+
+        <rmbutton [class]="'btn btn-round-black float-right'" [id]="'validate'" [disabled]="isValidateDisabled"
+          [buttonname]="'COMMON.VALIDATE' | translate" [iconstyle]="'fas fa-check'" (click)="validateRule()">
+        </rmbutton>
+      </div>
+    </div>
+
+  </fieldset>
+</form>

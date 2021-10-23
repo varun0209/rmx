@@ -1,0 +1,147 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+        <form #configurationForm="ngForm">
+            <div ngModelGroup="deviceSerialConfig" #skuSerialNumberCtrls="ngModelGroup">
+
+                <div class="mb-3 d-flex justify-content-end">
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'skuSearch'"
+                        [buttonname]="'COMMON.SEARCH' | translate" [iconstyle]="'fas fa-search'"
+                        (click)="getSkuSerialList()">
+                    </rmbutton>
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'skuClear'"
+                        [buttonname]="'COMMON.CLEAR'| translate" [iconstyle]="'far fa-times-circle'"
+                        (click)="clearGrid(); clearForm()">
+                    </rmbutton>
+                    <rmbutton [class]="'btn btn-round-black'" [id]="'skuAddorUpdate'" *ngIf="true"
+                        [disabled]="!configurationForm.valid" (onclick)="addOrUpdateRecord()" [buttonname]="btnName"
+                        [iconstyle]="btnName == commonEnum.add ?'fas fa-plus':'far fa-save'">
+                    </rmbutton>
+                </div>
+
+                <div class="row">
+
+                    <div class="col mb-3 form-group">
+                        <rmlabel [label]="'DEVICESERIALMAP.MANUFACTURER_ID' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.manufacturerId?.Required">
+                        </rmlabel>
+                        <rmtextbox [(ngModel)]="deviceSerialConfig.MANUFACTURER_ID" [name]="'skuManufacturerId'"
+                            [class]="'form-control'"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.manufacturerId?.Required"
+                            [id]="'skuManufacturerId'" [placeholder]="''" [disabled]="false"
+                            [maxlength]="appConfig?.deviceSerialMap?.manufacturerIdLength" [textBoxPattern]="">
+                        </rmtextbox>
+                    </div>
+
+                    <div class="col mb-3 form-group">
+                        <rmlabel [label]="'DEVICESERIALMAP.RANGE_START' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.rangeStart?.Required">
+                        </rmlabel>
+                        <rmtextbox [(ngModel)]="deviceSerialConfig.RANGE_START"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.rangeStart?.Required"
+                            [name]="'SNRangeStart'" [class]="'form-control'" [id]="'SNRangeStart'"
+                            (onChangeVal)="changeInput()" [placeholder]="''"
+                            [maxlength]="appConfig?.deviceSerialMap?.rangeStart">
+                        </rmtextbox>
+                    </div>
+
+                    <div class="col mb-3 form-group">
+                        <rmlabel [label]="'DEVICESERIALMAP.RANGE_END' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.rangeEnd?.Required">
+                        </rmlabel>
+                        <rmtextbox [(ngModel)]="deviceSerialConfig.RANGE_END"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.rangeEnd?.Required"
+                            [name]="'SNRangeEnd'" [class]="'form-control'" [id]="'SNRangeEnd'"
+                            (onChangeVal)="changeInput();" [placeholder]="''"
+                            [maxlength]="appConfig?.deviceSerialMap?.rangeEnd">
+                        </rmtextbox>
+                    </div>
+
+                    <div class="col mb-3 form-group">
+                        <rmlabel [label]="'DEVICESERIALMAP.PROGRAM_NAME' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.programName?.Required">
+                        </rmlabel>
+                        <ng-multiselect-dropdown [settings]="programDDSettings" [data]="programNameList"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.programName?.Required"
+                            [(ngModel)]="selectedModelOptions" name="'programNameList'" id="'programNameList'"
+                            (onSelect)="onProgramNameChange($event); changeInput();" tabindex="0"
+                            (onDeSelect)="onProgramNameDeSelect($event)" [disabled]="false">
+                        </ng-multiselect-dropdown>
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col mb-3 form-group">
+                        <rmlabel [label]="'DEVICESERIALMAP.PROGRAM_INDICATOR' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.programIndicator?.Required">
+                        </rmlabel>
+                        <ng-multiselect-dropdown tabindex="0" [settings]="programIndDDSettings"
+                            [data]="programIndicatorList"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.programIndicator?.Required"
+                            [(ngModel)]="selectedInModelOptions" name="programIndicatorList" id="programIndicatorList"
+                            (onSelect)="onIndicatorChange($event); changeInput();" [disabled]="false"
+                            (onDeSelect)="onIndicatorDeSelect($event)">
+                        </ng-multiselect-dropdown>
+                    </div>
+
+                    <div class="col mb-3 form-group">
+                        <rmlabel [label]="'DEVICESERIALMAP.LOOKUP_TYPE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.lookupType?.Required">
+                        </rmlabel>
+                        <rmdropdown [name]="'skuLookupType'" [id]="'skuLookupType'" [class]="'form-control'"
+                            [(ngModel)]="deviceSerialConfig.LOOKUP_TYPE"
+                            (onChangeVal)="onLookupTypeSelect($event.value); changeInput();"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.lookupType?.Required"
+                            [dpOptions]=" lookupTypeOptions" [value]="deviceSerialConfig.LOOKUP_TYPE"></rmdropdown>
+                    </div>
+
+                    <div class="col mb-3 form-group">
+                        <rmlabel [label]="'DEVICESERIALMAP.LOOKUP_REF' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.lookupRef?.Required">
+                        </rmlabel>
+
+                        <ng-multiselect-dropdown *ngIf="isDDRefShow" [name]="'lookupRefDDList'" [id]="'lookupRefDDList'"
+                            tabindex="0" [settings]="lookupRefDDSettings" [data]="lookupRefList"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.lookupRef?.Required"
+                            [(ngModel)]="selectedCategory" (onSelect)="lookupRefSelect($event); changeInput();"
+                            [disabled]="isLookupRefDisabled" (onDeSelect)="lookupRefDeSelect($event)" (onfocus)="true">
+                        </ng-multiselect-dropdown>
+
+                        <rmngtypeahead *ngIf="!isDDRefShow" [id]="'skuLookupRef'" [name]="'skuLookupRef'"p
+                            [configData]="configData" [label]="'Sku'" [value]="'Sku'" [placeholder]="''"
+                            [bufferSize]="appConfig?.deviceSerialMap?.bufferSize"
+                            [skuLength]="appConfig?.deviceSerialMap?.skuLength"
+                            [(ngModel)]="deviceSerialConfig.LOOKUP_REF"
+                            [bufferDataToDisplay]="appConfig?.deviceSerialMap?.bufferDataToDisplay"
+                            [typeaheadPattern]="controlConfig.SKuPattern"
+                            [errorMessage]="appService.getErrorText('2660078')"
+                            (emitTypeAheadValue)="typeaheadSKUResponse($event)" [editTypeAhead]="editActualSKUTypeAhead"
+                            [disabled]="isLookupRefDisabled" [clearTypeAhead]="clearActualSKUTypeAhead"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.lookupRef?.Required">
+                        </rmngtypeahead>
+
+                    </div>
+
+                    <div class="col mb-3 form-group">
+                        <rmtoggle class="mr-3" [name]="'active'" [label]="'COMMON.ACTIVE'| translate"
+                            [togglelblClass]="'mt-0'" [id]="'active'"
+                            [toggleval]="deviceSerialConfig.ACTIVE == 'Y'? true:false"
+                            (onChangeVal)="onActiveChange($event); changeInput();">
+                        </rmtoggle>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="row">
+            <div class="col-md-12 mb-3 form-group" *ngIf="deviceSerialList && deviceSerialList?.Elements.length">
+                <rmgrid [(gridproperties)]="deviceSerialList" [isCancelIconShow]="false"
+                    (emitEditDetails)="editSKUSerialNumberList($event)" (emitDeleteDetails)="deleteRecordPop($event)">
+                </rmgrid>
+            </div>
+        </div>
+
+    </div>
+</div>
+

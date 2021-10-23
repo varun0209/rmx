@@ -1,0 +1,131 @@
+<div class="col-12 mb-3 form-group">
+    <fieldset class="ruleMaster-fieldset m-0">
+        <legend class="ruleMaster-legend">{{title}}</legend>
+
+        <div class="form-row">
+            <div class="form-group col-sm-10" *ngIf="showPreview && previewOnTop">
+                <h3 class="mb-1">{{'COMMON.PREVIEW' | translate}}</h3>
+                <rmtextarea [id]="'rule'" name="rule" [rows]="'rows'" [placeholder]="''" disabled [(ngModel)]="finalFormula"></rmtextarea>
+            </div>
+            <div class="form-group col-sm-2"*ngIf="showPreview && previewOnTop && showValidateButton">
+                <h3 class="mb-1">&nbsp;</h3>
+                <rmbutton [class]="'btn btn-round-black mt-2'" [buttonname]="'COMMON.VALIDATE' | translate"
+                          (onclick)="validateFormula()" id="validateFormula" [iconstyle]="'fas fa-check'"></rmbutton>
+            </div>
+        </div>
+
+        <!-- Labels for the Rule Rows-->
+        <div class="form-row">
+            <div class="ruleMaster form-group col-xl-4 col-lg-4 col-md-3 col-sm-3 col-3 ml-4">
+                <rmlabel class="ml-2" [label]="'ATTRIBUTEROUTESETUP.ATTRIBUTE' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.attribute?.Required"></rmlabel>
+            </div>
+            <div class="ruleMaster form-group col-xl-2 col-lg-2 col-md-3 col-sm-3 col-3">
+                <rmlabel class="ml-2" [label]="'ATTRIBUTEROUTESETUP.OPERATORS' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.operator?.Required"></rmlabel>
+            </div>
+            <div class="ruleMaster form-group col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+                <rmlabel class="ml-2" [label]="'ATTRIBUTEROUTESETUP.VALUE' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.value?.Required">
+                </rmlabel>
+            </div>
+            <div class="ruleMaster form-group col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2">
+                <rmlabel class="ml-2" [label]="'Actions' | translate"></rmlabel>
+            </div>
+        </div>
+
+        <!-- The Rule Rows -->
+        <div class="form-row pb-1" *ngFor="let data of rowDataList; let idx = index">
+
+            <div class="ruleMaster form-group col-xl-auto col-lg-auto col-md-auto col-sm-auto col-auto mt-2">
+                {{idx+1}} <rmlabel [label]="')'"></rmlabel> 
+            </div>
+            <div class="ruleMaster form-group col-xl-4 col-lg-4 col-md-3 col-sm-3 col-3">
+                <ng-select  [items]="attributeList"
+                            name="attributeList"
+                            [multiple]="false"
+                            [closeOnSelect]="true"
+                            bindLabel="TEXT"
+                            placeholder="Select Attribute"
+                            (change)="onAttributeChange(data)"
+                            [(ngModel)]="data.selectedAttribute">
+                </ng-select>
+            </div>
+            <div class="ruleMaster form-group col-xl-2 col-lg-2 col-md-3 col-sm-3 col-3">
+                <ng-select  [items]="data.operatorList"
+                            name="operatorList"
+                            [multiple]="false"
+                            [closeOnSelect]="true"
+                            placeholder="Select Operator"
+                            [disabled]="!data.selectedAttribute"
+                            (change)="onOperatorChange(data)"
+                            [(ngModel)]="data.selectedOperator"></ng-select>
+            </div>
+            <div class="ruleMaster form-group col-xl-3 col-lg-3 col-md-3 col-sm-3 col-3">
+                <ng-container [ngSwitch]="data.selectedControlType">
+                    <ng-container *ngSwitchCase="'DROPDOWN'">
+                        <ng-select  [items]="data.valueList"
+                                    name="valueList"
+                                    [multiple]="data.multiSelectValue"
+                                    [closeOnSelect]="!data.multiSelectValue"
+                                    placeholder="Select Value"
+                                    (change)='onValuecomboChange(data)'
+                                    [disabled]="!data.selectedOperator"
+                                    [(ngModel)]="data.selectedValue"></ng-select>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'TEXTBOX'">
+                        <rmtextarea name="attributeValue" [rows]="1" [placeholder]="'Enter Value' | translate"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.value?.Required"
+                                    [(ngModel)]="data.selectedValue" [placeholder]="''" [id]="'value'"
+                                    (onChangeVal)="onValueTextBoxChange(data)" #valueTextBox 
+                                    [disabled]="!data.selectedOperator"></rmtextarea>
+                    </ng-container>
+                </ng-container>
+            </div>
+            <div class="ruleMaster form-group col-xl-2 col-lg-2 col-md-2 col-sm-2 col-2 pt-2">
+                <!-- <rmbutton [class]="'btn btn-round-black ml-2 mr-2'" [disabled]="idx < rowDataList.length - 1"
+                        (onclick)="addLine()" id="addLIne" [iconstyle]="'fas fa-plus'">
+                </rmbutton>
+
+                <rmbutton [class]="'btn btn-round-black mr-2'"
+                        (onclick)="delLine(idx)" id="addLine" [iconstyle]="'fas fa-minus'">
+                </rmbutton> -->
+
+                <span class="pr-2">
+                    <i class="fas fa-plus-circle fa-2x iconColor" disabled="idx < rowDataList.length - 1"
+                      (click)="addLine(idx)"></i>
+                </span>
+                <span>
+                    <i class="fas fa-minus-circle fa-2x iconColor"
+                      (click)="delLine(idx)"></i>
+                  </span>
+            </div>
+        </div> <!-- Div Row Loop-->
+
+        <div class="form-row" *ngIf="!excludeOr">
+            <div class="form-group col-sm-4">
+                <h3>{{'Custom Rule Condition' | translate}}</h3>
+                <rmtextarea [id]="'rule'" name="rule" [rows]="'1'" [placeholder]="''" [(ngModel)]="ruleCondition"></rmtextarea>
+            </div>
+            <div class="form-group  col-sm-4">
+                <rmbutton [class]="'btn btn-round-black mt-4 mr-2'" [buttonname]="'COMMON.VALIDATE' | translate"
+                (onclick)="validateFormula()" id="validateFormula" [iconstyle]="'fas fa-check'">
+                </rmbutton>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-sm-10" *ngIf="showPreview && !previewOnTop">
+                <h3 class="mb-1">{{'COMMON.PREVIEW' | translate}}</h3>
+                <rmtextarea [id]="'rule'" name="rule" [rows]="'rows'" [placeholder]="''" disabled [(ngModel)]="finalFormula"></rmtextarea>
+            </div>
+            <div class="form-group col-sm-2"*ngIf="showPreview && !previewOnTop && showValidateButton">
+                <h3 class="mb-1">&nbsp;</h3>
+                <rmbutton [class]="'btn btn-round-black mt-2'" [buttonname]="'COMMON.VALIDATE' | translate"
+                          (onclick)="validateFormula()" id="validateFormula" [iconstyle]="'fas fa-check'"></rmbutton>
+            </div>
+        </div>
+
+    </fieldset>
+</div>

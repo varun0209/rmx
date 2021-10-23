@@ -1,0 +1,356 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+
+        <fieldset class="rm-card mt-2">
+            <tabset #staticTabs>
+                <tab heading="{{'LABELREPRINTCONFIG.LABELCONFIG' | translate}}" id="labelConfigSetup" active="true" (selectTab)="selectedConfigTab(labelReprint.labelConfig)">
+                    <div class="tab-pane">
+                        <div class="container-fluid px-0">
+                            <form #labelReprintForm="ngForm">
+                                <fieldset ngModelGroup="labelReprintConfig" #labelReprintConfig="ngModelGroup">
+                                    <div class="mb-3 d-flex justify-content-end">
+                                        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'" [disabled]="isResetBtnDisabled"
+                                                  (onclick)="resetadhocLabelDoc()" [buttonname]="'COMMON.RESET' | translate"
+                                                  [iconstyle]="'fas fa-redo'">
+                                        </rmbutton>
+                                        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Clear'"
+                                                  [buttonname]="'COMMON.CLEAR' | translate" [iconstyle]="'far fa-times-circle'"
+                                                  [disabled]="isClearBtnDisabled" (click)="clearadhocLabelDoc()">
+                                        </rmbutton>
+                                        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'" *ngIf="labelReprintConfig"
+                                                  [disabled]="editParameterMode ? !labelReprintForm.valid || isValidateAddBtnFlag : !labelReprintConfig.valid || isValidateAddBtnFlag"
+                                                  (onclick)="addOrUpdatelaberReprintInfo()" [buttonname]="laberReprintBtnName" [iconstyle]="
+                                                  laberReprintBtnName == commonButton.add
+                                                  ? 'fas fa-plus'
+                                                  : 'far fa-save'
+                                                  ">
+                                        </rmbutton>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-3 col-md-3 col-sm-12  mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.LABEL' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.label
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmtextbox [(ngModel)]="adhocLabelDoc.Label" [name]="'name'" [class]="'form-control'"
+                                                       [disabled]="isNameDisabled" [id]="'name'" [requiredIf]="
+                                                       masterPageService.hideControls.controlProperties?.label
+                                                       ?.Required
+                                                       " [isAllowEmptyValue]="true" (onChangeVal)="onLabelChange()" [placeholder]="''"
+                                                       [divClass]="'input-group'" [hideSearchIcon]='true'
+                                                       [searchIconBtnDisabled]="isSearchIconLabelBtnDisabled"
+                                                       (searchEventEmit)="searchadhocLabelName()" (enter)="searchadhocLabelName()">
+                                            </rmtextbox>
+
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12  mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.FILE' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.file?.Required
+                                                     "></rmlabel>
+                                            <rmtextbox [(ngModel)]="adhocLabelDoc.File" [class]="'form-control'" [name]="'fileName'"
+                                                       [disabled]="isFileNameDisabled" [textBoxPattern]="textBoxPattern" [id]="'fileName'"
+                                                       [requiredIf]="
+                                                       masterPageService.hideControls.controlProperties?.file?.Required
+                                                       " (onChangeVal)="onFileChange()" [placeholder]="''">
+                                            </rmtextbox>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.DESCRIPTION' | translate"></rmlabel>
+                                            <rmtextarea [(ngModel)]="adhocLabelDoc.Description" [name]="'description'" [rows]="'1'"
+                                                        [disabled]="isDescriptionDisabled" [id]="'description'" (onChangeVal)="onDescriptionChange()"
+                                                        [placeholder]="''">
+                                            </rmtextarea>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.DOCTYPE' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.docType
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmdropdown [name]="'dockType'" [id]="'dockType'" #dockTypeDropdown [requiredIf]="
+                                                        masterPageService.hideControls.controlProperties?.docType
+                                                        ?.Required
+                                                        " [class]="'form-control'" [(ngModel)]="adhocLabelDoc.DockType"
+                                                        (onChangeVal)="onDockTypeChange($event.value)" [disabled]="isDocTypeDisabled"
+                                                        [dpOptions]="dockTypesList" [value]="adhocLabelDoc.DockType"></rmdropdown>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.DOCCATEGORY' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.category
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmdropdown [name]="'category'" [id]="'category'" #categoryDropdown [class]="'form-control'"
+                                                        [(ngModel)]="adhocLabelDoc.DockCategory" (onChangeVal)="onCategoryChange($event.value)"
+                                                        [disabled]="isCategoryDisabled" [dpOptions]="categoryList" [requiredIf]="
+                                                        masterPageService.hideControls.controlProperties?.category
+                                                        ?.Required
+                                                        " [value]="adhocLabelDoc.DockCategory"></rmdropdown>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.DOCFORMAT' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.docFormat
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmdropdown [name]="'dockFormat'" [id]="'dockFormat'" [requiredIf]="
+                                                        masterPageService.hideControls.controlProperties?.docFormat
+                                                        ?.Required
+                                                        " #dockFormatDropdown [class]="'form-control'" [(ngModel)]="adhocLabelDoc.DockFormat"
+                                                        (onChangeVal)="onDockFormatChange($event.value)" [disabled]="isDocFormatDisabled"
+                                                        [dpOptions]="dockFormatList" [value]="adhocLabelDoc.DockFormat"></rmdropdown>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.TRIGGER' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.trigger
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmdropdown [name]="'trigger'" [id]="'trigger'" #triggerDropdown [class]="'form-control'"
+                                                        [requiredIf]="
+                                                        masterPageService.hideControls.controlProperties?.trigger
+                                                        ?.Required
+                                                        " [(ngModel)]="adhocLabelDoc.Trigger" (onChangeVal)="onTriggerChange($event.value)"
+                                                        [disabled]="isTriggerDisabled" [dpOptions]="triggerList" [value]="adhocLabelDoc.Trigger">
+                                            </rmdropdown>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.ALLOWEDUSERS' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.allowedUser
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmmultiselect [name]="'allowedUser'" class="w-100" [id]="'allowedUser'"
+                                                           [disabled]="isAllowedUserDisabled" [requiredIf]="
+                                                           masterPageService.hideControls.controlProperties?.allowedUser
+                                                           ?.Required
+                                                           " [placeHolder]="''" [data]="allowedUserList" [dropdownSettings]="dropdownSettings"
+                                                           [selectedItems]="adhocLabelDoc.AllowedUsers" [(ngModel)]="adhocLabelDoc.AllowedUsers[0]"
+                                                           (onSelectedItem)="onSelectRole($event)" (onDeSelectItem)="onDeSelectRole($event)">
+                                            </rmmultiselect>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.IMAGENAME' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.imageName
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmtextbox [(ngModel)]="adhocLabelDoc.ImageFile" [name]="'imageName'" [class]="'form-control'"
+                                                       [disabled]="isImageNameDisabled" [id]="'imageName'" [requiredIf]="
+                                                       masterPageService.hideControls.controlProperties?.imageName
+                                                       ?.Required
+                                                       " [isAllowEmptyValue]="true" (onChangeVal)="onImageNameChange()" [placeholder]="''">
+                                            </rmtextbox>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.NOTES' | translate"></rmlabel>
+                                            <rmtextarea [(ngModel)]="adhocLabelDoc.Notes" [rows]="'1'" [name]="'notes'"
+                                                        [disabled]="isNotesDisabled" [id]="'notes'" (onChangeVal)="onNotesChange()" [placeholder]="''">
+                                            </rmtextarea>
+                                        </div>
+                                        <div class="col-lg-6 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.HEADERQUERY' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.headerQuery
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <div class="row no-gutters">
+                                                <div class="col pr-1">
+                                                    <rmtextarea [(ngModel)]="adhocLabelDoc.HeaderQuery" [name]="'headerQuery'" [rows]="'1'"
+                                                                [divClass]="'input-group'" [disabled]="isHeaderQueryDisabled" [id]="'headerQuery'"
+                                                                [requiredIf]="
+                                                                masterPageService.hideControls.controlProperties
+                                                                ?.headerQuery?.Required
+                                                                " (onChangeVal)="onHeaderQueryChange()" [placeholder]="''">
+                                                    </rmtextarea>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <rmbutton [class]="'btn btn-outline-secondary float-right'" [id]="'validate'"
+                                                              [disabled]="isValidateDisabled" [buttonname]="''" [iconstyle]="'fas fa-check'"
+                                                              (onclick)="validateHeaderQuery()"></rmbutton>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <ng-container *ngIf="!isValidateAddBtnFlag">
+                                    <fieldset class="labelReprint-fieldset m-0 " ngModelGroup="parameterForm"
+                                              #parameterForm="ngModelGroup">
+                                        <legend class="labelReprint-legend">
+                                            {{ "LABELREPRINTCONFIG.HEADERQUERY" | translate }}
+                                        </legend>
+
+                                        <div>
+                                            <div class="row" *ngFor="
+                                                 let parameter of adhocLabelDoc.ParameterAttributeValues;
+                                                 let i=index; trackBy:customTrackBy
+                                                 ">
+                                                <div class="col-lg-11 col-md-10 ml-3">
+                                                    <div class="row">
+                                                        <div class="col-md-3 col-sm-12 mb-3 form-group">
+                                                            <rmlabel [label]="'LABELREPRINTCONFIG.PARAMETERNAME' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.parameterName?.Required"></rmlabel>
+                                                            <rmtextbox [(ngModel)]="parameter.ParamterName" name="parameterName{{ i }}"
+                                                                       [class]="'form-control'" [textBoxPattern]="textBoxPattern" [requiredIf]="masterPageService.hideControls.controlProperties?.parameterName?.Required"
+                                                                       [disabled]="parameterIndex != i" [id]="'parameterName'" [isAllowEmptyValue]="true"
+                                                                       (onChangeVal)="onParameterNameChange()" [placeholder]="''">
+                                                            </rmtextbox>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-12 mb-3 form-group">
+                                                            <rmlabel [label]="'LABELREPRINTCONFIG.PARAMETERTYPE' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.parameterType?.Required"></rmlabel>
+                                                            <rmtextbox [(ngModel)]="parameter.Type" name="parameterType{{ i }}"
+                                                                       [class]="'form-control'" [requiredIf]="masterPageService.hideControls.controlProperties?.parameterType?.Required" [disabled]="parameterIndex != i"
+                                                                       [id]="'parameterType'" [isAllowEmptyValue]="true"
+                                                                       (onChangeVal)="onParameterTypeChange()" [placeholder]="''">
+                                                            </rmtextbox>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-12 mb-3 form-group">
+                                                            <rmlabel [label]="'LABELREPRINTCONFIG.DEFAULTVALUE' | translate"></rmlabel>
+                                                            <rmtextbox [(ngModel)]="parameter.DefaultValue" name="defaultValue{{ i }}"
+                                                                       [class]="'form-control'" [disabled]="parameterIndex != i"
+                                                                       [id]="'defaultValue'" [isAllowEmptyValue]="true" (onChangeVal)="onDefaultValueChange()"
+                                                                       [placeholder]="''">
+                                                            </rmtextbox>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-12 mb-3 form-group">
+                                                            <rmlabel [label]="'LABELREPRINTCONFIG.LOOKUPQUERY' | translate"></rmlabel>
+                                                            <rmtextbox [(ngModel)]="parameter.LookupQery" name="lookupQuery{{ i }}"
+                                                                       [class]="'form-control'" [disabled]="parameterIndex != i"
+                                                                       [id]="'lookupQuery'" [isAllowEmptyValue]="true" (onChangeVal)="onLookupQueryChange()"
+                                                                       [placeholder]="''">
+                                                            </rmtextbox>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-auto marginTop "
+                                                     *ngIf="i != adhocLabelDoc.ParameterAttributeValues.length - 1">
+                                                    <rmbutton [class]="'btn btn-round-black mr-1 floatRight'" [id]="'add'"
+                                                              [disabled]="parameterIndex == i" [buttonname]="''" (onclick)="deleteParamterInfo(i)"
+                                                              [iconstyle]="'fas fa-minus-circle'">
+                                                    </rmbutton>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row" *ngIf="!editParameterMode">
+                                            <div class="col-md-1 col-sm-12 offset-lg-11 offset-md-10 positionRelative">
+                                                <rmbutton [class]="'btn btn-round-black floatRight'" [id]="'add'"
+                                                          [disabled]="!parameterForm.valid" [buttonname]="''" (onclick)="addParamterInfo()"
+                                                          [iconstyle]="'fas fa-plus-circle'">
+                                                </rmbutton>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </ng-container>
+
+                                <div class="row mt-2" *ngIf="laberReprintList">
+                                    <div class="col-md-12 mb-3 form-group">
+                                        <rmgrid [(gridproperties)]="laberReprintList" (emitEditDetails)="editAdhocLabelDoc($event)"
+                                                (emitDeleteDetails)="deleteAdhocLabelRow($event)" (emitChildEditDetails)="editParameters($event)">
+                                        </rmgrid>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </tab>
+
+                <tab heading="{{'LABELREPRINTCONFIG.PRINTCONFIG' | translate}}" id="printConfigSetup" (selectTab)="selectedConfigTab(labelReprint.printConfig)">
+                    <div class="tab-pane">
+                        <div class="container-fluid px-0">
+                            <form>
+                                <fieldset ngModelGroup="printConfigControls" #printConfigControls="ngModelGroup">
+
+                                    <div class="d-flex justify-content-end mb-3">
+                                        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Reset'" [disabled]="isPrintResetDisabled"
+                                                  (onclick)="resetPrintConfig()" [buttonname]="'COMMON.RESET' | translate"
+                                                  [iconstyle]="'fas fa-redo'">
+                                        </rmbutton>
+                                        <rmbutton [class]="'btn btn-round-black'" [id]="'Save'" [disabled]="!(printConfigControls.valid)"
+                                                  (onclick)="addOrUpdatePrintConfig()" [buttonname]="adhocPrintConfigBtnName"
+                                                  [iconstyle]="adhocPrintConfigBtnName == commonButton.add ?'fas fa-plus':'far fa-save'">
+                                        </rmbutton>
+                                    </div>
+
+
+                                    <div class="row mb-3">
+
+                                        <div class="col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.LABELNAME' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.label
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmdropdown [name]="'label'" [id]="'labelName'" [class]="'form-control'"
+                                                        [(ngModel)]="adhocPrintConfig.Label" [disabled]="isLabelNameDisabled"
+                                                        (onChangeVal)="onLabelNameSelect($event); changePrintConfig();" [requiredIf]="true"
+                                                        [dpOptions]="labelNameOptions" [value]="adhocPrintConfig.Label"
+                                                        [requiredIf]="
+                                                        masterPageService.hideControls.controlProperties?.label
+                                                        ?.Required
+                                                        ">
+                                            </rmdropdown>
+                                        </div>
+
+                                        <div class="col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.PRINTERNAME' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.printerName
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmtextbox [(ngModel)]="adhocPrintConfig.PrinterName" [name]="'printerName'" [class]="'form-control'"
+                                                       [disabled]="isPrinterNameDisabled" [id]="'printerName'" [textBoxPattern]="textBoxPattern"
+                                                       [requiredIf]="
+                                                       masterPageService.hideControls.controlProperties?.printerName
+                                                       ?.Required
+                                                       " [isAllowEmptyValue]="true" (onChangeVal)="changePrintConfig()" [placeholder]="''">
+                                            </rmtextbox>
+                                        </div>
+                                        <div class="col-md-3 col-sm-12 mb-3 form-group">
+                                            <rmlabel [label]="'LABELREPRINTCONFIG.PRINTERTYPE' | translate" [isAsterisk]="
+                                                     masterPageService.hideControls.controlProperties?.printerType
+                                                     ?.Required
+                                                     "></rmlabel>
+                                            <rmdropdown [name]="'printerType'" [id]="'printerType'" #printerTypeDropdown [requiredIf]="
+                                                        masterPageService.hideControls.controlProperties?.printerType
+                                                        ?.Required
+                                                        " [class]="'form-control'" [(ngModel)]="adhocPrintConfig.PrinterType"
+                                                        (onChangeVal)="onPrinterTypeChange($event.value); changePrintConfig();" [disabled]="isPrinterTypeDisbled"
+                                                        [dpOptions]="printerTypeList" [value]="adhocPrintConfig.PrinterType"></rmdropdown>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mb-3" *ngIf="adhocPrintConfigList">
+                                            <rmgrid [(gridproperties)]="adhocPrintConfigList" (emitEditDetails)="editAdhocPrintConfig($event)"
+                                                    (emitDeleteDetails)="deleteAdhocPrintConfigRow($event)">
+                                            </rmgrid>
+                                    </div>
+
+
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </tab>
+
+            </tabset>
+        </fieldset>
+
+
+    </div>
+</div>
+
+<ng-template #deleteModal>
+    <div class="modal-header bgheader">
+        <h4 class="modal-title pull-left">{{'COMMON.CONFIRMDELETE' | translate}}</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="masterPageService.hideModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body m-body">
+        <span>
+            <i class="fas fa-question-circle ques-icon"> </i> {{'COMMON.DELETECONFIRMRECORD' | translate }}
+        </span>
+        <div class="d-flex justify-content-center log-btn-position">
+            <div class="pr-2">
+                <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'"
+                          (onclick)="deleteRecord()"></rmbutton>
+            </div>
+            <div>
+                <rmbutton [buttonname]="'COMMON.CANCEL' | translate" [class]="'btn btn-round-black'"
+                          (onclick)="masterPageService.hideModal()"></rmbutton>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,20 @@
+{
+  "Exclusion": [{
+      "user": "svcacct",
+      "time": 1785
+    }
+  ],
+  "Clients": {
+    "1011": [{
+        "siteid": "DFW004",
+        "time": 3585
+      },
+      {
+        "siteid": "DFW005",
+        "time":  3585
+      }
+    ]
+  },
+  "Default": 885,
+  "waitngTime": 15
+}

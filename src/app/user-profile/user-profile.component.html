@@ -1,0 +1,66 @@
+﻿<div class="config-container scrollbar container-fluid">
+  <div class="row">
+    <div class="col-12 userprofile-panel">
+      <div class="card-body user-photo">
+        <picture>
+          <img src="assets/images/rmx-user.png" class="user-img mx-auto" alt="User Profile Img">
+        </picture>
+        <div>
+          <span class="card-title">
+            <b>{{userName}}</b>
+          </span>
+        </div>
+      </div>
+      <fieldset class="rm-card mt-2 shadow-lg bg-white rounded">
+        <form [formGroup]="userForm">
+          <div class="p-2 user-details">
+            <div class="col-md-12 mt-3">
+              <rmlabel [label]="'USERPROFILE.SITE' | translate" [isAsterisk]="'true'"></rmlabel>
+              <select class="form-control" id="SiteId" formControlName="siteId" name="siteid"
+                [(ngModel)]="userProfile.SiteId" (change)="changeSiteId($event)" required>
+                <option style="display:none"></option>
+                <option class='option' *ngFor="let option of siteIdOptions" [value]="option.siteId">
+                  {{option.siteId}}&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;{{option.clientName}}</option>
+              </select>
+            </div>
+
+            <div class="col-md-12 mt-3">
+              <rmlabel [label]="'USERPROFILE.CLIENT' | translate" [isAsterisk]="'true'"></rmlabel>
+              <select class="form-control" id="clientId" formControlName="clientId"
+                [attr.disabled]="isClientDisable ? '' : null" [name]="client" [(ngModel)]="userProfile.ClientId"
+                (change)="onChangeData($event)" required>
+                <option style="display:none"></option>
+                <option class='option' *ngFor="let option of client" [ngValue]="option.ClientId">{{option.ClientName}}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-12 mt-3">
+              <rmlabel [label]="'USERPROFILE.LOCATION' | translate" [isAsterisk]="'true'"></rmlabel>
+              <rmtextbox [placeholder]="''" formControlName="location" [(ngModel)]="userProfile.Loc" [name]="'Location'"
+                [disabled]="isLocationDisabled" #inputLocation (onChangeVal)="changeInput(inputLocation)"
+                [id]="'Location'"></rmtextbox>
+            </div>
+            <div class="col-md-12 mt-3">
+              <rmlabel [label]="'USERPROFILE.DEVICEID' | translate"></rmlabel>
+              <rmtextbox [placeholder]="''" formControlName="deviceId" [(ngModel)]="userProfile.DeviceId"
+                [name]="'DeviceId'" [disabled]="isDeviceIdDisabled" #inputDeviceId
+                (onChangeVal)="changeInput(inputDeviceId)" [id]="'DeviceId'" (keyup)="onDeviceIdChange($event)">
+              </rmtextbox>
+            </div>
+            <div class="row ml-1 mt-4">
+              <div class="col-12">
+                <div class="text-center">
+                  <button class="btn btn-round-black" type="submit"
+                    (click)="validateLocation(userForm.value,inputLocation)"
+                    [disabled]="!(userForm.valid && !(clientDisabled && locationDisabled))">{{'COMMON.SAVE'| translate}}</button>
+                  <button hidden class="btn btn-round-black ml-2" type="submit" (click)="reset()"
+                    [disabled]="!userForm.valid">Reset</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </fieldset>
+    </div>
+  </div>
+</div>

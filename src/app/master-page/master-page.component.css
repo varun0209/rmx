@@ -1,0 +1,461 @@
+.search-bar{
+  background: #ccc;
+}
+.alt-mt{
+  margin-top: 20px;
+  margin-bottom: 0px;
+  margin-left: 15px !important;
+}
+.btn-link{
+text-decoration: none;
+}
+
+.mode{
+  color:rgb(255, 255, 255);
+  font-size : 16px;
+  left: 3.3px;
+  margin-top: 4px;
+  position: absolute;
+}
+
+.log-btn-position{
+  position: inherit;
+  top: 11px;
+  margin-top: 6%;
+}
+
+.m-body{
+ text-align: center !important;
+}
+
+.xpo-logo {
+  width: 56px;
+  margin-right: 22px;
+}
+
+
+.rm-header {
+  font-family: Bodoni;
+  color: rgb(0,0,0);
+  font-size: 24px;
+  padding-right: 15px;
+}
+
+.footer-sec {
+  /* background: rgb(85,85,85); */
+  color: rgb(255,255,255);
+  clear: both;
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.accordion-sec {
+  /* width: 44%; */
+  float: right;
+  /* margin-top: 93px; */
+  margin-right: 11px;
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+}
+
+.nav-tabs {
+  margin: 0;
+}
+
+.tab-content {
+  height: 100%;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+}
+
+
+.accordion .card:first-of-type {
+ border-bottom: 1px solid rgba(0,0,0,.125);
+}
+.rm-log-mobile {
+  width: 80px;
+  margin-top: 7px;
+  margin-right: 0px;
+}
+
+.navbar {
+  padding: 0px 3px;
+}
+
+.typeahead{
+ max-width: 100px;
+}
+
+/*user logout code start*/
+.dropodown-position {
+  margin: 8px -6.9rem;
+  padding: 0.2rem 0;
+  min-width: 9rem;
+  width:130px;
+  border-radius: 10px;
+}
+
+.dropdown div.dropdown-menu {
+  box-shadow:none;
+}
+
+.user-logout div.dropdown-menu:before {
+  content: "";
+  border-bottom: 10px solid #ffffff;
+  border-right: 9px solid transparent;
+  border-left: 12px solid transparent;
+  position: absolute;
+  top: -10px;
+  right: 9px;
+  z-index: 10;
+}
+
+.user-logout div.dropdown-menu:after {
+  content: "";
+  border-bottom: 11px solid #cccccc;
+  border-right: 11px solid transparent;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: -11px;
+  right: 7px;
+  z-index: 9;
+}
+
+.mode-dropdown-position{
+  top: 8px !important;
+  left: -6px !important;
+}
+
+.mode-selection div.dropdown-menu:before {
+  content: "";
+  border-bottom: 10px solid #ffffff;
+  border-right: 9px solid transparent;
+  border-left: 12px solid transparent;
+  position: absolute;
+  top: -10px;
+  left: 6px;
+  z-index: 10;
+}
+
+.mode-selection div.dropdown-menu:after {
+  content: "";
+  border-bottom: 11px solid #cccccc;
+  border-right: 11px solid transparent;
+  border-left: 15px solid transparent;
+  position: absolute;
+  top: -11px;
+  left: 3px;
+  z-index: 9;
+}
+
+.dropdown-toggle::after {
+  border-top: unset;
+  border-right: unset;
+  border-bottom: unset;
+  border-left: unset;
+  margin-left: unset;
+}
+
+/*dropdown background active*/
+.dropdown-item:active {
+  background-color: rgb(255,255,255);
+}
+.option-text {
+  padding: 0.5rem 1.0rem;
+  white-space: unset;
+  word-break: break-all;
+  display: flex;
+
+}
+.user-logout-icon{
+  margin-top: 3px;
+  padding-right: 2px;
+}
+
+.option-text:active{
+  color: rgb(0,0,0);
+}
+
+
+/*dropdown option text*/
+.option-text:hover{
+background-color: unset;
+}
+/*user logout code end*/
+
+/* Utility dropdown css starts here  */
+.utility-dd{
+  position: absolute;
+  right: 0;
+  top: 3px;
+}
+.utility-button{
+  background: transparent;
+  color:rgb(255,255,255);
+  outline: none !important;
+  box-shadow:none;
+}
+.utility-icon{
+  font-size: 20px;
+}
+.dropdown-display{
+  display: inline-flex;
+  min-width: max-content !important;
+}
+.dropdown-item-pos{
+  margin-top: 5px !important;
+  margin-left: 8px !important;
+/* margin: 8px -6.2rem !important; */
+}
+
+.utility-dd div.dropdown-menu:before {
+  content: "";
+  border-bottom: 10px solid #ffffff;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  position: absolute;
+  top: -8px;
+  right: 6px;
+  z-index: 10;
+}
+
+.utility-dd div.dropdown-menu:after {
+  content: "";
+  border-bottom: 10px solid #cccccc;
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
+  position: absolute;
+  top: -10px;
+  right: 6px;
+  z-index: 9;
+}
+.ribbon-height {
+  height: 26px !important;
+  display: table !important;
+}
+
+.ribbon-table{
+  display:table-cell;
+}
+.rm-card{
+  border: 1px solid rgba(0,0,0,.125);
+  background-color: #ffffff
+}
+.user-logoutpadding{
+  font-weight: 300;
+  padding: .250rem .50rem;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.site-id{
+  font-size: 14px;
+    font-weight: 500;
+    margin-top: 5px;
+    color: #000;
+    display: flex;
+}
+.site-id span{
+  display: flex;
+}
+.site-id span:before{
+  background-color: #6f6f6f;
+  content: " ";
+  display: inline-block;
+  height: 1.428rem;
+  margin: 0 12px;
+  width: 1px;
+}
+.mt-71{
+  margin-top: 15px;
+}
+.tab-menu{
+  background: #fff;
+  border-radius: 20px;
+  border: 1px #c00 solid;
+  display: flex;
+}
+
+.tab-menu .tab-item{
+  padding: 5px;
+  width: 10px;
+  -webkit-box-flex: 1;
+  flex: 1 1 auto;
+  text-align: center;
+  color: #c00;
+  font-size: 13px;
+}
+.tab-menu .tab-item:nth-child(1){
+  border-radius: 20px 0 0 20px;
+}
+.tab-menu .tab-item:nth-last-child(1){
+  border-radius: 0 20px 20px 0;
+}
+.tab-menu .active{
+ background: #c00;
+ font-weight: 600;
+  color: #fff;
+}
+
+.xpo-AppSwitcherPopover-footerContainer {
+  align-items: center;
+  border-top: 1px solid #d8d8d8;
+  display: flex;
+  padding: 8px;
+}
+
+@media (min-width: 576px) {
+  .container {
+    max-width: none;
+    }
+  }
+
+@media (min-width: 360px) and (max-width: 767.98px) {
+  .rm-header {
+    font-family: Bodoni;
+    color: rgb(0,0,0);
+    font-size: 21px !important;
+      }
+  .navbar {
+   padding: 0;
+    position: fixed;
+    width: 100%;
+    z-index: +10;
+    top: 0;
+  }
+
+  .xpo-logo {
+    width: 200px;
+    margin-right: 9%;
+  }
+
+  .mobile-logo {
+    visibility: visible;
+  }
+
+  .desktop-logo {
+    display: none;
+  }
+  .header-container {
+    text-align: center;
+    padding-left: 121px;
+  }
+  .footer-bg-verison{
+    margin-right: 58px;
+  }
+
+  .dropodown-position {
+    margin: 5px -8.9rem!important;
+    padding: .2rem 0!important;
+    min-width: 9rem!important;
+    border-radius: 10px!important;
+    width: 128px !important;
+  }
+
+  .option-text {
+      padding: 0.5rem 1.3rem;
+      white-space: unset;
+      word-break: break-all;
+      display: flex;
+      width:123px;
+    }
+    .mobile-option-text{
+      padding: .5rem 1.5rem;
+      color: unset;
+    }
+
+    .dropdown-item {
+      display: block;
+      width: 100%;
+      padding: .25rem 1.5rem;
+      clear: both;
+      font-weight: 400;
+      /* color: #212529; */
+      text-align: inherit;
+      white-space: nowrap;
+      /* background-color: transparent; */
+      border: 0;
+  }
+  .dropdown-display{
+    display: inline-flex !important;
+    min-width: max-content !important;
+  }
+
+
+
+  .ribbon-bg {
+    position: fixed ;
+    width: 100%;
+
+  }
+
+  .alt-mt {
+    padding: 10px 0 !important;
+    margin-left: 0px !important;
+    padding-left: 15px !important;
+    display: inline-block;
+    width: 100%;
+    margin-top: 0px;
+    }
+    .receiving-error .alt-mt{
+      margin-bottom: -20px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  .desktop-logo {
+    visibility: visible;
+  }
+
+  .mobile-logo {
+    display: none;
+  }
+
+  .dropodown-position {
+    margin: 8px -9.6rem;
+ }
+
+}
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+
+  .layout {
+    width: 500px;
+    margin: auto;
+  }
+
+  .mobile-logo {
+    display: none;
+  }
+  .dropodown-position{
+    margin: 8px -8.7rem;
+  }
+}
+@media (min-width: 1280px) and (max-width:1439.98px) {
+ 
+    .dropodown-position{
+      margin: 8px -8.6rem;
+    }
+  }
+
+  @media (min-width:1440px) and (max-width:1920px) {
+  
+    .dropodown-position{
+      margin: 8px -7.9rem;
+    }
+  }
+
+/******Landscape media queries*******/
+@media screen and (min-width: 340px) and (max-width:667.98px) and (orientation : landscape)  {
+  .xpo-logo {
+    width: 200px;
+    margin-right: 5%;
+  }
+}
+
+
+
+
+
+
+

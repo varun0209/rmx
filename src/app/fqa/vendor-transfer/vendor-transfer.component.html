@@ -1,0 +1,266 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid" *ngIf="!isShowControls">
+    <div [ngClass]="batchData.length>0 ? 'col-md-6 col-sm-12' : 'col-md-12 col-sm-12'">
+      <div class="alert alert-dark d-flex flex-wrap justify-content-center" role="alert">
+        {{'VENDORTRANSFER.SELECTTRANSFERTYPE' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid" *ngIf="isShowControls">
+    <div class="row">
+      <div [ngClass]="batchData.length>0 ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'">
+          <div class="row mb-3">
+            <div class="col-md-6" *ngIf="!(masterPageService.hideControls.controlProperties?.vendorId?.Hidden)">
+              <rmlabel [label]="'VENDORTRANSFER.VENDORID' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.vendorId?.Required">
+              </rmlabel>
+              <rmdropdown name="vendorID" [id]="'vendorID'" #vendorIDDropdown [class]="'form-control'"
+              [(ngModel)]="vendorID" (onChangeVal)="onVendorChange($event.value)" [requiredIf]="masterPageService.hideControls.controlProperties?.vendorId?.Required"
+              [disabled]="isVendorIDDisabled" [dpOptions]="vendorTypes" [value]="vendorID"></rmdropdown>
+            </div>
+            <div [ngClass]="(masterPageService.hideControls.controlProperties?.vendorId?.Hidden) ? 'col-md-6':'col pr-0'">
+              <rmlabel [label]="'COMMON.BATCHID' | translate" class="pr-0 mt-2" ></rmlabel>
+              <rmtextbox [(ngModel)]="batchId" [disabled]="isbatchIdDisabled" [id]="'batchId'" [class]="'form-control'"
+                [divClass]="'input-group'" [type]="'text'" [placeholder]="''" name="'batchId'" (onChangeVal)="onBatchIdChange()"
+                 (enter)="getCMBatchInfo()">
+              </rmtextbox>
+            </div>
+            <div class="mt-4 pl-md-3 pr-3">
+              <rmbutton [class]="'btn btn-round-black'" [id]="'newBatch'"
+                (onclick)="createVendorTransferBatchId()" [disabled]="isNewBatchDisabled"
+                [buttonname]="'VENDORTRANSFER.NEWBATCH' | translate" [iconstyle]="'fa fa-plus-circle'"></rmbutton>
+            </div>
+          </div>
+
+      <div class="row mb-3" *ngIf="batchDetails.length && shipToInfo.length">
+
+        <div class="col-md-6 col-sm-12">
+          <fieldset class="containerinfo-fieldset m-0">
+            <legend class="containerinfo-legend">
+              {{'Batch Detail' | translate}}</legend>
+            <div class="row no-gutters my-2">
+              <div class="col-md-6 font-weight-bolder blackColor">
+                {{'VENDORTRANSFER.EXTERNORDERKEY' | translate}}<span>:</span>
+              </div>
+              <div class="col-md-6 negativeMargin">
+                <rmbadge [badgenumber]="shipToInfoObj.ExternOrderKey"></rmbadge>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap my-2">
+              <div class="flexBasis mb-2 pr-2">
+                <div class="row no-gutters ">
+                  <div class="col-md-6 font-weight-bolder blackColor">
+                    {{'COMMON.BATCHID' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-6 negativeMargin">
+                    <rmbadge [badgenumber]="shipToInfoObj.BatchId"></rmbadge>
+                  </div>
+                </div>
+              </div>
+              <div class="flexBasis">
+                <div class="row no-gutters">
+                  <div class="col-md-6 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.CONTAINERS' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-6 negativeMargin">
+                    <rmbadge [badgenumber]="ContainersCount +'/'+batchDetailsObj.MaxContainers"></rmbadge>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap my-2">
+              <div class="flexBasis  mb-2 pr-2">
+                <div class="row no-gutters">
+                  <div class="col-md-6 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.ORDERGROUP' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-6 negativeMargin">
+                    <rmbadge [badgenumber]="batchDetailsObj.OrderGroup"></rmbadge>
+                  </div>
+                </div>
+              </div>
+              <div class="flexBasis">
+                <div class="row no-gutters">
+                  <div class="col-md-6 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.BATCHSTATUS' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-6 negativeMargin">
+                    <rmbadge [badgenumber]="shipToInfoObj.BatchStatusDesc"></rmbadge>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap my-2">
+              <div class="flexBasis  mb-2 pr-2">
+                <div class="row no-gutters">
+                  <div class="col-md-6 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.ORDERTYPE' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-6 negativeMargin">
+                    <rmbadge [badgenumber]="batchDetailsObj.OrderType"></rmbadge>
+                  </div>
+                </div>
+              </div>
+              <div class="flexBasis">
+                <div class="row no-gutters">
+                  <div class="col-md-6 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.SERIALNUMBERS' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-6 negativeMargin">
+                    <rmbadge [badgenumber]="serialNumberCount +'/'+batchDetailsObj.MaxSerialnumbers"></rmbadge>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap my-2">
+              <div class="flexBasis  mb-2 pr-2">
+                <div class="row no-gutters">
+                  <div class="col-md-6 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.TOLOC' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-6 negativeMargin">
+                    <rmbadge [badgenumber]="batchDetailsObj.ToLoc"></rmbadge>
+                  </div>
+                </div>
+              </div>
+              <div class="flexBasis">
+                <div class="row no-gutters">
+                  <div class="col-md-6 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.TRANSFERKEY' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-6 negativeMargin">
+                    <rmbadge [badgenumber]="batchDetailsObj.TransferKey"></rmbadge>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <fieldset class="containerinfo-fieldset m-0">
+            <legend class="containerinfo-legend">
+              {{'VENDORTRANSFER.SHIPTOINFO' | translate}}</legend>
+            <div class="d-flex flex-wrap my-2 pt-3">
+              <div class="flexBasis  mb-2 pr-2">
+                <div class="row no-gutters">
+                  <div class="col-md-4 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.VENDORID' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-8 font-weight-boldest">
+                    {{batchDetailsObj.SelectedVendorId}}
+                  </div>
+                </div>
+              </div>
+              <div class="flexBasis">
+                <div class="row no-gutters">
+                  <div class="col-md-6 col-xl-4 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.ADDRESS' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-6 col-xl-8 font-weight-boldest">
+                    {{shipToInfoObj.Address1}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap my-2">
+              <div class="flexBasis  mb-2 pr-2">
+                <div class="row no-gutters">
+                  <div class="col-md-4 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.CITY' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-8 font-weight-boldest">
+                    {{shipToInfoObj.City}}
+                  </div>
+                </div>
+              </div>
+              <div class="flexBasis">
+                <div class="row no-gutters">
+                  <div class="col-md-4 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.STATE' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-8 font-weight-boldest">
+                    {{shipToInfoObj.State}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap my-2">
+              <div class="flexBasis  mb-2 pr-2">
+                <div class="row no-gutters">
+                  <div class="col-md-4 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.ZIP' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-8 font-weight-boldest">
+                    {{shipToInfoObj.ZIP}}
+                  </div>
+                </div>
+              </div>
+              <div class="flexBasis">
+                <div class="row no-gutters">
+                  <div class="col-md-4 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.COUNTRY' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-8 font-weight-boldest">
+                    {{shipToInfoObj.Country}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-wrap my-2">
+              <div class="flexBasis  mb-2 pr-2">
+                <div class="row no-gutters">
+                  <div class="col-md-4 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.PHONE' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-8 font-weight-boldest">
+                    {{shipToInfoObj.Phone}}
+                  </div>
+                </div>
+              </div>
+              <div class="flexBasis">
+                <div class="row no-gutters">
+                  <div class="col-md-4 font-weight-bolder blackColor">
+                    {{'VENDORTRANSFER.CONTACT' | translate}}<span>:</span>
+                  </div>
+                  <div class="col-md-8 font-weight-boldest">
+                    {{shipToInfoObj.Contact1}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-12">
+          <container-summary [inbContainerDisabled]="inbContainerDisabled" (emitCurrentOperationId)="setCurrentOperationId($event)"
+            (emitSerialNumber)="getAutoPopulatedSerailNum($event)" (emitcontainerID)="getinbContainerID($event)"
+             [uiData]="uiData" [isHideResetButton]="contSummaryHideResetSection" [isHideContSummarySection]="contSummaryHideResetSection" [transferTypeConfigObj]="batchDetailsObj">
+            </container-summary>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="row mb-3 remove-fieldset-mt" *ngIf="multipleContainerList.length">
+            <div class="col-12">
+              <rmgrid [(gridproperties)]="containerListGrid" (emitDeleteDetails)="removePopup($event)">
+              </rmgrid>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <rmbutton [class]="'btn btn-round-black float-right'"
+            *ngIf="!masterPageService.hideControls.controlProperties?.moveBatch?.Hidden" [id]="'moveContainer'"
+            (onclick)="updateLottables()" [disabled]="isProcessDisabled" [buttonname]="'COMMON.PROCESS' | translate"
+            [iconstyle]="'fas fa-cogs'"></rmbutton>
+          <rmbutton [class]="'btn btn-round-black float-left'" [id]="'Clear'" [disabled]="isClearDisabled"
+            [buttonname]="'COMMON.CLEAR'| translate" (onclick)="reset()" [iconstyle]="'fas fa-times-circle'">
+          </rmbutton>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+

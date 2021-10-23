@@ -1,0 +1,63 @@
+<div class="mx-auto mt-3" *ngIf="showAlert && !appErrService.specialCharErrMsg">
+    <rmalert [class]="'w-50'" [text]="text"></rmalert>
+</div>
+<div class="mx-auto mt-3" *ngIf="appErrService.specialCharErrMsg">
+    <rmalert [class]="'w-50'" [text]="appErrService.specialCharErrMsg"></rmalert>
+</div>
+<section>
+    <div class="row mt-4">
+        <div class="col-md-12  mb-3">
+            <label>{{'COMMON.SERIALNUMBER' | translate}}</label>
+            <span class="badge-right">
+                <rmbadge  [badgenumber]="containerInvAccount"></rmbadge>
+            </span>
+            <rmtextbox [(ngModel)]="serialNumber" #inputSerial [disabled]="isSerialNumDisabled" [placeholder]="''"
+                [id]="'serialNumberRef'" (onChangeVal)="changeSerialNumber(inputSerial)" [name]="'serialNumberRef'"
+                (clearEmit)="clearEmit($event)" (enter)="validateMoveSerialNumber(inputSerial)" tabindex="1"
+                [flag]="true" [uiData]="uiData" [isSerialNumber]="true"
+                [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+        </div>
+        <div class="col-md-12 mb-3">
+            <label>{{'COMMON.LOCATION' | translate}} </label>
+            <span class="badge-right">
+                <rmbadge [badgenumber]="locationInvAccount"></rmbadge>
+            </span>
+            <rmtextbox [(ngModel)]="locationId" #inputLocation [disabled]="isLocationDisabled" [placeholder]="''"
+                (enter)="validateLocation(inputLocation,$event)" [name]="'locationId'"
+                (onChangeVal)="changeLocation(inputLocation)" [id]="'locationId'" tabindex="1" [flag]="true">
+            </rmtextbox>
+        </div>
+        
+        <div class="col-md-12 mb-3">
+            <label>{{'COMMON.REASONCODE' | translate}}</label>
+            <rmmultiselect tabindex="1"  id="reasonCode" [name]="'reasonCodes'" class="w-100" [id]="'reasonCodes'" 
+                [placeHolder]="''" [dropdownSettings]="dropdownSettings" [data]="reasonCodeOptions" 
+                (onSelectedItem)="changeReasonCode($event)" [selectedItems]="reasonCode"
+                (onDeSelectItem)="reasonCodeDeselect()" [disabled]="isReasonCodeDisabled"
+                ></rmmultiselect>
+          </div>
+          
+        <div class="col-md-12">
+            <container-suggestion *ngIf="controlConfig?.containerInputId"
+                [csLabel]="controlConfig?.containerInputId | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.containerInputId?.Required"
+                [class]="'form-control'" [id]="'containerInputId'" name="containerInputId"
+                (focusContainer)="getSuggestContainer($event)" (emitContainerId)="getContainerId($event)"
+                (validateContainerValue)="validateContainer($event)" [inbContainerId]="inbContainerId"
+                (emitCheckContainer)="checkContainer($event)"
+                (emitvalidateContainer)="validateContainerResponse($event)"
+                (emitValidateContainerFailResponse)="emitValidateContainerFailResponse($event)" [uiData]="uiData">
+            </container-suggestion>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="mt-2 clearfix">
+        <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'moveSerialNumber'" [disabled]="isMoveDisabled"
+            [buttonname]="'COMMON.MOVE' | translate" (onclick)="moveSerialNumber()" [iconstyle]="'fa fa-plus'">
+        </rmbutton>
+        <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled"
+            [buttonname]="'COMMON.CLEAR' | translate" (onclick)="Clear()" [iconstyle]="'fas fa-times-circle'">
+        </rmbutton>
+    </div>
+</section>

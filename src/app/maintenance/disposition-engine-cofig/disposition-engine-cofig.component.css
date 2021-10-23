@@ -1,0 +1,75 @@
+  
+  .scrollbar {
+    min-height: 203px;
+    max-height: 203px;
+    overflow-y: auto;
+    padding-right: 0;
+    }
+    
+    #style-4::-webkit-scrollbar {
+    width: 5px;
+    height: 5px
+    }
+    
+    #style-4::-webkit-scrollbar-thumb {
+    background-color: #555555;
+    border: 1px solid #555555;
+    }
+    
+    .cursorPointer{
+      cursor: pointer !important;
+    }
+    
+     li:nth-child(even) {background-color: #f2f2f2;} 
+    
+    
+    .lineHeight{
+    line-height: 79px;
+    }
+    
+    .borderGrey{
+    border: 1px solid rgba(0,0,0,.125);
+    }
+    
+    .menu-search{
+    width: 30%;
+      font-size: 14px;
+    }
+    .menu-search i{
+      padding-bottom: 0px;
+      line-height: 26px;
+    }
+    .menu-search input{
+    border: none;
+    box-shadow: none;
+    background: none;
+    border-radius: 0;
+    }
+    .bg-color{
+    background-color:  rgb(8,104,172) !important;
+    color: white;
+    }
+    
+    .labelColor{
+    color: #4A4A4A;
+    font-size: 12px;
+    line-height: 14px;
+    opacity: 0.75;
+    }
+    
+    .arrowStyle{
+    color: #4A4A4A;
+    opacity: 0.35;
+    }
+    
+    .flexBasis{
+    flex-basis: 50%;
+    }
+    
+    .breakWord{
+      word-break: break-word;
+    }
+    
+    
+    
+    

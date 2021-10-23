@@ -1,0 +1,71 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div
+        [ngClass]="masterPageService?.gridContainerDetails?.Elements?.length ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'"
+        *ngIf="!masterPageService.hideControls.controlProperties?.inboundContainer?.Hidden">
+        <container-summary [inbContainerDisabled]="masterPageService.disabledContainer" [id]="'ClearContainer'"
+          (emitContainerSummaryResponse)="getContainerSummaryResponse($event)" (emitCurrentOperationId)="setCurrentOperationId($event)"
+          (receiptKey)="getQueuedTestSerialNumbers()" (emitcontainerID)="getinbContainerID($event)"
+          (emitSerialNumber)="getAutoPopulatedSerailNum($event)"
+          (emitContainerSummaryProperties)="containerSummaryProperties($event)"
+          (containerList)="getContainerList($event)" (clear)="Clear()" [uiData]="uiData">
+        </container-summary>
+      </div>
+    </div>
+    <div class="row" *ngIf="inboundProperties">
+      <div class="d-flex align-content-end flex-wrap" *ngFor="let header of headingsobj">
+        <div class="px-3 pb-4">
+          {{header}} : <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div
+        [ngClass]="masterPageService?.gridContainerDetails?.Elements?.length ? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'"
+        *ngIf="!masterPageService.hideControls.controlProperties?.serialNumber?.Hidden ">
+        <div class="form-group">
+          <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"></rmlabel>
+          <rmtextbox [(ngModel)]="serialNumber" #serialNumberInput [disabled]="masterPageService.disabledSerialNumber"
+            [id]="'serialNumber'" [placeholder]="''" (enter)="validateTestSerialNumber($event,serialNumberInput)"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumber?.Required" [uiData]="uiData" [isSerialNumber]="true"
+            [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+        </div>
+      </div>
+      <div
+        [ngClass]="masterPageService?.gridContainerDetails?.Elements?.length ? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'"
+        *ngIf="!masterPageService.hideControls.controlProperties?.serialNumber?.Hidden ">
+        <container-suggestion *ngIf="controlConfig?.containerInputId"
+          [csLabel]="controlConfig?.containerInputId | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.containerInputId?.Required"
+          [class]="'form-control'" [id]="'containerInputId'" (focusContainer)="getSuggestContainer($event)"
+          (emitContainerId)="getContainerId($event)" (validateContainerValue)="validateContainer($event)"
+          [inbContainerId]="inbContainerID" (emitCheckContainer)="checkContainer($event)"
+          (emitvalidateContainer)="validateContainerResponse($event)"
+          (emitValidateContainerFailResponse)="emitValidateContainerFailResponse($event)" [uiData]="uiData">
+        </container-suggestion>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <ng-container *ngIf="surveyService.showSurvey">
+          <app-dynamic-survey [surveyResponse]="surveyService.surveyResponse"
+            (emitSurveyResponse)="getRefreshedSurvey($event)" (emitCompletedSurvey)="doneSurvey($event)"
+            (emitResSurvey)="reSurvey()">
+          </app-dynamic-survey>
+        </ng-container>
+        <div class="clearfix">
+          <rmbutton [class]="'btn btn-round-black float-right'" [disabled]="isSaveDisabled"
+            [buttonname]="'COMMON.SAVE'| translate" [id]="'save'" (onclick)="saveSerialNum()"
+            [iconstyle]="'far fa-save'"></rmbutton>
+          <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isSurveyClearDisabled"
+            [buttonname]="'COMMON.CLEAR'| translate" (onclick)="serialNumberClear()"
+            [iconstyle]="'fas fa-times-circle'"></rmbutton>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button hidden id="stopProcessQueue"></button>
+</div>

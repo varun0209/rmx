@@ -1,0 +1,315 @@
+﻿<section *ngIf="gridprop">
+  <section *ngIf="gridprop">
+    <div class="d-flex justify-content-end border">
+
+      <i *ngIf="gridprop.ImportVisible" (click)="fileInput.click()" class="fas fa-upload btn-import border-left"
+        tooltip="Import File"></i>
+      <input hidden type="file"
+        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+        #fileInput (click)="fileInput.value = null" value=""
+        (change)="importFile($event.target.files,gridprop.FileName)">
+      <i *ngIf="gridprop.ExportVisible" (click)="exportFile()" class="fas fa-download btn-export border-left"
+        tooltip="Export File"></i>
+    </div>
+    <div class="box grid-scroll-p">
+      <table class="table  table-bordered fixed-layout-p mb-0 table-hover table-responsive-sm top-border">
+        <thead class="table-head-color" *ngIf="gridprop.Elements.length>0">
+          <tr>
+            <th *ngIf="gridprop.EditVisible || gridprop.DeleteVisible || isShowRowViewIcon"
+              class="border-right-0 edit-delete-col-width text-center">
+              &nbsp;
+              <span (click)="toggleGridColumns()" *ngIf="!hideRearrangeIcon" class="cursorPointer">
+                <i class="fas fa-exchange-alt fa-lg mr-2"
+                  [ngClass]="{ 'fas fa-redo fa-lg': !originalColumnGrid , 'fa fa-exchange-alt fa-lg': originalColumnGrid }"></i>
+              </span>
+              <span *ngIf="gridprop.ShowCheckbox" class="cursorPointer">
+                <rmcheckbox class="d-inline-block ml-4 check-box-customcss" [checked]="gridprop.CheckboxChecked"
+                  (onChangeVal)="checkedAll($event)"></rmcheckbox>
+              </span>
+            </th>
+            <ng-container *ngFor="let column of columns">
+              <!--[style.width]="column.width+'px'"-->
+              <th *ngIf="(column.name != 'CanMove' && column.name != 'Verify'  && column.name != 'isUpdated')"
+                class="pointer border-left-0" [style.width]=" isScroll ? 'auto' : column.width+'px'"
+                (click)="sort(column.name)">
+                <span>{{column.display}}&nbsp;</span>
+                <span [ngClass]="{'fa fa-sort':key != column.name && !gridprop.SortDisabled}"></span>
+                <span *ngIf="key == column.name" [ngClass]="{'fa fa-sort-up':!reverse}"></span>
+                <span *ngIf="key == column.name" [ngClass]="{'fa fa-sort-down':reverse}"></span>
+                <ng-container *ngIf="gridprop.SearchVisible">
+                  <div (click)="stopClickEvent($event);false"
+                    [ngClass]="{'border-left-0': gridprop.EditVisible || gridprop.DeleteVisible}"
+                    *ngIf="(column.name != 'CanMove' && column.name != 'Verify')">
+                    <input #searchText type="text" [value]="searchText.value.toUpperCase()"
+                      [(ngModel)]="searchData[column.name]" name="{{column.name}}"
+                      class="form-control form-control-sm mt-1 rmgrid-searchbox" />
+                  </div>
+                </ng-container>
+              </th>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container
+            *ngFor="let element of gridprop.Elements | customOrderBy : key : reverse | searchFilter: searchData | paginate: { itemsPerPage: gridprop.ItemsPerPage, currentPage: p,totalItems: gridprop.TotalRecods, id: gridprop.PaginationId }; let i = index">
+            <tr
+              [ngClass]="{'just-inserted': (element?.Status == serialnumberStatus.completed && gridBatchId == element.BatchId),'resultPass': resultStatus ? (getResultPass(element)|| element?.BatchStatus) : (element?.Result == serialnumberStatus.pass),
+                                       'resultFail': resultStatus ? getResultFail(element)|| (element?.IsTimeExceeded == commonEnum.yes) : (element?.Result == serialnumberStatus.fail), 'highlightRow': (element == selectedParent && gridprop.EditHighlight && !isChildEdit) }"
+              class="striped">
+              <!-- <td [attr.colspan]="columns.length+1" class="p-0  border-0">
+                    <table class="table table-responsive-sm top-border mb-0">
+                      <tbody>
+                        <tr> -->
+              <td *ngIf="gridprop.EditVisible || gridprop.DeleteVisible || gridprop.CloseVisible || isShowRowViewIcon"
+                class="text-align-center-p">
+                <span class="pointer margin-right-p" (click)="editrow(element)" *ngIf="gridprop.EditVisible">
+                  <i class="fas fa-pen"
+                    [ngClass]="{ 'highlightIcon': element == selectedParent && gridprop.EditHighlight && !isChildEdit }"></i>
+                </span>
+                <span class="pointer margin-right-p" (click)="deleterow(element,i)"
+                  *ngIf="gridprop.DeleteVisible || element.DeleteVisible">
+                  <i class="fa fa-fw fa-trash-alt" [tooltip]="deleteBtnTooltip"></i>
+                </span>
+                <span class="pointer margin-right-p" *ngIf="element.ShowCheckbox">
+                  <rmcheckbox class="d-inline-block ml-3 check-box-customcss" [checked]="element.checkboxChecked"
+                    (onChangeVal)="checkboxChecked($event, element)"></rmcheckbox>
+                </span>
+                <span class="pointer margin-right-p" (click)="close(element,i)" *ngIf="gridprop.CloseVisible">
+                  <img src="assets/images/close-container.svg" width="14" [tooltip]="closeVisibleTooltip">
+                </span>
+                <span (click)="rowView(element, rowViewTemplate)" class="cursorPointer pl-1">
+                  <i class="fas fa-eye"></i>
+                </span>
+              </td>
+              <ng-container *ngFor="let column of columns;let j=index">
+                <ng-container *ngIf="isClear">
+                  <td [ngClass]="{'tbl-left-border':element?.CanMove == true && j==0 }"
+                    *ngIf="column.name != 'CanMove' && column.name != 'Verify' && column.name != 'isUpdated'"
+                    [style.width]="column.width+'px'">
+                    <span *ngIf="j==0">
+                      <rmbutton [class]="'rmchildpadding border-0'" *ngIf="element.ChildElements"
+                        (click)="openCloseRow(i);showListDetails(element)"
+                        [style.visibility]="element.ChildElements.length>0?'visible':'hidden'"
+                        [iconstyle]="rowSelected!=i?'fa fa-plus':'fa fa-minus'">
+                      </rmbutton>
+                      <span class="margin-right-p" *ngIf="getInprocess(element)">
+                        <i class="fa fa-spinner fa-spin fa-6"></i>
+                      </span>
+                      <span *ngIf="element?.Verify">
+                        <i [ngClass]="element?.Verify == 'N'? '' : 'fas fa-check-circle fqa-fa-check'"
+                          class="fas  mr-1"></i>
+                      </span>
+                      <span class="linkStyle" *ngIf="isHyperLink"
+                        (click)="onColValueClick(getColValue(element[column.name]))">
+                        {{getColValue(element[column.name])}}</span>
+                      <span *ngIf="!isHyperLink">{{getColValue(element[column.name])}}</span>
+                    </span>
+                    <span *ngIf="j!=0">
+                      <ng-container *ngIf="column.name=='Quantity'">
+                        <rmbadge [badgenumber]="element[column.name]"></rmbadge>
+                      </ng-container>
+                      <ng-container *ngIf="column.name=='Remarks' && element[column.name]">
+                        <span *ngFor="let column of element[column.name].split('|')">
+                          {{column}}
+                          <!-- <rmbadge [badgenumber]="column"></rmbadge>&nbsp; -->
+                        </span>
+                      </ng-container>
+                      <ng-container *ngIf="column.name=='BatchStatus'">
+                        <rmprogress [status]="element[column.name]"></rmprogress>
+                      </ng-container>
+                      <ng-container *ngIf="column.name=='Verified'">
+                        <span *ngIf="element[column.name]=='N'">
+                          <i class="fas fa-times-circle mr-1"></i>
+                        </span>
+                        <span *ngIf="element[column.name]=='Y'">
+                          <i class="fas fa-check-circle fqa-fa-check"></i>
+                        </span>
+                      </ng-container>
+
+                      <ng-container *ngIf="isObject(element[column.name])">
+                        {{getColValue(element[column.name])|json}}
+                      </ng-container>
+                      <ng-container
+                        *ngIf="column.name!=='Remarks' && column.name!=='BatchStatus'&& column.name!=='Quantity'  && column.name!=='Verified' && !isObject(element[column.name])">
+                        {{getColValue(element[column.name])}}
+                      </ng-container>
+                      <span *ngIf="element[column.name]=='N'  && column.name!=='Verified' && isCancelIconShow">
+                        <i class="fas fa-times-circle mr-1"></i>
+                      </span>
+                    </span>
+                  </td>
+                </ng-container>
+              </ng-container>
+              <!-- </tr>
+                      </tbody>
+                    </table>
+                </td> -->
+            </tr>
+            <tr *ngIf="rowSelected==i">
+              <td [attr.colspan]="columns.length+1" align="center">
+                <rmchildgrid [childelements]="element.ChildElements" [Isshowchild]="Isshowchild"
+                  [parentEditMode]="parentEditMode" [selectedChild]="selectedChildElement"
+                  (emitChildEditDetails)="childEditDetails($event,element,i)" [editvisible]="element.EditVisible"
+                  [editHighlight]="element.EditHighlight" [deletevisible]="element.DeleteVisible"
+                  (emitChildRowDetails)="rowView($event, rowViewTemplate)" [isGridRearranged]="!originalColumnGrid">
+                </rmchildgrid>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+        <tfoot class="btn-round-black"  *ngIf="gridprop.ToolbarVisible">
+          <tr>
+            <td [attr.colspan]=" gridprop.EditVisible && gridprop.DeleteVisible ? columns.length+1:columns.length">
+              <span *ngIf="gridprop.ExportVisible"  class="pointer margin-right-toolbar-p"
+                 (click)="openModal(exportTemplate)">
+                <i class="fa fa-fw fa-download mr-1" title="Export">
+                </i>
+              </span>
+              <span *ngIf="gridprop.ImportVisible"  class="pointer margin-right-toolbar-p"
+                 (click)="openModal(uploadTemplate)">
+                <i class="fa fa-fw fa-upload mr-1" title="Import">
+                </i>
+              </span>
+              <span class="pointer margin-right-p">
+                <i class="fa fa-fw fa-archive mr-1" title="Close">
+                </i>
+              </span>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+
+    </div>
+
+    <!-- file export Template -->
+    <ng-template #exportTemplate>
+      <div mat-dialog-title>
+        <h4 class="modal-title pull-left">
+          {{fileExport}}</h4>
+        <button type="button"  class="close pull-right"  aria-label="Close"  (click)="dialogRef.hide()">
+          <span aria-hidden="true">
+            &times;</span>
+        </button>
+      </div>
+      <div mat-dialog-actions>
+        <div class="form-group position-relative text-center">
+          <rmbutton [class]="'btn btn-round-black mr-5'"  [id]="'Export'"  [buttonname]="'Export As Excel'"
+             (click)="exportAsXLSX()" [iconstyle]="'fa fa-upload mr-1'">
+          </rmbutton>
+
+          <rmbutton [class]="'btn btn-round-black'"  [id]="'Import'"  [buttonname]="'Export As PDF'"
+             (click)="convert()"  [iconstyle]="'fa fa-upload mr-1'">
+          </rmbutton>
+        </div>
+      </div>
+
+    </ng-template>
+
+
+    <!-- Upload template -->
+    <ng-template #uploadTemplate>
+      <div mat-dialog-title>
+        <h4 class="modal-title pull-left">
+          {{fileUpload}}</h4>
+        <button type="button"  class="close pull-right"  aria-label="Close"  (click)="dialogRef.hide()">
+          <span aria-hidden="true">
+            &times;</span>
+        </button>
+      </div>
+      <div mat-dialog-actions>
+        <div class="form-group position-relative text-center">
+          <input type="file"  style="display: inline-block;"  (change)="incomingfile($event)"  placeholder="Upload"
+             accept=".xlsx">
+          <rmbutton [class]="'btn btn-round-black mt-3'"  [id]="'Import'"  [buttonname]="'Upload'"
+             (click)="uploadXLSX()"  [iconstyle]="'fa fa-upload mr-1'">
+          </rmbutton>
+        </div>
+      </div>
+    </ng-template>
+    <!-- Row View template -->
+    <ng-template #rowViewTemplate>
+      <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+        {{'COMMON.ROWDETAILS' | translate}}
+        <button mat-icon-button (click)="rowViewModalRef.close()">
+          <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+      </h1>
+
+      <xpo-dialog-content>
+        <div class="modal-body">
+          <div class="row scrollbar" id="scrollbar" *ngIf="selectedRow">
+            <div class="col-lg-6 col-sm-12 p-1" *ngFor="let item of selectedRowArray">
+              <div class="row no-gutters">
+                <div class="col-lg-5 col-6 text-right">
+                  {{item}} :
+                </div>
+                <div class="col-lg-7 col-6 text-left pl-1 font-weight-bold grid-row-view-poperty">
+                  {{selectedRow[item]}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </xpo-dialog-content>
+    </ng-template>
+  </section>
+  <ng-container>
+    <div class="text-center pagination-custom-height"
+      *ngIf="gridprop.PaginationVisible && gridprop.Elements.length>0 && isClear">
+      <pagination-controls (pageChange)="pageChanged($event); rowSelected= -1"
+        (pageBoundsCorrection)="pageChanged($event)"  [id]="gridprop.PaginationId"></pagination-controls>
+    </div>
+  </ng-container>
+</section>
+
+<ng-template #exportFiles>
+  <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    {{'COMMON.EXPORTDATAPREVIEW' | translate}} {{'COMMON.TO' | translate}}
+    <button mat-icon-button (click)="clearImportExport(); masterPageService.hideDialog();">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h1>
+  <xpo-dialog-content>
+    <div class="modal-body m-body d-flex justify-content-center p-5">
+      <div class="mr-4 border p-2 rounded bg-export" *ngFor="let file of fileList">
+        <img height=60 width=60 class="p-2" src="assets/images/{{ file }}.svg"
+          (click)="masterPageService.hideModal(); downloadFile(file);">
+      </div>
+    </div>
+  </xpo-dialog-content>
+</ng-template>
+
+<ng-template #exportModal>
+  <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    <h4 class="modal-title pull-left" *ngIf="showProcessbutton">{{'COMMON.FILE' | translate}} {{'COMMON.PREVIEW' |
+      translate}}</h4>
+    <h4 class="modal-title pull-left" *ngIf="!showProcessbutton">{{'COMMON.ERRORPRIVIEWMSG' | translate}} </h4>
+    <button mat-icon-button (click)="clearImportExport(); masterPageService.hideDialog();">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h1>
+  <xpo-dialog-content>
+    <div class="modal-body m-body">
+      <div class="row mb-3 remove-fieldset-mt" *ngIf="exportGridList">
+        <div class="d-flex justify-content-end col-12 mb-2" *ngIf="sheetColumns.length">
+          <div class="w-25 d-flex align-items-center">
+            <rmlabel [label]="'FILEUPLOAD.SHEETS' | translate" class="mr-2"></rmlabel>
+            <rmdropdown [name]="'sheets'" [id]="'sheets'" [class]="'form-control'" (onChangeVal)="changeData($event)"
+              [(ngModel)]="selectedSheet" [dpOptions]="sheetColumns" [value]="selectedSheet" class="w-100"></rmdropdown>
+          </div>
+        </div>
+        <div class="col-12">
+          <rmgrid [(gridproperties)]="exportGridList" [isCancelIconShow]="false" [hideRearrangeIcon]="true">
+          </rmgrid>
+        </div>
+      </div>
+    </div>
+  </xpo-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button type="button"
+      (click)="clearImportExport(); masterPageService.hideDialog();">Close</button>
+    <rmbutton *ngIf='showProcessbutton' [class]="'btn btn-round-black mr-1'" [id]="'Process'"
+      [buttonname]="'COMMON.PROCESS'| translate" (onclick)="masterPageService.hideDialog(); selectFile();"
+      [iconstyle]="'fas fa-cogs'"></rmbutton>
+  </mat-dialog-actions>
+</ng-template>

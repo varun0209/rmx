@@ -1,0 +1,49 @@
+<div class="container-fluid">
+    <form #configurationForm="ngForm">
+        <div ngModelGroup="groupSetup" #sapCtrls="ngModelGroup">
+
+            <div class="form-row">
+
+                <div class="col mb-3">
+                    <rmlabel [label]="'GROUPSETUP.GROUPID' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.grouptypeID?.Required">
+                    </rmlabel>
+                    <rmtextbox [(ngModel)]="groupSetup.GROUPID" [textBoxPattern]="textBoxPattern"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.grouptypeID?.Required"
+                        [name]="'Groupid'" [class]="'form-control'" #grouptypeID [id]="'Groupid'"
+                        (onChangeVal)="changeInput()" [placeholder]="''"
+                        [maxlength]="appConfig?.groupValueSetup?.groupIDTextboxLength">
+                    </rmtextbox>
+                </div>
+
+                <div class="col mb-3">
+
+                </div>
+
+                <div class="col-12 mb-3">
+                    <rmlabel [label]="'GROUPSETUP.DESCRIPTION' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.description?.Required">
+                    </rmlabel>
+                    <rmtextbox [(ngModel)]="groupSetup.DESCRIPTION" [textBoxPattern]="textBoxPattern"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.description?.Required"
+                        [name]="'Description'" [class]="'form-control'" [id]="'Description'"
+                        (onChangeVal)="changeInput()" [placeholder]="''"
+                        [maxlength]="appConfig?.groupValueSetup?.descriptionTextboxLength">
+                    </rmtextbox>
+                </div>
+
+            </div>
+
+            <div class="mb-3 d-flex justify-content-end">
+                <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'clear'" [buttonname]="'COMMON.CLEAR'| translate"
+                    [iconstyle]="'far fa-times-circle'" [disabled]="isClearBtnDisabled" (click)="clear()">
+                </rmbutton>
+                <rmbutton [class]="'btn btn-round-black ml-1'" [id]="'add'" *ngIf="sapCtrls"
+                    [disabled]=" !(sapCtrls.valid)" (onclick)="addGroupType()" [buttonname]="groupValueSetupBtnName"
+                    [iconstyle]="groupValueSetupBtnName == commonEnum.save ?'fas fa-save':'far fa-save'">
+                </rmbutton>
+            </div>
+
+        </div>
+    </form>
+</div>

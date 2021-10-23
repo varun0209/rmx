@@ -1,0 +1,22 @@
+﻿
+  .border-blue{
+      border-color: rgb(8,104,172);
+  }
+
+  .text-blue{
+    color: rgb(8,104,172);
+    font-size: 13px !important;
+  }
+
+  .fontSize{
+    font-size: 13px !important;
+  }
+
+  .fixedHeight{
+    height: 190px;
+    overflow-y: auto;
+  }
+
+  .blackColor{
+    color: rgb(0, 0, 0) !important;
+  }

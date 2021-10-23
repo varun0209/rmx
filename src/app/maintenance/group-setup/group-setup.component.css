@@ -1,0 +1,10 @@
+@media(max-width: 767.98px) and (min-width: 360px){
+    .col{
+        min-width:100%;
+    }
+}
+@media(max-width: 1024px) and (min-width: 768px){
+    .col{
+        min-width:50%;
+    }
+}

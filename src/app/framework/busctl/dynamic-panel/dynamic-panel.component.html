@@ -1,0 +1,150 @@
+﻿<div [ngClass]="setContainer">
+    <div class="form-row my-1 py-1 " [ngClass]=" setDynamicPanelBorder">
+        <ng-container *ngFor="let cardelement of cards.TransControls; index as i"
+            [ngSwitch]="cardelement.Property.controlType">
+            <ng-container *ngSwitchCase="'label'">
+        <div class="col ml-2 align-self-center" *ngFor="let AttributeValue of cardelement.AttributeValues">
+                    <p class="wordwrap mt-2" *ngFor="let AttributeValue of cardelement.AttributeValues">
+                        {{AttributeValue.Text}}</p>
+                </div>
+            </ng-container>
+            <!-- <div  class="my-1" [ngClass]="dynamicFormClass"> -->
+            <ng-container *ngSwitchCase="'dropdown'">
+                <div class="col pt-2" >
+                    <div [ngClass]="dynamicFormClass" class="mb-display-flex pl-3  align-baseline" *ngIf="(cardelement.AttributeValues.length > 0 && cardelement.Property.controlVisible == 'Y')">
+                        <rmlabel [lblStyle]="'mr-2 lable-padding'"
+                            [for]="getElementId(cardelement.Property.controlId,cards.TransId)"
+                            [label]="cardelement.AttributeName"></rmlabel>
+                        <rmdropdown [name]="cardelement.AttributeName" #attrname
+                            [id]="getElementId(cardelement.Property.controlId,cards.TransId)" [class]="'mx-0 min-width-dropdown'"
+                            [disabled]="cardelement.Disable" [(ngModel)]="cardelement.SelectedValue"
+                            [value]="cardelement.SelectedAttributeValue.Id" [description]="'Description'"
+                            (onChangeVal)="changeDropDown(cardelement,$event, attrname)" [dpOptions]="cardelement.AttributeValues"
+                            tabindex="2"></rmdropdown>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'multiSelectDropDown'">
+                <div class="col pt-2">
+                    <div [ngClass]="dynamicFormClass" class="align-baseline"
+                        *ngIf="(cardelement.AttributeValues.length > 0 && cardelement.Property.controlVisible == 'Y')">
+                        <rmlabel [lblStyle]="'mr-2 lable-padding'"
+                            [for]="getElementId(cardelement.Property.controlId,cards.TransId)"
+                            [label]="cardelement.AttributeName"></rmlabel>
+                        <rmmultiselect [name]="cardelement.AttributeName"
+                            [id]="getElementId(cardelement.Property.controlId)" [disabled]="cardelement.Disable"
+                            [placeHolder]="''" [data]="cardelement.AttributeValues" class="w-50"
+                            [dropdownSettings]="cardelement.Property.dropdownSettings"
+                            [selectedItems]="cardelement.SelectedAttributeValues"
+                            (onSelectedItem)="getSelectedList(cardelement,$event, cards.TransId);"
+                            (onDeSelectItem)="onDeSelectItem(cardelement, $event)">
+                        </rmmultiselect>
+                        <button class="btn btn-round-black btn-sm add-btn"
+                            (click)="multiSelectInput(cardelement, cards.TransId)"
+                            [disabled]="(!cardelement.SelectedAttributeValues.length > 0) || cardelement.Disable"> <i
+                                class="fa fa-check" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'textbox'">
+                <div class="col pt-2"  >
+                    <div [ngClass]="dynamicFormClass" class="align-baseline" *ngIf="(cardelement.AttributeValues.length > 0 && cardelement.Property.controlVisible == 'Y')"
+                       >
+                        <rmlabel [lblStyle]="'mr-2'" [label]="cardelement.AttributeName"></rmlabel>
+                        <rmtextbox [name]="cardelement.Property.ControlId" #textbox [textBoxPattern]="textBoxPattern"
+                            (enter)="enterInput(cardelement, $event,textbox)" [(ngModel)]="cardelement.SelectedValue"
+                            [id]="getElementId(cardelement.Property.controlId, cards.TransId)" [placeholder]="''"
+                            [disabled]="cardelement.Disable"></rmtextbox>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'textarea'">
+                <div class="col">
+                    <div [ngClass]="dynamicFormClass" class=" align-baseline">
+                        <rmlabel [lblStyle]="'mr-2'" [label]="cardelement.AttributeName"></rmlabel>
+                        <rmtextarea [id]="getElementId(cardelement.Property.controlId, cards.TransId)"
+                            [placeholder]="cardelement.Property.placeholder"
+                            (onChangeVal)="changeInput(cardelement, $event)" [(ngModel)]="cardelement.SelectedValue"
+                            [disabled]="cardelement.Disable"></rmtextarea>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'checkbox'">
+                <div class="col">
+                    <div [ngClass]="dynamicFormClass">
+                        <rmtoggle [label]="cardelement.AttributeName" [disabled]="cardelement.Disable"
+                            [(ngModel)]="cardelement.controlvalue"
+                            [id]="getElementId(cardelement.Property.controlId, cards.TransId)"
+                            [toggleval]="cardelement.SelectedValue == 'True' ? true : false"
+                            (onChangeVal)="changeCheckBox(cardelement, $event)"></rmtoggle>
+                    </div>
+                </div>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'toggle'">
+                <div class="col pt-2">
+                    <div [ngClass]="dynamicFormClass">
+                        <rmtoggle [label]="cardelement.AttributeName" [disabled]="cardelement.Disable" #attrnameToggle
+                            [(ngModel)]="cardelement.controlvalue"
+                            [id]="getElementId(cardelement.Property.controlId, cards.TransId)"
+                            [toggleval]="cardelement.SelectedValue == 'Y' ? true : false"
+                            (onChangeVal)="changeToggle(cardelement, $event,attrnameToggle)"></rmtoggle>
+                    </div>
+                </div>
+
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'autoextender'">
+        <div class="col auto-extend-width pt-2">
+          <div [ngClass]="dynamicFormClass" class="mb-display-flex pl-mb-3  align-baseline">
+                        <rmauto-extender [disabled]="cardelement.Disable" [name]="cardelement.AttributeName"
+                            [(ngModel)]="cardelement.controlvalue" [id]="getElementId(cardelement.Property.controlId,
+                            cards.TransId)" [transactionId]="cards.TransId"
+                             [fieldArrayInput]="cardelement.SelectedValue" #extender [waitTime]="skuWaitTime"
+                             [formStyle]="'form-group form-group-mb'"
+                            (typeaheadResponse)="typeaheadResponse(cardelement,$event,extender)" [uiData]="uiData">
+                        </rmauto-extender>
+                    </div>
+                </div>
+            </ng-container>
+      <!--Autoextender1 is using for parts-->
+      <ng-container *ngSwitchCase="'autoextender1'">
+        <div class="col auto-extend-width pt-2">
+          <div [ngClass]="dynamicFormClass" class="mb-display-flex pl-mb-3  align-baseline">
+            <rmauto-extender-one [disabled]="cardelement.Disable" [name]="cardelement.AttributeName"
+              [(ngModel)]="cardelement.controlvalue" [id]="getElementId(cardelement.Property.controlId,cards.TransId)"
+              [transactionId]="cards.TransId" [isAdd]="autoExtenderOneAddDisable"
+              [isDoneDisabled]="autoExtenderOneDoneDisable"  [fieldArrayInput]="cardelement.SelectedValue"
+              [isQtyDisabled]="autoExtenderOneIsQtyDesiabled" #extender [waitTime]="skuWaitTime"
+              [formStyle]="'form-group form-group-mb'"
+              (typeaheadResponse)="typeaheadResponse(cardelement,$event,extender)" [uiData]="uiData"
+              [partsList]="partsList">
+            </rmauto-extender-one>
+          </div>
+        </div>
+      </ng-container>
+            <ng-container *ngSwitchCase="'radiobutton'">
+                <div class="">
+                  <div [ngClass]="dynamicFormClass" class="align-baseline">
+                    <ng-container *ngFor="let AttributeValue of cardelement.AttributeValues; let i=index">
+                      <fieldset [disabled]=cardelement.Disable>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" [name]="cardelement.AttributeName"
+                            [id]="getElementId(cardelement.Property.controlId,
+                            cards.TransId)"
+                            (change)="changeRadioBtn(cardelement, $event, AttributeValue)"
+                            [checked]="AttributeValue.Text == cardelement.SelectedValue"
+                            value="{{AttributeValue.Id}}">
+                          <label class="form-check-label"
+                            [for]="getElementId(AttributeValue.Text, cards.TransId)">{{AttributeValue.Text}}</label>
+                        </div>
+                      </fieldset>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+            <!-- </div> -->
+        </ng-container>
+        <!-- <rmbutton [class]="'btn btn-default ml-1'" [disabled]="'false'" (onclick)="submit()" [iconstyle]="'fa fa-sync-alt'"></rmbutton>  [{'id':'1','text':'pass'}] -->
+    </div>
+</div>

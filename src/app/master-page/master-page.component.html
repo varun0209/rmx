@@ -1,0 +1,223 @@
+﻿<rmx-shell [routes]="appService.appRoutes" [versionNumber]="release" [environment]="env" [drawerClosedByDefault]="true">
+  <xpo-header-app-name (click)="navigateToMain()" class="xpo-Header-appName">RMx</xpo-header-app-name>
+  <xpo-header-items> <img width="80" *ngIf="appService.clientImage" height="21" class="" src="{{appService.clientImage}}"
+      alt="{{appService.imageAltText}}" /> <span class="site-id" *ngIf="masterPageService.siteId"> <span> {{masterPageService.siteId}} </span> <span>
+      {{masterPageService.location}} </span> </span>
+  </xpo-header-items>
+
+  <xpo-header-actions>
+    <!-- <div class="time-location">
+      <span>{{ realTime | date: 'hh:mm:ss a' }}-{{timeZoneName}}</span>
+    </div> -->
+    <div class="d-flex justify-content-around mr-2 header-search">
+      <i class="fas fa-search mobile-search" (click)="slideSearch($event)"></i>
+      <mat-form-field class="mb-searchtoggle"
+        [ngClass]="masterPageService.hideSearchBox  ? 'mbsearchtoggle-show' : 'mbsearchtoggle-hide'">
+        <mat-label>Search</mat-label>
+        <input matInput placeholder="Search">
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="user-logout">
+      <span [xpoPopoverTriggerFor]="popover">
+        <i class="fas fa-user-circle"></i>
+      </span>
+      <xpo-popover #popover="xpoPopover" [position]="position" [color]="color" [caretPosition]="caretPosition"
+        class="Popover-profile">
+        <xpo-popover-title>My Account</xpo-popover-title>
+        <xpo-popover-content>
+          <div class="popover-user-details">
+            <span class="user-pic float-left " *ngIf="loggedInUser">{{loggedInUser.charAt(0) | uppercase }} </span>
+            <span class="popover-user-name">
+              Welcome
+              <h2>{{loggedInUser}}</h2>
+            </span>
+          </div>
+          <button xpo-popover-item [routerLink]="['/user-profile']">My Profile</button>
+          <button xpo-popover-item>Help</button>
+          <button xpo-popover-item>Privacy Policy</button>
+          <button xpo-popover-item (click)="openLogoutModal()">Log Out</button>
+          <!-- <button xpo-popover-item (click)="openMaterial(logoutConfirmation)">Log Out</button> -->
+        </xpo-popover-content>
+        <div class="xpo-AppSwitcherPopover-footerContainer u-flex--spaceBetween">
+          <mat-icon class="xpo-AppSwitcherPopover-footerIcon mat-icon notranslate material-icons mat-icon-no-color"
+            role="img" aria-hidden="true">settings</mat-icon>
+          <button color="primary" mat-raised-button="" class="mat-raised-button mat-button-base mat-primary"
+            ng-reflect-color="primary">
+            <span class="mat-button-wrapper">View All</span>
+            <div class="mat-button-ripple mat-ripple" matripple="" ng-reflect-centered="false"
+              ng-reflect-disabled="false" ng-reflect-trigger="[object HTMLButtonElement]"></div>
+            <div class="mat-button-focus-overlay"></div>
+          </button>
+        </div>
+      </xpo-popover>
+
+    </div>
+    <!-- <div class="apps">
+      <span [xpoPopoverTriggerFor]="apps"><i class="fas fa-th"></i></span>
+      <xpo-popover #apps="xpoPopover" class="Popover-profile" [caretPosition]="caretPosition">
+        <xpo-popover-title>Applications</xpo-popover-title>
+        <xpo-popover-content>
+          <button xpo-popover-item>IOS</button>
+          <button xpo-popover-item>BAX</button>
+        </xpo-popover-content>
+        <div class="xpo-AppSwitcherPopover-footerContainer u-flex--spaceBetween">
+          <mat-icon class="xpo-AppSwitcherPopover-footerIcon mat-icon notranslate material-icons mat-icon-no-color"
+            role="img" aria-hidden="true">settings</mat-icon>
+            <div class="text-center gxo-btn">
+              <button class="col" mat-flat-button xpoSmallButton color="primary" type="submit"
+               >View All</button>
+            </div>
+        </div>
+      </xpo-popover>
+    </div> -->
+  </xpo-header-actions>
+  <rmx-shell-ribbon class="u-flex--spaceBetween d-flex">
+    <div class="title">{{title | translate}}</div>
+    <div class="actions d-flex">
+      <div *ngIf="masterPageService.showRibbondropdown" class="mr-3 mb-0">
+        <rmdropdown [id]="'opCategorydropdown'" [name]="'opCategorydropdown'"  [disabled]=""
+          (click)="hideApps()" (onChangeVal)="masterPageService.setOptions($event)"
+          [dpOptions]="masterPageService.options" [value]="masterPageService.option"></rmdropdown>
+      </div>
+      <span *ngIf="masterPageService.showUtilityIcon" mat-raised-button [xpoPopoverTriggerFor]="jsPopover"><i
+          class="fas fa-grip-horizontal mr-2"></i></span>
+      <xpo-popover #jsPopover="xpoPopover" [position]="'below'" [color]="'primary'" [caretPosition]="caretPosition">
+        <button xpo-popover-item
+          *ngIf="masterPageService.hideControls.controlProperties.recoverSerialNumber?.Show && appService.checkDevice()"
+          (click)="openModal(utilitymodal,operation.serialnumberrecoverRef)">{{'Recover Serial Number'|
+          translate}}</button>
+
+        <button xpo-popover-item *ngIf="masterPageService.hideControls.controlProperties.containerMove?.Show"
+          (click)="openModal(utilitymodal,operation.containermoveRef)">{{'Container Move' | translate}}</button>
+
+        <button xpo-popover-item *ngIf="masterPageService.showUtilityIcon"
+          (click)="openModal(utilitymodal,operation.closecontainerRef)">{{'Close Container' | translate}}</button>
+
+        <button xpo-popover-item *ngIf="masterPageService.hideControls.controlProperties.containerInfo?.Show"
+          (click)="openModal(utilitymodal,operation.containerinformationRef)">{{'Container Information' |
+          translate}}</button>
+
+      </xpo-popover>
+    </div>
+  </rmx-shell-ribbon>
+  <div class="container-fluid" *ngIf="appErrService.alertFlag">
+    <div class="mx-auto">
+      <rmalert [class]="'w-50'" [text]="appErrService.alertMsg" [alertColor]="appErrService.alertColor"></rmalert>
+    </div>
+  </div>
+  <div class="main-container">
+    <div class="form-row d-flex">
+      <div [ngClass]="processQueuePanel() ? 'col-7': 'col-12' ">
+        <div class="col-lg-4 col-md-5 col-sm-6 mx-auto mt-71" *ngIf="masterPageService.showRibbonModesDropdown">
+          <div class="tab-menu">
+            <button class="tab-item btn btn-link" [class.active]="i == masterPageService.selectedModeIndex"
+              *ngFor="let mode of masterPageService.modes; let i = index"
+              (click)="masterPageService.selectedMode(mode, i)"
+              [disabled]="(i !== masterPageService?.selectedModeIndex) && masterPageService.modeOptionSelected">{{mode.Text}}</button>
+          </div>
+        </div>
+        <router-outlet></router-outlet>
+      </div>
+      <div class="col-5" *ngIf="processQueuePanel()">
+        <div class="accordion-sec w-100" *showItBootstrap="['lg','xl','md','sm']">
+          <fieldset class="rm-card p-0">
+            <ul class="nav nav-tabs ul-tabs" id="tab" role="tablist">
+              <li class="nav-item" (click)="masterPageService.setActiveTab(commonEnum.containerDetails)"
+                *ngIf="masterPageService.hideControls.controlProperties.containerDetailsTab?.Show && masterPageService?.gridContainerDetails?.Elements?.length">
+                <a [ngClass]="masterPageService?.gridContainerDetails?.Elements?.length && masterPageService.setActiveTabValue === commonEnum.containerDetails ? 'active' : ''"
+                  class="nav-link" id="queue-tab3" data-toggle="tab" href="#containerDetailsTab" role="tab"
+                  aria-controls="containerDetailsTab" aria-selected="true">{{containerDetailsTabHeader | translate}}</a>
+              </li>
+              <li class="nav-item" *ngIf="masterPageService?.tempQueList?.Elements?.length">
+                <a [ngClass]="!masterPageService.hideControls.controlProperties.containerDetailsTab?.Show && masterPageService?.tempQueList?.Elements?.length ? 'active' : ''"
+                  class="nav-link" id="queue-tab" data-toggle="tab" href="#queue" role="tab" aria-controls="queue"
+                  aria-selected="true">{{cardHeader | translate}}</a>
+              </li>
+              <li *ngIf="masterPageService.hideControls.controlProperties.batchDetailTab?.Show" class="nav-item">
+                <a class="nav-link " id="queue-tab1" data-toggle="tab" (click)="masterPageService.batchSerialFocus()"
+                  href="#fqaBadge" role="tab" aria-controls="queue" aria-selected="true">{{fqaCardHeader|
+                  translate}}</a>
+              </li>
+              <li class="nav-item"
+                *ngIf="masterPageService.hideControls.controlProperties.samplingBatchDetailsTab?.Show && masterPageService.samplingBatchDeatil">
+                <a class="nav-link" id="queue-tab2" data-toggle="tab" href="#samplingcard" role="tab"
+                  aria-controls="samplingcard" aria-selected="true">{{samplingCardHeader | translate}}</a>
+              </li>
+              <li class="nav-item" *ngIf="(masterPageService.hideControls.controlProperties.routeDeatilsTab?.Show) &&
+              (masterPageService.routeOperationList || masterPageService.nextRoutesList )" id="routecardHeader"
+                (click)="masterPageService.setActiveTab(commonEnum.routeDetails)">
+                <a [ngClass]="(masterPageService.setActiveTabValue === commonEnum.routeDetails) ? 'active' : ''"
+                  class="nav-link" id="queue-tab3" data-toggle="tab" href="#routecard" role="tab"
+                  aria-controls="routecard" aria-selected="true">{{routeCardHeader | translate}}</a>
+              </li>
+              <li class="nav-item" *ngIf="(masterPageService.hideControls.controlProperties.deviceDeatilsTab?.Show) &&
+          ((masterPageService.serialNumberProperties | json) != '{}' && masterPageService.enableDynamicSelector)"
+                id="devicecardHeader" (click)="masterPageService.setActiveTab(commonEnum.deviceDetails)">
+                <a [ngClass]="(masterPageService.setActiveTabValue === commonEnum.deviceDetails) ? 'active' : ''"
+                  class="nav-link" id="queue-tab4" data-toggle="tab" href="#devicecard" role="tab"
+                  aria-controls="devicecard" aria-selected="true">{{deviceCardHeader | translate}}</a>
+              </li>
+              <li class="nav-item" (click)="actionTab()"
+                *ngIf="masterPageService.hideControls.controlProperties?.actionDetailsTab?.Show">
+                <a class="nav-link " id="queue-tab1" data-toggle="tab" href="#receiving-action" role="tab"
+                  aria-controls="queue" aria-selected="true">Action Required</a>
+              </li>
+            </ul>
+            <div class="tab-content  p-2" id="queueTabContent">
+              <div class="tab-pane fade show"
+                [ngClass]="(masterPageService.hideControls.controlProperties.containerDetailsTab?.Show &&
+            masterPageService?.gridContainerDetails?.Elements?.length && masterPageService.setActiveTabValue === commonEnum.containerDetails) ? 'active' : ''"
+                id="containerDetailsTab" role="tabpanel" aria-labelledby="queue-tab3">
+                <rmgrid [(gridproperties)]="masterPageService.gridContainerDetails" [resultStatus]="false">
+                </rmgrid>
+              </div>
+              <div class="tab-pane fade show"
+                [ngClass]="(!masterPageService.hideControls.controlProperties.containerDetailsTab?.Show &&
+            masterPageService?.tempQueList?.Elements?.length && masterPageService.setActiveTabValue === commonEnum.containerDetails) ? 'active' : ''"
+                id="queue" role="tabpanel" aria-labelledby="queue-tab">
+                <rmgrid [(gridproperties)]="masterPageService.tempQueList"
+                  [gridBatchId]="masterPageService.gridBatchId">
+                </rmgrid>
+              </div>
+              <div class="tab-pane fade show " id="fqaBadge" role="tabpanel" aria-labelledby="queue-tab1">
+                <batch-detail></batch-detail>
+              </div>
+              <div class="tab-pane fade show" id="samplingcard" role="tabpanel" aria-labelledby="queue-tab2">
+                <sampling-batch-details></sampling-batch-details>
+              </div>
+              <div [ngClass]="(masterPageService.setActiveTabValue === commonEnum.routeDetails) ? 'active' : ''"
+                class="tab-pane fade show" id="routecard" role="tabpanel" aria-labelledby="queue-tab3">
+                <div class="route-details" *ngIf="showRouteDetails() ">
+                  <app-route-details></app-route-details>
+                </div>
+                <div class="text-center" *ngIf="!showRouteDetails()">{{'COMMON.NODATAFOUND' | translate}}
+                  <img class="nodata-img" src="assets/images/no-data-found.png" alt="">
+                </div>
+              </div>
+              <div [ngClass]="(masterPageService.setActiveTabValue === commonEnum.deviceDetails) ? 'active' : ''"
+                class="tab-pane fade show" id="devicecard" role="tabpanel" aria-labelledby="queue-tab4">
+                <div class="route-details"
+                  *ngIf="((masterPageService.serialNumberProperties | json) != '{}' && masterPageService.enableDynamicSelector)">
+                  <app-tree-view [treeObj]="masterPageService.serialNumberProperties" [height]="'500'"></app-tree-view>
+                </div>
+                <div class="text-center"
+                  *ngIf="!((masterPageService.serialNumberProperties | json) != '{}' && masterPageService.enableDynamicSelector)">
+                  {{'COMMON.NODATAFOUND' | translate}}
+                  <img class="nodata-img" src="assets/images/no-data-found.png" alt="">
+                </div>
+              </div>
+              <div class="tab-pane fade show " id="receiving-action" role="tabpanel" aria-labelledby="queue-tab1">
+                <receiving-action-required></receiving-action-required>
+              </div>
+            </div>
+          </fieldset>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+</rmx-shell>
+
+

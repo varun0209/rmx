@@ -1,0 +1,86 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="row m-0">
+        <div class="col-lg-12 col-md-12 col-sm-12 p-0">
+            <div class="container-fluid">
+                <div class="row p-3">
+                    <div class="col-md-6">
+
+                        <div class="row mb-2">
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <rmlabel [label]="controlConfig.inboundContainer | translate"
+                                        [isAsterisk]="masterPageService.hideControls.controlProperties?.inboundBatchContainer?.Required">
+                                    </rmlabel>
+                                    <rmtextbox [(ngModel)]="batchId" #inboundBatchCon [id]="'inboundBatchContainer'"
+                                        [placeholder]="''"
+                                        [requiredIf]="masterPageService.hideControls.controlProperties?.inboundBatchContainer?.Required"
+                                        (enter)="validateSkuTransferSerialnumbers(inboundBatchCon);"
+                                        (onChangeVal)="onChangeBatchId();" [disabled]="isBatchIdDisabled"></rmtextbox>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 d-flex align-items-center mt-2">
+                                <rmbutton [class]="'btn btn-round-black'" [id]="'reset'" [disabled]="isResetDisabled"
+                                    [buttonname]="'COMMON.RESET' | translate" (onclick)="resetBatchId();"
+                                    [iconstyle]="'fas fa-redo'">
+                                </rmbutton>
+                            </div>
+
+                        </div>
+
+                        <div class="row  mb-2">
+                            <div class="col-md-6 col-sm-12 mt-2">
+                                <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.batchSerialNumber?.Required">
+                                </rmlabel>
+                                <div class="mb-2">
+                                    <rmtextbox [(ngModel)]="batchSerialNumber" 
+                                        [disabled]="masterPageService.hideControls.controlProperties?.batchSerialNo?.Disabled || isBatchSerialNoDisabled"
+                                        #batchSerialNo [id]="'batchSerialNumber'" [placeholder]="''"
+                                        (enter)="validateSkuTransferSerialnumber(batchSerialNo);" [uiData]="uiData" [isSerialNumber]="true"
+                                        [textBoxPattern]="controlConfig?.barCodePattern"
+                                        [requiredIf]="masterPageService.hideControls.controlProperties?.batchSerialNumber?.Required">
+                                    </rmtextbox>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-md-6 col-sm-12 mt-2">
+                                <rmlabel [label]="'DEVICEMANAGEMENT.REASON' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.batchReason?.Required">
+                                </rmlabel>
+                                <rmdropdown [dpOptions]="reasonsList" [disabled]="isBatchReasonDisabled"
+                                    [name]="'batchReason'" [id]="'batchReason'" [value]="selectedBatchReason.Id"
+                                    [(ngModel)]="selectedBatchReason.Text"
+                                    (onChangeVal)="onSelectedBatchReason($event)"></rmdropdown>
+                            </div>
+                        </div>
+
+
+                        <div class="row p-3">
+
+                            <div class="col-md-12 mt-3">
+                                <app-sku-transfer *ngIf="isSkuTransferFlag" (clearSerialNumber)="clearBatchSerialNo();"
+                                    [originalSku]="originalSku" [skuLength]="appConfig.wmxSkuTransfer.skuLength"
+                                    [deviceMgmtDevice]="deviceMgmt" [skuObject]="skuObject" [dmDevice]="dmDevice"
+                                    (emitDevice)="processSKu($event)" [buttonName]="buttonName">
+                                </app-sku-transfer>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 mt-3" *ngIf="transferDeviceList">
+                        <rmgrid [(gridproperties)]="transferDeviceList" [isCancelIconShow]="false">
+                        </rmgrid>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>

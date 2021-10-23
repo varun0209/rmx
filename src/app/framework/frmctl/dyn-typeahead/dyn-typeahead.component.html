@@ -1,0 +1,8 @@
+<ng-select [items]="bufferList" [virtualScroll]="virtualScroll" [bindLabel]="label" [bindValue]="value"
+    [placeholder]="placeholder" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()"
+    (search)="searchInput($event)" (change)="onChange($event)" [id]="id" [(ngModel)]="selectedTypeahead" dropdownPosition="bottom"
+    #typeAhead [editableSearchTerm]="editableSearchTerm" [multiple]="multiple" (clear)="clear();" (blur)="blur();" >
+        <ng-template ng-option-tmp let-item="item" let-index="index">
+            <span>{{item.Text}}</span>
+          </ng-template>
+</ng-select>

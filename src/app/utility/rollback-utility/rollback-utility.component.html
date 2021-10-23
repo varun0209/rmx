@@ -1,0 +1,40 @@
+<div class="container db-mt padding-bottom">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-lg-12 col-md-12 col-12 mb-2">
+        <rmlabel [label]="'Inbound container'"></rmlabel>
+        <div class="mb-2">
+          <rmtextbox [(ngModel)]="inboundContainer" #InboundContainer [disabled]="isinboundcontainerDisabled" [placeholder]="''" [id]="'inboundcontainer'"></rmtextbox>
+        </div>
+      </div>
+
+      <div class="col-sm-12 col-lg-12 col-md-12 col-12 mb-2">
+        <rmlabel [label]="'Serial Number'"></rmlabel>
+        <div class="mb-2">
+          <rmtextbox [(ngModel)]="newSerailNo" (onChangeVal)="changeInput()" #newserialno [disabled]="isNewSerialNoDisabled" [placeholder]="''" [id]="'inputnewSerialNo'"></rmtextbox>
+        </div>
+      </div>
+
+      <div class="col-sm-12 col-lg-12 col-md-12 col-12 mb-2">
+        <rmlabel [lblStyle]="'mr-2'" [label]="' Operation to Rollback'"></rmlabel>
+
+        <rmdropdown [name]="'rollback'" [id]="" [class]="'mx-0'" [disabled]="isdropdownDisabled" [(ngModel)]="rollbackdropdown" [value]="" [dpOptions]=""
+          tabindex="2"></rmdropdown>
+      </div>
+      <div class="col-sm-12 col-lg-12 col-md-12 col-12 mb-2 mt-2">
+        <rmlabel [label]="'Outbound Container'"></rmlabel>
+        <div class="mb-2">
+          <rmtextbox [(ngModel)]="outboundContainer" #OutboundContainer [disabled]="isoutboundContainerDisabled" [placeholder]="''"
+            [id]="'OutboundContainer'"></rmtextbox>
+        </div>
+      </div>
+
+      <div class="col-sm-12 col-lg-12 col-md-12 col-12 mb-2 mt-3">
+        <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled" [buttonname]="'Clear'"
+          [iconstyle]="'fas fa-times-circle'" (onclick)="Clear()"></rmbutton>
+        <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'addSerialNumber'" [disabled]="isAddDisabled" [buttonname]="'Rollback'"
+          [iconstyle]="'fas fa-undo'"></rmbutton>
+      </div>
+    </div>
+  </div>
+</div>

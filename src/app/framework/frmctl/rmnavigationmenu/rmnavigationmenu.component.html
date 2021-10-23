@@ -1,0 +1,251 @@
+<!-- <br><br> -->
+<nav class="navbar navbar-light bg-light">
+<button class="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+    aria-expanded="false" aria-label="Toggle navigation" mat-icon-button [matMenuTriggerFor]="appMenu">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+ <mat-menu #appMenu="matMenu">
+  <button mat-menu-item [matMenuTriggerFor]="subMenu">CI Clear</button>
+  <button mat-menu-item [matMenuTriggerFor]="subMenuFqa">FQA</button>
+   <button mat-menu-item [matMenuTriggerFor]="subMenuRcv">Receiving</button>
+    <button mat-menu-item [matMenuTriggerFor]="subMenuPgm">Program</button>
+</mat-menu>
+
+<mat-menu #subMenu="matMenu">
+        <button mat-menu-item>CI Clear General</button>
+        <button mat-menu-item>CI Clear Display</button>
+        <button mat-menu-item>CI Clear Profile</button>
+    </mat-menu>
+<mat-menu #subMenuFqa="matMenu">
+        <button mat-menu-item>FQA General</button>
+        <button mat-menu-item>FQA Display</button>
+        <button mat-menu-item>FQA Profile</button>
+    </mat-menu>
+<mat-menu #subMenuRcv="matMenu">
+        <button mat-menu-item>Receiving General</button>
+        <button mat-menu-item>Receiving Display</button>
+        <button mat-menu-item>Receiving Profile</button>
+    </mat-menu>
+<mat-menu #subMenuPgm="matMenu">
+        <button mat-menu-item>Program General</button>
+        <button mat-menu-item>Program Display</button>
+        <button mat-menu-item>Program Profile</button>
+    </mat-menu>
+<!-- <button mat-icon-button [matMenuTriggerFor]="appMenu">
+  <mat-icon>menu</mat-icon>
+</button> -->
+  <span><img src="/assets/images/dashboard/Final QA.png" class="d-inline-block align-top" alt="GXO Logistics"></span>
+  </nav><br><br>
+
+<!-- Navbar 2-->
+<br><br><br>
+<nav class="navbar navbar-light bg-light">
+<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#collapsingNavbar" aria-controls="collapsingNavbar"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+<span><img src="/assets/images/dashboard/Final QA.png" class="d-inline-block align-top" alt="GXO Logistics"></span> 
+ </nav>
+<div class="navbar-collapse collapse" id="collapsingNavbar">
+    <!-- <nav class="nav flex-column" style="background-color:red;width:12%"> -->
+      <div id="accordion" style="width:180px">
+  <div class="card colr">
+    <div class="card-header">
+      <a class="card-link" data-toggle="collapse" href="#Receiving">
+        Receiving
+      </a>
+    </div>
+    <div id="Receiving" class="collapse show" data-parent="#accordion">
+      <div class="card-body">
+        <a class="nav-link active" href="#">Receiving Device1</a>
+        <a class="nav-link active" href="#">Receiving Device2</a>
+        <a class="nav-link active" href="#">Receiving Device3</a>
+      </div>
+    </div>
+  </div>
+<div class="card colr">
+    <div class="card-header">
+      <a class="card-link" data-toggle="collapse" href="#CIClear">
+        CI Clear
+      </a>
+    </div>
+    <div id="CIClear" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        <a class="nav-link active" href="#">CI Clear Device1</a>
+        <a class="nav-link active" href="#">CI Clear Device2</a>
+        <a class="nav-link active" href="#">CI Clear Device3</a>
+      </div>
+    </div>
+  </div>
+<div class="card colr">
+    <div class="card-header">
+      <a class="card-link" data-toggle="collapse" href="#FQA">
+        FQA
+      </a>
+    </div>
+    <div id="FQA" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        <a class="nav-link active" href="#">FQA Device1</a>
+        <a class="nav-link active" href="#">FQA Device2</a>
+        <a class="nav-link active" href="#">FQA Device3</a>
+      </div>
+    </div>
+  </div>
+<div class="card colr">
+    <div class="card-header">
+      <a class="card-link" data-toggle="collapse" href="#Program">
+        Program
+      </a>
+    </div>
+    <div id="Program" class="collapse" data-parent="#accordion">
+      <div class="card-body">
+        <a class="nav-link active" href="#">Program Device1</a>
+        <a class="nav-link active" href="#">Program Device2</a>
+        <a class="nav-link active" href="#">Program Device3</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </nav> -->
+</div>
+
+<!-- Navbar 3-->
+<br><br><br><br><br>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nbarctrl" aria-controls="nbarctrl"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+<span><img src="/assets/images/dashboard/Final QA.png" class="d-inline-block align-top" alt="GXO Logistics"></span> 
+ </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-danger justify-content-center">
+ 
+  <nav class="nav nav-pills nav-fill" id="nbarctrl">  
+    
+    <span> <li class="nav-item">
+  <a class="nav-link text-white" href="#rcv" data-toggle="collapse" id="receiv">Receiving
+    <!-- <br><small class="text-muted">rvg module</small> -->
+  </a></li>
+  <div id="rcv" class="collapse" style="position:absolute">
+<ul class="list-group" style="width:150px">
+  <li class="list-group-item list-group-item-secondary">RR sort</li>
+  <li class="list-group-item list-group-item-secondary">Bulk Returns</li>
+  <li class="list-group-item list-group-item-secondary">Direct Returns</li>
+  <li class="list-group-item list-group-item-secondary">Edge Returns</li>
+  <li class="list-group-item list-group-item-secondary">CI Clear</li>
+</ul>  
+</div></span>
+ <span> <li class="nav-item">
+   <a class="nav-link text-white" href="#autocell" data-toggle="collapse">Auto Cell</a></li>
+<div id="autocell" class="collapse" style="position:absolute">
+<ul class="list-group" style="width:150px">
+  <li class="list-group-item list-group-item-secondary">Induction Tote Move</li>
+  <li class="list-group-item list-group-item-secondary">Cell ESN Move</li>
+  <li class="list-group-item list-group-item-secondary">Clear Lane</li>
+</ul>  
+</div></span>
+ <li class="nav-item"><a class="nav-link text-white" href="#">Final QA</a></li>
+  <li class="nav-item"><a class="nav-link text-white" href="#">Maintenance</a></li>
+<li class="nav-item"><a class="nav-link text-white" href="#">Diagnostic Tools</a></li>
+<li class="nav-item"><a class="nav-link text-white" href="#">Business Rules</a></li>
+<li class="nav-item"><a class="nav-link text-white" href="#">Audit</a></li>
+<li class="nav-item"><a class="nav-link text-white" href="#">Utilities</a></li>
+
+</nav>
+
+</nav>
+
+<!-- Navbar 4-->
+<br><br><br><br><br><br><br><br><br>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#nbarctrl4" aria-controls="nbarctrl4"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+<span><img src="/assets/images/dashboard/Final QA.png" class="d-inline-block align-top" alt="GXO Logistics"></span> 
+ <form class="form-inline my-2 my-lg-0 float-right" style="padding-left:72%">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-danger my-2 my-sm-0" type="submit">Search</button>
+    </form>
+ </nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-danger justify-content-center">
+ 
+  <nav class="nav nav-pills nav-fill" id="nbarctrl4">  
+
+    <span> <li class="nav-item">
+  <a class="nav-link text-white" data-toggle="collapse" href="#rcv4" id="receiv4">Receiving
+    <!-- <br><small class="text-muted">rvg module</small> -->
+  </a></li>
+   <div id="rcv4" class="collapse" style="position:absolute"> 
+     <div class="card">
+  <div class="card-body bg-light">
+    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="RR Sort">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="RR Sort" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="CI Clear">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="CI Clear" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Bulk Returns">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Bulk Returns" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Direct Returns">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Direct Returns" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Edge Returns">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Edge Returns" style="width:80px;height:80px"> </span>
+    
+</div>
+</div>
+   </div> 
+</span>
+
+<span> <li class="nav-item">
+  <a class="nav-link text-white" data-toggle="collapse" href="#fqa4" id="receiv4">Final QA
+    <!-- <br><small class="text-muted">rvg module</small> -->
+  </a></li>
+   <div id="fqa4" class="collapse" style="position:absolute"> 
+     <div class="card">
+  <div class="card-body bg-light">
+    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Edge FQA">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Edge FQA" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Shred FQA">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Shred FQA" style="width:80px;height:80px"> </span>
+</div>
+</div>
+   </div> 
+</span>
+
+<span> <li class="nav-item">
+  <a class="nav-link text-white" data-toggle="collapse" href="#dtools4" id="dtool4">Diagnostic Tools
+    <!-- <br><small class="text-muted">rvg module</small> -->
+  </a></li>
+   <div id="dtools4" class="collapse" style="position:absolute"> 
+     <div class="card">
+  <div class="card-body bg-light">
+    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Doerfer Client">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Doerfer Client" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Tote Suggestion">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Tote Suggestion" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="ESN Suggestion">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="ESN Suggestion" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Audit Points">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Audit Points" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Real Time Callout">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Real Time Callout" style="width:80px;height:80px"> </span>
+  <br><br>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Client Code Map">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Client Code Map" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Clear Lane">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Clear Lane" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Rules Activation">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Rules Activation" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Rule Setup">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Rule Setup" style="width:80px;height:80px"> </span>
+  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Close Receipts">
+  <img src="/assets/images/dashboard/Final QA.png" class="rounded img-thumbnail border border-danger" alt="Close Receipts" style="width:80px;height:80px"> </span>
+     
+</div>
+</div>
+   </div> 
+</span>
+
+  </nav>
+
+</nav>

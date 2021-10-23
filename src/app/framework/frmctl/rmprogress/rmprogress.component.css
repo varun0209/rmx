@@ -1,0 +1,11 @@
+.pg-height{
+    height:16px;
+}
+.progress{
+    background-color: rgb(255,0,0);
+}
+.lblStatus{
+    position: relative;
+    margin: 0 auto;    
+    font-size: 10px;
+}

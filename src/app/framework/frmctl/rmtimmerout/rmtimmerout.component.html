@@ -1,0 +1,16 @@
+<h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+  {{'COMMON.IDELMESSAGE' | translate}}
+</h4>
+
+<xpo-dialog-content>
+  {{'COMMON.IDELCONFORMATIONMESSAGE' | translate}} {{masterPageService.timmerCount}} {{'COMMON.OF' | translate}}
+  {{waitngTime}} {{'COMMON.SECONDS' | translate}}
+</xpo-dialog-content>
+
+
+<mat-dialog-actions>
+  <rmbutton [buttonname]="'COMMON.CONTINUE' | translate" [class]="'btn btn-round-black rm-color--sucess'"
+    (click)="modelClose('continue')"></rmbutton>
+  <rmbutton [buttonname]="'COMMON.LOGOUT' | translate" [class]="'btn btn-round-black rm-color--error'"
+    (click)="modelClose('logout')"></rmbutton>
+</mat-dialog-actions>

@@ -1,0 +1,62 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div
+        [ngClass]=" (masterPageService?.gridContainerDetails?.Elements?.length) ? 'col-md-12 col-sm-12' : 'col-md-7 col-sm-12'">
+        <div class="row">
+          <div class="col-md-12" *ngIf="!masterPageService.hideControls.controlProperties?.inboundContainer?.Hidden">
+            <container-summary [inbContainerDisabled]="masterPageService.disabledContainer" [id]="'inbContainer'"
+              (emitContainerSummaryProperties)="containerSummaryProperties($event)" (emitCurrentOperationId)="setCurrentOperationId($event)"
+              (emitSerialNumber)="getAutoPopulatedSerailNum($event)" (containerList)="getContainerList($event)"
+              (clear)="clear()" [uiData]="uiData">
+            </container-summary>
+          </div>
+        </div>
+        <div class="row pl-0" *ngIf="inboundProperties">
+          <div class="d-flex align-content-end flex-wrap" *ngFor="let header of headingsobj">
+            <div class="p-3" [ngClass]="inboundProperties[header]=='' ? 'pt-4':'p-3'">
+              {{header}} : <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6" *ngIf="!masterPageService.hideControls.controlProperties?.serialNumber?.Hidden">
+            <div class="form-group">
+              <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"></rmlabel>
+              <rmtextbox [(ngModel)]="serialNumber" #serialNumberInput
+                [disabled]="transactionService.disabledSerialNumber" [id]="'serialNumber'" [placeholder]="''"
+                (enter)="validateTestSerialNumber($event,serialNumberInput)" (onChangeVal)="changeInput()"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"
+                [uiData]="uiData" [isSerialNumber]="true" [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+            </div>
+          </div>
+          <div class="col-md-6" *ngIf="!masterPageService.hideControls.controlProperties?.containerSuggestion?.Hidden">
+            <container-suggestion *ngIf="controlConfig?.containerInputId"
+              [csLabel]="controlConfig?.containerInputId | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.containerInputId?.Required"
+              [class]="'form-control'" [id]="'containerInputId'" (focusContainer)="getSuggestContainer($event)"
+              (validateContainerValue)="validateContainer($event)" (emitCheckContainer)="checkContainer($event)"
+              (emitvalidateContainer)="validateContainerResponse($event)"
+              (emitValidateContainerFailResponse)="emitValidateContainerFailResponse($event)" [uiData]="uiData">
+            </container-suggestion>
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="mt-4">
+              <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [disabled]="isSaveDisabled"
+                [buttonname]="'COMMON.SAVE'| translate" [id]="'save'" (onclick)="saveTransaction()"
+                [iconstyle]="'far fa-save'"></rmbutton>
+              <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'"
+                [disabled]="isSerialNumberClearDisabled" [buttonname]="'COMMON.CLEAR'| translate"
+                (onclick)="serialNumberClear()" [iconstyle]="'fas fa-times-circle'">
+              </rmbutton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+.badge-label-mb {
+  margin-top: 6px;
+}
+
+.blink {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0.1;
+  }
+}
+.badge-align {
+  padding: .45em .5em !important;
+}

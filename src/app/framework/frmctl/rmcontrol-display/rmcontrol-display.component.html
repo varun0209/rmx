@@ -1,0 +1,6 @@
+<div class="position-relative" [ngClass]="divStyle">
+    <span class="lblName">{{label}}</span>
+    <span class="lblValue">{{value}}</span>
+  <span class="edit-label-value"><button type="button" class="btn btn-link" (click)="onClick()"
+      [disabled]="isIconDisabled"><i *ngIf="showIcon()" [ngClass]="'fas fa-pen m-fa-pen'"></i></button></span>  
+</div>

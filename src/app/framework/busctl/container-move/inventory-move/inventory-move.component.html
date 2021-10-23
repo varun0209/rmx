@@ -1,0 +1,47 @@
+<div class="mx-auto mt-3" *ngIf="showAlert && !appErrService.specialCharErrMsg">
+  <rmalert [class]="'w-50'" [text]="text"></rmalert>
+</div>
+<div class="mx-auto mt-3" *ngIf="appErrService.specialCharErrMsg">
+  <rmalert [class]="'w-50'" [text]="appErrService.specialCharErrMsg"></rmalert>
+</div>
+<form [formGroup]="inventoryMoveForm">
+  <section>
+    <div class="row mt-4">
+      <div class="col-md-12 mb-3">
+        <rmlabel [label]="controlConfig.inboundContainer | translate"></rmlabel>
+        <span class="badge-right">
+          <rmbadge class="pr-1" [badgenumber]="invAccount"></rmbadge>
+          <rmbadge [badgenumber]="currentLocationId"></rmbadge>
+        </span>
+
+        <rmtextbox [(ngModel)]="containerId" #movecontainerId [disabled]="isContainerDisabled" [placeholder]="''"
+          (enter)="validateMoveContainer(movecontainerId,$event)" (onChangeVal)="changeContainer(movecontainerId)"
+          (clearEmit)="clearEmit($event)" [id]="'containerId'" formControlName="containerId" tabindex="1" [flag]="true">
+        </rmtextbox>
+      </div>
+      <div class="col-md-12 mb-3">
+        <label>{{'COMMON.LOCATION' | translate}} </label>
+        <span class="badge-right" *ngIf="locationObj.InvAccount">
+          <rmbadge [badgenumber]="locationObj.InvAccount"></rmbadge>
+        </span>
+        <rmtextbox [(ngModel)]="locationId" #inputLocation [disabled]="isLocationDisabled" [placeholder]="''"
+          (enter)="validateContainerLocation(inputLocation,$event)" (onChangeVal)="changeLocation(inputLocation)"
+          [id]="'locationId'" formControlName="locationId" tabindex="1" [flag]="true"></rmtextbox>
+      </div>
+      <div class="col-md-12 mb-3">
+        <label>{{'COMMON.REASONCODE' | translate}}</label>
+        <ng-multiselect-dropdown tabindex="1" name="reasonCodes" id="reasonCode" formControlName="reasonCodes" [placeholder]="'Select reason code'" [disabled]="isReasonCodeDisabled" [settings]="dropdownSettings" 
+        [data]="reasonCodeOptions" [(ngModel)]="reasonCode" (onSelect)="changeReasonCode($event)" (onDeSelect)="reasonCodeDeselect()"  [requiredIf]="true">
+        </ng-multiselect-dropdown>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="mt-3 clearfix">
+      <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'moveContainer'" [disabled]="isMoveDisabled"
+        [buttonname]="'COMMON.MOVE' | translate" (onclick)="moveContainer()" [iconstyle]="'fa fa-plus'"></rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled"
+        [buttonname]="'COMMON.CLEAR' | translate" (onclick)="Clear()" [iconstyle]="'fas fa-times-circle'"></rmbutton>
+    </div>
+  </section>
+</form>

@@ -1,0 +1,70 @@
+.add-btn{
+    border-radius: 50%;
+}
+.btn-sm{
+    font-size: .50rem;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+   opacity: 1;
+}
+
+.qtyWidth{
+    /* width:5%; */
+    /* max-width:33%; */
+    max-width:23%;
+}
+
+.quantity{
+    display: block;
+    width: 39%;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: rgb(73, 80, 87);
+    background-color: rgb(255, 255, 255);
+    background-clip: padding-box;
+    border: 1px solid rgb(206, 212, 218);
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.table td:first-child{
+    border-top: none;
+}
+
+.table td{
+    padding: 0px;
+    border-top: none;
+}
+
+.table .tdBtn{
+   vertical-align: middle;
+}
+
+span.suggested-conatiner-badge {
+    position: absolute;
+    top: -5px;
+    right: 5px;
+}
+.height-45{
+    height:45px;
+}
+@media (min-width: 320px) and (max-width: 640px) {
+span.suggested-conatiner-badge {
+    position: absolute;
+    top: -24px;
+    right: 40px;
+}
+
+.qtyWidth{
+    /* width:5%; */
+    max-width:29%;
+}
+}
+@media (max-width: 1199.98px) { 
+    .qtyWidth{
+      
+        max-width:23%;
+    }
+ }

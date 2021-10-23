@@ -1,0 +1,146 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid" *ngIf="!isShowControls">
+        <div [ngClass]="batchQueData.length>0 ? 'col-sm-12' : 'col-sm-12'">
+            <div class="alert alert-dark d-flex justify-content-center" role="alert">
+                {{'FQA.MODE' | translate}}
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid" *ngIf="isShowControls">
+        <div class="row">
+
+            <div [ngClass]="batchQueData.length>0 ? 'col-sm-12' : 'col-sm-12'"
+                *ngIf="!(masterPageService.hideControls.controlProperties.inboundContainer?.Hidden) && !checkmode?.inboundContainer?.Hidden">
+                <container-summary
+                    [inbContainerDisabled]="!masterPageService.disabledContainer && masterPageService.hideControls.controlProperties?.ribbondropdown?.Show"
+                    (validateFQASerialNumbers)="validateFQASerialNumbers($event)"
+                    (emitisContainerValid)="validateContainerSummary($event)" (containerList)="getContainerList($event)"
+                    (emitSpinner)="appService.hideSpinner()" (clearEmit)="clearEmit($event)"
+                    (emitCurrentOperationId)="setCurrentOperationId($event)"
+                    (emitContainerSummaryProperties)="containerSummaryProperties($event)" (clear)="reset()"
+                    [uiData]="uiData"></container-summary>
+
+            </div>
+            <!-- <div [ngClass]="contsummaryParent?.quantity > 0 ? 'mb-4':'mb-3'" class="col-md-6 col-sm-12 d-flex align-items-end">
+                <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'ClearContainer'" [disabled]="isClearDisabled" [buttonname]="'Clear Container'"
+                    (onclick)="Clear()" [iconstyle]="'fas fa-times-circle'"></rmbutton>
+            </div> -->
+        </div>
+        <div class="row" *ngIf="inboundProperties">
+            <div class="d-flex align-content-end flex-wrap" *ngFor="let header of headingsobj">
+                <div class="p-3" [ngClass]="inboundProperties[header]=='' ? 'pt-4':'p-3'">{{header}} :
+                    <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-2">
+            <ng-container>
+                <div [ngClass]="batchQueData.length>0 ? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'"
+                    *ngIf="!masterPageService.hideControls.controlProperties.serialNumber?.Hidden">
+                    <div class="form-group">
+                        <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required">
+                        </rmlabel>
+                        <rmtextbox [(ngModel)]="serialNumber" #serialNumberInput
+                            [disabled]="masterPageService.disabledSerialNumber" [id]="'serialNum'"
+                            (enter)="serialNumberVerification(serialNumberInput,$event)" [uiData]="uiData"
+                            [isSerialNumber]="true" [textBoxPattern]="controlConfig?.barCodePattern" [placeholder]="''"
+                            (onChangeVal)="changeInput(serialNumberInput)"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumber?.Required">
+                        </rmtextbox>
+                    </div>
+                </div>
+                <div [ngClass]="batchQueData.length>0 ? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'"
+                    *ngIf="getSNRetestStatus()" class="sn-retest">
+                    <rmbutton [class]="'btn btn-round-black mr-1 float-left align-middle'" [id]="id"
+                        [disabled]="isSerialNumberResetDisabled" [buttonname]="'COMMON.RESET' | translate"
+                        (onclick)="serialNumberReset()" [iconstyle]="'fas fa-redo'"></rmbutton>
+                </div>
+                <div [ngClass]="batchQueData.length>0 ? 'col-md-6 col-sm-12' : 'col-md-3 col-sm-12'"
+                    [ngClass]="isContainerEnable?'mb-3':''"
+                    *ngIf="!(masterPageService.hideControls.controlProperties.containerSuggestion?.Hidden) && !checkmode?.containerSuggestion?.Hidden">
+                    <ng-container>
+                        <container-suggestion *ngIf="controlConfig?.containerInputId"
+                            [csLabel]="controlConfig?.containerInputId"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.containerInputId?.Required"
+                            [class]="'form-control'" [id]="'containerInputId'" [isContainerDisabled]="true"
+                            [isClearContainerDisabled]="true" (focusContainer)="getSuggestContainer($event)"
+                            (emitContainerId)="getContainerId($event)"
+                            (getSuggestExpContainerResponse)="getSuggestContainerResponse($event)"
+                            (validateContainerValue)="validateContainer($event)" [isMoveDisabled]="isMoveDisabled"
+                            (emitCheckContainer)="checkContainer($event)"
+                            (emitvalidateContainer)="validateContainerResponse($event)" [uiData]="uiData">
+                        </container-suggestion>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </div>
+        <ng-container>
+            <div class="form-group row">
+                <div class="col-md-2 mb-2" *ngIf="!masterPageService.hideControls.controlProperties.caseCount?.Hidden">
+                    <rmlabel [for]="'caseCount'" [label]="'FQA.CASECOUNT' | translate" class="mt-2"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.caseCount?.Required"></rmlabel>
+                    <input type="number" id="caseCount" name="caseCount" (input)="caseCountinputChange()"
+                        [(ngModel)]="countCase" (keyup.enter)="validatecountCase()" name="quant[1]"
+                        class="form-control input-number input-width" [disabled]="isCountCaseDisabled" value="1" min="1"
+                        max="100" numbersOnly (blur)="onCaseCountBlur()"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.caseCount?.Required">
+                </div>
+                <ng-container *ngIf="!masterPageService.hideControls.controlProperties.batchId?.Hidden">
+                    <div *ngIf="batchId" class="col-md-4 mb-2">
+                        <rmlabel [label]="'COMMON.BATCHID' | translate" class="pr-0 mt-2"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.batchId?.Required">
+                        </rmlabel>
+                        <rmtextbox [(ngModel)]="batchId" [disabled]="true" [id]="'batch'" [class]="'form-control'"
+                            [type]="'text'" [placeholder]="''"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.batchId?.Required">
+                        </rmtextbox>
+                    </div>
+                </ng-container>
+                <div class="col-md-6" *ngIf="!masterPageService.hideControls.controlProperties.fqaLabelPrint?.Hidden">
+                    <rmtoggle [label]="'FQA.FQALABELPRINT' | translate" [togglelblClass]="'mt-1'" class="my-1"
+                        [id]="'FQAPrint'" [disabled]="FQAPrintDisabled" [toggleval]="FQAPrint"
+                        (onChangeVal)="changeFQAPrint($event)"></rmtoggle>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" *ngIf="fqaDeviceList">
+                    <rmgrid [(gridproperties)]="fqaDeviceList"></rmgrid>
+                </div>
+            </div>
+
+            <div class="row">
+                <div [ngClass]="batchQueData.length>0 ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'" class="mb-4 mt-4">
+                    <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'fqaClear'"
+                        [disabled]="isfqaClearDisabled" [buttonname]="'COMMON.CLEAR'| translate" (onclick)="Clear()"
+                        [iconstyle]="'fas fa-times-circle'"></rmbutton>
+
+                    <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'Process'"
+                        [disabled]="isProcessDisabled" [buttonname]="'COMMON.PROCESS'| translate"
+                        (onclick)="processTransfer(); isProcessDisabled = true" [iconstyle]="'fas fa-trash-alt'">
+                    </rmbutton>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+<!-- invalid serial numbers popup - on serial number scan  -->
+<ng-template #popTemplate>
+    <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container"> {{title}}
+        <button mat-icon-button (click)="hideModal()">
+            <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+    </h1>
+    <xpo-dialog-content>
+        <div class="modal-body">
+            <div class="form-group position-relative">
+                <ul class="list-group scrollbar" *ngIf="deviceErrors" id="style-4">
+                    <rmgrid [(gridproperties)]="deviceErrors" [isScroll]="true"></rmgrid>
+                </ul>
+                <serial-number-move [tittle]="modelTittle" [serialNumbers]="deviceErrors" [flag]="flag"
+                    [isModalOpen]="isModalOpen" (emitModalClose)="hideModal()"></serial-number-move>
+            </div>
+        </div>
+    </xpo-dialog-content>
+</ng-template>
+<button hidden id="stopProcessQueue"></button>

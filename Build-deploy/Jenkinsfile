@@ -1,0 +1,196 @@
+#!/usr/bin/env groovy
+import hudson.model.*
+import jenkins.model.Jenkins
+import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
+import hudson.AbortException
+import java.text.SimpleDateFormat
+import groovy.json.*
+
+def application = "RM-2.0-UI"
+def branchdetails = "$env.BRANCH_NAME"
+def NODE_HOME = "/apps/node/node-v14.17.4-linux-x64"
+def applicationname = "${application}-${env.BRANCH_NAME}"
+def releasebranch = ""
+def fortifyBranch = ""
+def relbranch = ""
+def archiveArtifactsBranch = ""
+def archiveArtifacts = ""
+def versionresult = ""
+def packageVersion = "" 
+
+@Library('shared-libraries')_
+def buildResult = "SUCCESS"
+node {
+	try {	
+		env.workspace = pwd()
+		stage ('project-version-repo') {			
+			echo "checking out project-version-repo"
+			checkout([
+			$class: 'GitSCM', 
+			branches: [[name: "*/master"]], 
+			doGenerateSubmoduleConfigurations: false, 
+			extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: "${workspace}"]], 
+			submoduleCfg: [],
+			userRemoteConfigs: [[url: 'git@github.xposc.com:BusApp-RM/Projectversion.git']]])
+			
+			def properties = "${workspace}/deploy.properties"
+			
+			
+			if (fileExists("$properties")){
+				echo "file $properties exists"
+				def props = readProperties file: "$properties"
+				if (!releasebranch){
+					releasebranch = props."${applicationname}"
+				}
+				echo "Branch = $releasebranch" 
+				
+				if (!archiveArtifactsBranch){
+					archiveArtifacts = props."${applicationname}-ReleaseVersion"
+				}
+				echo "applicationname = ${applicationname}"
+				echo "ArchiveArtifacts Branch = $archiveArtifacts"
+				
+				if (!relbranch){
+					relbranch = props."${application}-Release-Branch"
+				}
+				if (!fortifyBranch){
+					fortifyBranch = props."${applicationname}-FortifyScan"
+				}				
+				echo "Fortify Branch = $fortifyBranch" 
+			}
+		}
+		if ("${branchdetails}" == "${relbranch}") {   
+			version {   
+				projectversion = "git@github.xposc.com:BusApp-RM/Projectversion.git"
+				properties = "deploy.properties"
+				appname = "$application"
+				branch = "$branchdetails"
+				dir = "Projectversion"   
+			} 
+		} else {
+			def versionNumberString = Jenkins.instance.getItem("build_number")
+			def builddisplay = Jenkins.instance.getItem("currentBuild.displayName")
+			def version = VersionNumber(versionNumberString: '${build_number}', skipFailedBuilds:true, versionPrefix: "$branchdetails.")
+			currentBuild.displayName = "$version"
+		}
+		versionresult = currentBuild.displayName
+		echo "this is versionresult $versionresult"    
+		deleteDir()
+		stage ('Stage:SCM Checkout') {
+			checkout([
+			$class: 'GitSCM', 
+			branches: [[name: "*/$branchdetails"]], 
+			doGenerateSubmoduleConfigurations: false, 
+			//extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: '/apps/jenkins/workspace/Jenkins-RM-UI-Test/RM-2.0/ReturnsManager']], 
+			submoduleCfg: [], 
+			userRemoteConfigs: [[url: 'git@github.xposc.com:BusApp-RM/RM-2.0.git']]])   
+		}
+    
+		stage('Build') {
+			withEnv(["PATH+NPM=${NODE_HOME}/bin"]) {
+				// def hasSummaryMatch = (branchdetails ==~/^Release(\d{1,50})\.(\d{1,50})$/)
+				
+
+				def props = readJSON file: "${workspace}/ReturnsManager/package.json"
+				if ("${branchdetails}" == "${releasebranch}")  {
+					packageVersion = "${versionresult}".replaceAll("Release","")
+				} else {
+					packageVersion = "0.0.${BUILD_NUMBER}"
+				}
+				echo "packageVersion: ${packageVersion}"
+				String fullBuildVersion = "${packageVersion}"
+				props.version = fullBuildVersion
+				writeJSON file: "${workspace}/ReturnsManager/package.json", json: props, pretty: 4
+				
+				sh "sed -i 's/0.0.0/${fullBuildVersion}/g' ${workspace}/ReturnsManager/src/assets/app-release-config.ts"
+				
+				dir("./ReturnsManager/"){
+					sh"npm install"
+					sh"""export NG_PATH=${workspace}/ReturnsManager/node_modules/@angular/cli/bin/ng
+					node ./replace.build.js && node --max_old_space_size=4096 ${workspace}/ReturnsManager/node_modules/@angular/cli/bin/ng build --prod --output-hashing=all --base-href=/ && node ./versioning.build.js"""
+				}
+				def props2 = readJSON file: "${workspace}/ReturnsManager/package.json"
+				props2.version = "0.0.0"
+				writeJSON file: "${workspace}/ReturnsManager/package.json", json: props2, pretty: 4
+			}
+		}
+		stage('Stage:Archiving'){			
+		    if ("${archiveArtifacts}" != "null") {
+				artifactbackup {
+					projectversion = "git@github.xposc.com:BusApp-RM/Projectversion.git"
+					machine = "tsgvm00386"
+					properties = "deploy.properties"
+					appname = "${application}"
+					type = "jar,war"
+					artifactname = "ROOT"
+					artifactdir = "RM-2.0-UI"
+					path = "ReturnsManager"
+					branch = "${branchdetails}"
+					dir = "Projectversion"
+				}
+			}
+			else{
+				echo "Archiving is not working"
+			}
+		}
+
+		if ("${branchdetails}" == "${releasebranch}") {				
+			stage('promotion-DEV'){	
+				def artifact_name = "ROOT"
+				def configurationFile = "runtime-config.json"
+				def artifact_base_path = "/apps/jenkins/Application-artifacts/RM-2.0-UI"
+				def artifact_path = "${artifact_base_path}/Dev/${branchdetails}/${versionresult}"
+				def backup_path = 'C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5\\webapps\\Backup'
+				def deployment_path = 'C:\\Program Files\\Apache Software Foundation\\Tomcat 8.5\\webapps'
+				def dev_host = "win-rmx-dev"
+				def artifact_host = "jenkins-386"
+				def playbook_name = "rmx-ui-deployment.yml"
+				checkout([
+				$class: 'GitSCM',
+				branches: [[name: "*/master"]],
+				doGenerateSubmoduleConfigurations: false,
+				extensions: [[$class: 'CleanBeforeCheckout'],[$class: 'RelativeTargetDirectory', relativeTargetDir: "$workspace"]], 
+				submoduleCfg: [],
+				userRemoteConfigs: [[url: 'git@github.xposc.com:BusApp-Jenkins/NPS-ENV.git']]])
+						
+				echo "executing Ansible playbook"
+				withCredentials([[$class: 'UsernamePasswordMultiBinding', 
+				credentialsId: 'GIT-Username', 
+				usernameVariable: 'GIT_USERNAME', 
+				passwordVariable: 'GIT_PASSWORD']]) {    
+					wrap([$class: 'AnsiColorBuildWrapper', colorMapName: "xterm"]) {
+						ansiblePlaybook(
+						colorized: true,
+						credentialsId: 'jenkins',
+						extras: """-e 'application=${application} envir=Dev artifact_name=${artifact_name}  artifact_base_path=${artifact_base_path} artifact_path=${artifact_path} backup_path="${backup_path}" deployment_path="${deployment_path}" configurationFile=${configurationFile} versionresult=${versionresult} variable_hosts=${dev_host} variable_artifact_host=${artifact_host}'""", 
+						inventory: "/etc/ansible/hosts",
+						installation: 'Ansible-2.4', 
+						playbook: "${playbook_name}")
+					}
+				}      
+			}
+		}
+	}catch (any) {
+		currentBuild.result = "FAILURE"
+		throw any //rethrow exception to prevent the build from proceeding
+	} finally {
+		if (currentBuild.result == 'FAILURE'){
+			standardemail {
+				projectversion = "git@github.xposc.com:BusApp-RM/Projectversion.git"
+				dir = "Projectversion"
+				properties =  "deploy.properties"
+				buildStatus = "FAILURE"
+				appname = "$application"
+				jobBaseName = "$application-Development"
+				branch = "$branchdetails"
+				sub = "RMX-UI Branch:$branchdetails, version:$versionresult build failed"
+				message = "Current Branch:$branchdetails, version:$versionresult build failed please look jenkins logs"
+			}
+		} else {
+      gittag {
+        command = "git tag -a ${versionresult} -m 'Jenkins Build'"
+        giturl = "github.xposc.com/BusApp-RM/RM-2.0.git"
+      }
+		}
+	}
+}

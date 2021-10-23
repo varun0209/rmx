@@ -1,0 +1,32 @@
+export class NciInfo {
+    NCIKey:string;
+    SiteId:string;
+    ClientId:string;
+    Status:string;
+    Sku:string;
+    SerialNumber:string;
+    ExpectedQty:number;
+    ReceivedQty:number;
+    DispositionDate:string;
+    PrimaryReason:string;
+    Reason2:string;
+    Reason3:string;
+    Comments:string;
+    ActionTaken:string;
+    Route1:string;
+    Route2:string;
+    Route3:string;
+    DockType:string;
+    DockValue:string;
+    AddDate:string;
+    EditDate:string;
+    EditWho:string;
+    Carrier:string;
+    CarrierCode:string;
+    CarrierReference:string;
+    PrimaryReasonCd: number;
+    ReasonCd2: number;
+    ReasonCd3: number;
+    VendorId:string;
+    VendorName:string;
+}

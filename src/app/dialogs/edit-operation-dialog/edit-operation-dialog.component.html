@@ -1,0 +1,9 @@
+<xpo-dialog-title>
+    {{'OPERATION.OPERATIONEDITPOPUPNAME' | translate }}
+</xpo-dialog-title>
+<xpo-dialog-content>
+    <div class="form-group position-relative">
+        <app-editoperation [operationData]="operationData" [appConfig]="appConfig"
+            (emitSubmitOperationData)="saveOperationData($event)"></app-editoperation>
+    </div>
+</xpo-dialog-content>

@@ -1,0 +1,148 @@
+#wrapper {
+    display: flex;    
+    margin-left: 8%;
+  }
+  #left {
+    flex: 0 0 60%;
+   
+  }
+  #right {
+    flex: 1;        
+
+  }
+  .noOperationCategory{
+    flex: 0 0 90%; 
+  }
+
+  .mc-noalert{
+    margin-top: 4%;
+}
+.mc-onalert{
+    margin-top: 1%;
+    padding-top: 0;
+}
+/* sample */
+.card-border{
+    border: 0px;
+    /* padding: 1%; */
+}
+.no-queues-border{
+  border:  1px solid rgba(0,0,0,.125);
+}
+
+.no-queues-bg-color{
+background-color: rgba(247,247,247,1)
+}
+
+.thead-bg{
+    background-color: rgba(0,0,0,.03);
+   
+}
+
+.odd {
+     background-color: rgba(242,242,242,1);
+     }
+
+.no-queues {
+  width: 95%;
+  margin: 60px auto;
+}
+
+.padding-bottom {
+  padding-bottom: 22px;
+}
+
+/*large screens */
+@media (min-width: 1280px) {
+  .mc-noalert {
+    margin-top: 5%;
+  }
+
+  .no-queues {
+    width: 83vw;
+    margin-left: 157px;
+  }
+}
+/*large Screens*/
+@media (max-width: 1279px) and (min-width: 1200px) {
+  .mc-noalert {
+    margin-top: 6%;
+  }
+}
+ 
+
+
+/*large Screens*/
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .mc-noalert {
+    margin-top: 6%;
+  }  
+}
+
+/*medium screens */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .mc-noalert {
+    margin-top: 7%;
+    width: 418px;
+  }
+
+  .padding-bottom {
+    padding-bottom: 32px;   
+  }
+}
+
+/*small screens*/
+@media (min-width: 640px) and (max-width: 768px) {
+  
+
+ 
+}
+
+/*extra small screens*/
+@media (min-width: 320px) and (max-width: 640px) {
+  .mc-noalert {
+    margin-top: 16%;
+  }
+}
+
+
+
+.noBorder td{
+  border: 0 !important;
+}
+.testTable {
+  width: 100%;
+  margin-bottom: 0em;  
+}
+.testTable tr td:first-child{
+  width:1%;
+}
+.testTable tr:first-child td{
+  border-top:0px;
+}
+.tdwhiteSpace{
+  white-space:nowrap;
+}
+
+.testTable td {
+  white-space: nowrap;
+}
+
+.testTable tr td:last-child {
+  width: 100%;
+}
+
+#style-4::-webkit-scrollbar {
+  width: 4px !important;
+  height: 4px;
+}
+
+#style-4::-webkit-scrollbar-thumb {
+  background-color: #555555;
+  border: 1px solid #555555;
+}
+
+
+
+
+

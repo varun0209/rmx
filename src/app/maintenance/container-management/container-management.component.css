@@ -1,0 +1,45 @@
+.rm-card {
+  border: 1px solid rgba(0, 0, 0, .125);
+  background-color: #ffffff;
+}
+
+thead {
+  background-color: rgba(0, 0, 0, .05) !important;
+}
+
+thead tr th {
+  width: 3%;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: white;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, .05);
+}
+
+
+.warning {
+  background: rgb(227, 15, 15) !important;
+  -webkit-animation: highLight ease-in 1s infinite;
+  animation: highLight ease-in 1s infinite;
+}
+
+@keyframes highLight {
+  0% {
+    background-color: rgb(227, 15, 15) !important;
+  }
+
+  30% {
+    background-color: transparent;
+  }
+
+  50% {
+    background-color: rgb(227, 15, 15) !important;
+  }
+
+  100% {
+    background-color: rgb(227, 15, 15) !important;
+  }
+}

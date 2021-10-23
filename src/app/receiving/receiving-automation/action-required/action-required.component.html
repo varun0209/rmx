@@ -1,0 +1,20 @@
+<div class="row mt-3">
+    <div class="col-md-6 col-sm-12">
+      <div class="form-group">
+        <rmlabel [label]="'RECEIVING.DEVICEID' | translate" ></rmlabel>
+        <rmtextbox  #serialNumberBatchInput [id]="'deviceId'" (enter)="actionFoucs()"  [(ngModel)]="deviceId"  [placeholder]="''" [disabled]=""
+           ></rmtextbox>
+      </div>
+    </div>
+    <div class="col-md-3 col-sm-6 d-flex align-items-end mb-3">
+      <rmbutton [class]="'btn btn-round-black'" [id]="'action'" [disabled]="deviceId ? false:true" (onclick)="actionComplete()"  [buttonname]="'Complete' | translate"
+      [iconstyle]="'fas fa-cogs'"></rmbutton>
+    </div>
+    <div class="col-md-3 col-sm-6 d-flex align-items-end mb-3">
+      <rmbutton [class]="'btn btn-round-black'" [id]="'clear'" [disabled]="deviceId ? false:true" [buttonname]="'COMMON.CLEAR' | translate" (onclick)="clear()"
+        [iconstyle]="'fas fa-times-circle'"></rmbutton>
+    </div>
+  </div>
+
+
+ 

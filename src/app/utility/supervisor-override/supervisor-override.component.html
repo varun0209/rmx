@@ -1,0 +1,14 @@
+<div class="container db-mt padding-bottom">
+  <div class="container">
+    <div class="col-sm-12 col-lg-12 col-md-12 col-12 mb-4">
+      <label>Override ID</label>
+      <rmtextbox [(ngModel)]="code" [disabled]="isCodeDisable" #Code  [placeholder]="''" [id]="'Code'"
+                 (onChangeVal)="changeInput(Code)" (onControllerChange)="onControllerChange(Code)" (enter)="validateCode(Code,$event)"></rmtextbox>
+    </div>
+    <div class="col-sm-12 col-lg-12 col-md-12 col-12 mb-2 text-right">
+      <button type="button" class="btn btn-round-black mr-1">
+        <i class="far fa-check-circle mr-1"></i>Acknowledge
+      </button>
+    </div>
+  </div>
+</div>

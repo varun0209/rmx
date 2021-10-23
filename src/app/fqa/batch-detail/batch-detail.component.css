@@ -1,0 +1,16 @@
+.border-right{    
+   border-right: 2px aliceblue; 
+}
+.scroll-x{
+    overflow-x: scroll;
+}
+.progress{
+    background-color: transparent;
+    height: 2.5rem;
+    border-radius: 0;
+}
+.progress-bar{
+    background-color: rgb(255,0,0);
+    overflow: initial;
+    font-weight: 600;
+}

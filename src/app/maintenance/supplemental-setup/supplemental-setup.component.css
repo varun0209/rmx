@@ -1,0 +1,39 @@
+.padding-bottom {
+    padding-bottom: 22px;
+  }
+  .btn-notes{
+    vertical-align: middle;
+    height: 97px;
+    line-height: 139px;
+    width:60px;
+    text-align: center;
+  }
+  .btn-notes .fa-info-circle{
+    font-size: 42px;
+    color: #468ec1;
+    border-radius: 25px;
+    cursor: pointer;
+}
+@keyframes shadow-pulse
+{
+  0% {
+    box-shadow: 0 0 0 0px rgba(8, 104, 172, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(8, 104, 172, 0);
+  }
+}
+
+.btn-focus{
+  animation: shadow-pulse 1s infinite;
+}
+  /*medium screens */
+@media (min-width: 768px) and (max-width: 1024px) {
+     .padding-bottom {
+      padding-bottom: 32px;   
+    }
+  }
+
+  /* .db-mt {
+    margin-top: 40px;
+  } */

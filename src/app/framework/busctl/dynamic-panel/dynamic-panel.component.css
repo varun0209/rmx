@@ -1,0 +1,132 @@
+.card-noborder {
+    border: 0px !important;
+    }
+    
+    .nopadding {
+    padding: 0px !important;    
+    }
+    .p-top{
+    padding-top: 5px;
+    }
+    
+    p.wordwrap{
+        /*  word-break: break-all; */
+        white-space: normal; 
+         margin-bottom: 0px;
+     }
+ .dynamicpanel-desc-maxwidth{
+        max-width: 30%; 
+     /* max-width:20% */
+       width: 100%;
+     /*   max-width: 105%;
+       width: 100%; */
+    }
+
+  .dynamic-desc-maxwidth-testing{
+    max-width: 20%;
+    width: 100%;
+  }  
+  .trans-id{
+      width:33%;
+  }
+    .set-width{
+        max-width: 13%;
+        width: 98%;
+        margin-left: 24px;
+        margin: 4px 6px;
+        text-align: left !important;
+    }
+
+    .rowpadding{
+        /* padding-left:20px;
+        padding-bottom:20px; */
+    }
+    .scroll{
+        height: 50%;
+        overflow-y: scroll;
+    }
+
+    .auto-extend-width{
+        min-width: 18.666667%;
+        margin-right: 1%;
+        position: unset;
+     }
+    
+.add-btn {
+    border-radius: 50%;
+    font-size: .60rem;
+    padding: .25rem .25rem;
+    margin-left: 2px;
+}
+      /*setting dynamic panel  description max width */
+@media (min-width: 320px) and (max-width: 640px) {
+    .lable-margin{
+        margin-left: 1px !important;
+        text-align: unset !important;
+        padding-right: 15px !important;
+        padding-left: 15px !important;
+        width: 32% !important;
+    }
+    .dynamicpanel-desc-maxwidth{
+        width: 126% !important;
+        margin-left: 13px !important;
+        margin-bottom: 17px !important;
+        max-width: unset;
+    }
+    .mb-display-flex{
+        display: flex !important;
+    }    
+
+    .dropdown-result{
+        width: 123px !important;
+        margin-left: 14px !important;
+    }
+    .test{
+        max-width: 100% !important;
+        width: 98% !important;
+        margin-left: unset !important;
+        margin: 4px 16px !important;
+        text-align: unset !important; 
+    }
+    .set-width{
+        max-width: unset !important; 
+        width: 98% !important;
+        margin-left: 34px !important;
+        margin: 4px 18px !important;
+        text-align: unset !important;
+  }
+}
+
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) and (max-width: 991.98px) { 
+        .auto-extend-width{
+            min-width: 50%;
+     }
+    }
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .auto-extend-width{
+        min-width: 50%;
+     }     
+}
+
+/* small devices (mobiles) */
+@media (min-width: 320px) and (max-width: 767.98px) { 
+    .auto-extend-width{
+        min-width: 100%
+ }
+}
+
+/* @media (min-width: 1201px) and (max-width: 1500px) { 
+    .labelwidth{
+        width:8%;
+    }  
+} */
+/* 
+@media (min-width: 1500px){ 
+    .labelwidth{
+        width:6%;
+    }  
+} */

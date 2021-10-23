@@ -1,0 +1,95 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="row m-0">
+    <div class="col-lg-12 col-md-12 col-sm-12 p-0">
+      <div class="container-fluid">
+        <div class="row p-3">
+          <div class="col-md-12">
+            <div class="row mb-2">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <rmlabel [label]="'Container ID' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.containerId?.Required">
+                  </rmlabel>
+                  <rmtextbox [(ngModel)]="containerId" [id]="'containerId'" #containerID [placeholder]="''"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.containerId?.Required"
+                    (enter)="validateTransfer(containerID);" (onChangeVal)="onChangeContainerId($event);" (isInputValueEmpty)="containerEmptyValue()"
+                    [disabled]="isContainerDisabled"></rmtextbox>
+                </div>
+              </div>
+              <div class="col-md-6 d-flex align-items-center mt-2">
+                <rmbutton [class]="'btn btn-round-black'" [id]="'reset'" [disabled]="isResetDisabled"
+                  [buttonname]="'COMMON.RESET' | translate" (onclick)="reset();" [iconstyle]="'fas fa-redo'">
+                </rmbutton>
+              </div>
+            </div>
+            <div class="row  mb-2">
+              <div class="col-md-6 col-sm-12 mt-2">
+                <div class="form-group">
+                  <rmlabel [label]="'Part' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.partNo?.Required">
+                  </rmlabel>
+                  <rmtextbox [(ngModel)]="partNo" [id]="'partNo'" #part [placeholder]="''"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.partNo?.Required"
+                    (enter)="partVerification(part, $event)" (onChangeVal)="onChangepartNo();" [disabled]="ispartNoDisabled">
+                  </rmtextbox>
+                </div>
+              </div>
+              <!-- <div class="col-md-6 mt-4">
+                <div class="section-readonly mt-2" *ngIf="accessoryObject">
+                  <div class="lable-readonly d-flex col">
+                    <span>{{'COMMON.MODEL' | translate}}</span>
+                    <span class="badge badge-secondary ml-3">{{accessoryObject.SelectedSKUModel}}</span>
+                  </div>
+                  <div class="lable-readonly d-flex col">
+                    <span>{{'COMMON.QUANTITY' | translate}}</span>
+                    <span class="badge badge-secondary ml-3">{{accessoryObject.Quantity}}</span>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+            <div class="form-group row">
+              <div class="col-md-2 mb-2" *ngIf="!masterPageService.hideControls.controlProperties.caseCount?.Hidden">
+                <rmlabel [for]="'caseCount'" [label]="'FQA.CASECOUNT' | translate" class="mt-2"
+                  [isAsterisk]="masterPageService.hideControls.controlProperties?.caseCount?.Required"></rmlabel>
+                <input type="number" id="caseCount" name="caseCount" (input)="caseCountinputChange()"
+                  [(ngModel)]="countCase" (keyup.enter)="validateCaseCaount()" name="quant[1]"
+                  class="form-control input-number input-width" [disabled]="isCountCaseDisabled" value="1" min="1"
+                  max="100" numbersOnly (blur)="onCaseCountBlur()"
+                  [requiredIf]="masterPageService.hideControls.controlProperties?.caseCount?.Required">
+              </div>
+              <!-- *ngIf="!masterPageService.hideControls.controlProperties.batchId?.Hidden" -->
+              <ng-container >
+                <div *ngIf="batchId" class="col-md-4 mb-2">
+                  <rmlabel [label]="'COMMON.BATCHID' | translate" class="pr-0 mt-2"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.batchId?.Required"></rmlabel>
+                  <rmtextbox [(ngModel)]="batchId" [disabled]="true" [id]="'batch'" [class]="'form-control'"
+                    [type]="'text'" [placeholder]="''"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.batchId?.Required">
+                  </rmtextbox>
+                </div>
+              </ng-container>
+            </div>
+            <div class="row">
+              <div class="col" *ngIf="accessoryListItems">
+                <rmgrid [(gridproperties)]="accessoryListItems"></rmgrid>
+              </div>
+            </div>
+            <div class="row mb-4 mt-3">
+              <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+                <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled"
+                  [buttonname]="'COMMON.CLEAR' | translate" [iconstyle]="'fas fa-times-circle'" (onclick)="clearSku()">
+                </rmbutton>
+              </div>
+              <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+                <rmbutton [class]="'btn btn-round-black  float-right'" [id]="'process'" (onclick)="process()"
+                  [disabled]="disableProcess" [buttonname]="'COMMON.PROCESS' | translate" [iconstyle]="'far fa-save'">
+                </rmbutton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button hidden id="stopProcessQueue"></button>

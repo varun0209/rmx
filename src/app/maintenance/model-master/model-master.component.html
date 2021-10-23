@@ -1,0 +1,805 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-1'" class="padding-bottom">
+  <div class="container-fluid">
+    <form>
+      <div class="form-row">
+        <div class="col-md-6" ngModelGroup="searchConfig" #searchCtrls="ngModelGroup">
+          <div class="form-row">
+            <div class="form-group  col-md-6">
+              <rmlabel [label]="'MODELMASTER.OEMCODE' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.oemCode?.Required">
+              </rmlabel>
+              <ng-multiselect-dropdown #oemCodes [settings]="dropdownSettings" [data]="oemCodeList" 
+                [requiredIf]="masterPageService.hideControls.controlProperties?.oemCode?.Required"
+                [(ngModel)]="selectedOemCode" name="oemCode" id="oemCode" (onSelect)="oemCodeChange($event)"
+                [disabled]="isOEMCodeDisabled" (onDeSelect)="oemCodeDeSelect()">
+              </ng-multiselect-dropdown>
+            </div>
+            <div class="form-group col-md-6 pr-0">
+              <rmlabel [label]="'MODELMASTER.MODEL' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.model?.Required"> </rmlabel>
+              <rmtextbox #inputModel [name]="'model'" [id]="'model'" [placeholder]="''" [(ngModel)]="modelMaster.MODEL"
+                [disabled]="isModelDisabled" (onChangeVal)="changeInput(inputModel)" (enter)="getModelMasterList()"
+                [textBoxPattern]="modelPattern"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.model?.Required">
+              </rmtextbox>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="text-right mt-4">
+            <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.SEARCH' | translate"
+              [iconstyle]="'fas fa-search'" class="float-left" [disabled]="isSearchBtnDisabled" [id]="'search'"
+              (onclick)="getModelMasterList()"></rmbutton>
+            <rmbutton [id]="'reset'" [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.RESET' | translate"
+              [iconstyle]="'far fa-times-circle'" [disabled]="" (onclick)="clear()"></rmbutton>
+            <rmbutton [id]="'save'" [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.SAVE' | translate"
+              [iconstyle]="'far fa-save'" [disabled]="!(masterCtrls.valid && modelMaster.MODEL && modelMaster.OEM_CD)"
+              (onclick)="addOrUpdateModelMaster()">
+            </rmbutton>
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-md-12">
+          <tabset #staticTabs>
+            <tab [heading]="'MODELMASTER.MASTER' | translate" id="tab-master">
+              <div class="tab-pane">
+                <div class="p-2 custom-col-div" ngModelGroup="masterConfig" #masterCtrls="ngModelGroup">
+                  <div class="form-row">
+                    <div class="col-md-12">
+                      <div class="form-row">
+                        <div class="form-group col">
+                          <rmlabel [label]="'MODELMASTER.SECONDARY_CI_FLAG' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.secondaryCIFlag?.Required">
+                          </rmlabel>
+                          <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" [data]="secondCIFlagList" 
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.secondaryCIFlag?.Required"
+                            [(ngModel)]="selectedsecondCIFlag" name="secondaryCIFlag" id="secondaryCIFlag"
+                            (onSelect)="secondaryCIFlagChange($event)" [disabled]="isSecondaryCIFlagDisabled"
+                            (onDeSelect)="secondaryCIDeSelect()">
+                          </ng-multiselect-dropdown>
+                        </div>
+                        <div class="form-group col">
+                          <rmlabel [label]="'MODELMASTER.CONSTRAINED' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.constrained?.Required">
+                          </rmlabel>
+                          <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" [data]="constrainedList" 
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.constrained?.Required"
+                            [(ngModel)]="selectedConstrained" name="constrained" id="constrained"
+                            (onSelect)="constrainedChange($event)" [disabled]="isConstrainedDisabled"
+                            (onDeSelect)="constrainedDeSelect()">
+                          </ng-multiselect-dropdown>
+                        </div>
+                        <div class="form-group col">
+                          <rmlabel [label]="'MODELMASTER.MSNENABLED' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.msnEnabled?.Required">
+                          </rmlabel>
+                          <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" [data]="msnOptionList" 
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.msnEnabled?.Required"
+                            [(ngModel)]="selectedMSNOption" name="msnEnabled" id="msnEnabled"
+                            (onSelect)="msnChange($event)" [disabled]="isMSNEnabledDisabled"
+                            (onDeSelect)="constrainedDeSelect()">
+                          </ng-multiselect-dropdown>
+                        </div>
+                        <div class="form-group col">
+                          <rmlabel [label]="'MODELMASTER.INTERNAL_BATTERY' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.internalBattery?.Required">
+                          </rmlabel>
+                          <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                            [data]="internalBatteryList"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.internalBattery?.Required"
+                            [(ngModel)]="selectedIBOption" name="internalBattery" id="internalBattery"
+                            (onSelect)="internalBatteryChange($event)" [disabled]="isInternalBatterDisabled"
+                            (onDeSelect)="internalBatteryDeSelect()">
+                          </ng-multiselect-dropdown>
+                        </div>
+                        <div class="form-group col">
+                          <rmlabel [label]="'MODELMASTER.AUTO_REPRINT_LABEL' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.autoPrint?.Required">
+                          </rmlabel>
+                          <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings"
+                            [data]="autoPrintOptionList"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.autoPrint?.Required"
+                            [(ngModel)]="selectedautoPrintOption" name="autoPrint" id="autoPrint"
+                            (onSelect)="autoPrintChange($event)" [disabled]="isAutoPrintDisabled"
+                            (onDeSelect)="autoPrintDeSelect()">
+                          </ng-multiselect-dropdown>
+                        </div>
+                        <div class="form-group col">
+                          <rmlabel [label]="'MODELMASTER.WARRANTY_PERIOD' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.warrantyPeriod?.Required">
+                          </rmlabel>
+                          <input tabindex="0" type="number" id="warrantyPeriod" name="warrantyPeriod"
+                            [(ngModel)]="modelMaster.WARRANTY_PERIOD" class="form-control"
+                            [disabled]="isWarrantyPatternDsiabled" [numberPattern]="warrantyPattern" numbersOnly
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.warrantyPeriod?.Required">
+                        </div>
+                        <div class="form-group col">
+                          <rmlabel [label]="'MODELMASTER.WARRANTY_OFFSET' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.warrantyOffset?.Required">
+                          </rmlabel>
+                          <input tabindex="0" [(ngModel)]="modelMaster.WARRANTY_OFFSET" class="form-control"
+                            type="number" [disabled]="isWarrantyOffsetDisabled" id="warrantyOffset"
+                            name="warrantyOffset" [numberPattern]="warrantyPattern" numbersOnly
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.warrantyOffset?.Required">
+                        </div>
+                        <div class="form-group col">
+                          <rmlabel [label]="'MODELMASTER.CONTAINER_CAPACITY' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.containerCapacity?.Required">
+                          </rmlabel>
+                          <input tabindex="0" [(ngModel)]="modelMaster.CONTAINER_CAPACITY" class="form-control"
+                            type="number" id="containerCapacity" name="containerCapacity"
+                            [numberPattern]="warrantyPattern" [disabled]="isContainerCapacityDisabled" numbersOnly
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.containerCapacity?.Required">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 width-66">
+                      <div class="form-row">
+                        <div class="col-md-3">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.PARSER_ELIGIBILITY' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.parserEligibility?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="msddSettings"
+                              [data]="parserEligibilityOptions"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.parserEligibility?.Required"
+                              [(ngModel)]="selectedParserItems" name="parserEligibility" id="parserEligibility"
+                              (onSelect)="parserChange($event)" [disabled]="isParserEligibilityDisabled"
+                              (onDeSelect)="parserDeSelect($event)">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.KILL_SWITCH_FLAG' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.killSwitch?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                              [data]="killSwitchFlagList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.killSwitch?.Required"
+                              [(ngModel)]="selectedkillSwitch" name="killSwitch" id="killSwitch"
+                              (onSelect)="killSwitchChange($event)" [disabled]="isKillSwitchDisabled"
+                              (onDeSelect)="killSwitchDeSelect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.FLASHELIGIBLE' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.flashEligible?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings"
+                              [data]="flashEligibleList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.flashEligible?.Required"
+                              [(ngModel)]="selectedFlashOption" name="flashEligible" id="flashEligible"
+                              (onSelect)="flashChange($event)" [disabled]="isFlashEligibleDisabled"
+                              (onDeSelect)="flashDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.DATARELIGIBLE' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.dataR?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" [data]="dataRList" 
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.dataR?.Required"
+                              [(ngModel)]="selectedDataROption" name="dataR" id="dataR" (onSelect)="dataRChange($event)"
+                              [disabled]="isDataRDisbaled" (onDeSelect)="dataRDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.FACTORYRESETELIGIBLE' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.factoryReset?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings"
+                              [data]="factoryResetList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.factoryReset?.Required"
+                              [(ngModel)]="selectedFactoryResetOption" name="factoryReset" id="factoryReset"
+                              (onSelect)="factoryResetChange($event)" [disabled]="isFactoryResetDisabled"
+                              (onDeSelect)="factoryResetDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.FUNCTIONTESTELIGIBLE' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.factoryTest?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" [data]="factoryTestList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.factoryTest?.Required"
+                              [(ngModel)]="selectedFactoryTestOption" name="factoryTest" id="factoryTest"
+                              (onSelect)="factoryTestChange($event)" [disabled]="isFactoryTestDisabled"
+                              (onDeSelect)="factoryTestDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.LAUNCHDATE' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.launchDate?.Required">
+                            </rmlabel>
+                            <div class="input-group">
+                              <input name="launchDate" id="launchDate" type="text" class="form-control" bsDatepicker
+                                 [value]="modelMaster.LAUNCH_DATE" #launchDp="bsDatepicker" autocomplete="off"
+                                [bsConfig]="bsConfig" (bsValueChange)="onLaunchDateChange($event)" 
+                                (keydown)="$event.preventDefault()" [disabled]="isLaunchDateDisabled" [(ngModel)]="modelMaster.LAUNCH_DATE"
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.launchDate?.Required" />
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="launchDate" (click)="launchDp.show()">
+                                  <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12">
+                      <div class="form-row">
+
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.OSTYPE' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.osType?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" [data]="osTypeList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.osType?.Required"
+                              [(ngModel)]="selectedOsTypeOption" name="osType" id="osType"
+                              (onSelect)="osTypeChange($event)" [disabled]="isOsTypeDisabled"
+                              (onDeSelect)="osTypeDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.MARKETMODEL' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.marketModel?.Required">
+                            </rmlabel>
+                            <rmtextbox [name]="'marketModel'" [id]="'marketModel'"
+                              [(ngModel)]="modelMaster.MARKET_MODEL" [disabled]="isMarketModelDisabled"
+                              [placeholder]="''" [textBoxPattern]="namePattern"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.marketModel?.Required">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.PARENTMODEL' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.parentModel?.Required">
+                            </rmlabel>
+                            <rmtextbox [name]="'parentMaster'" [id]="'parentMaster'"
+                              [(ngModel)]="modelMaster.PARENT_MODEL" [disabled]="isParentMasterDisabled"
+                              [placeholder]="''" [textBoxPattern]="namePattern"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.parentModel?.Required">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.TIER' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.tire?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" [data]="tireList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.tire?.Required"
+                              [(ngModel)]="selectedTireOption" name="tire" id="tire" (onSelect)="tireChange($event)"
+                              [disabled]="isTireDisabled" (onDeSelect)="tireDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.OBSOLETEFLAG' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.obsoluteFlag?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                              [data]="obsoluteFlagList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.obsoluteFlag?.Required"
+                              [(ngModel)]="selectedObsoluteFlagOption" name="obsoluteFlag" id="obsoluteFlag"
+                              (onSelect)="obsoluteFlagChange($event)" [disabled]="isObsoluteFlagDisabled"
+                              (onDeSelect)="obsoluteFlagDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.MODELCLASS' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.modelClass?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings"
+                              [data]="modelClassList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.modelClass?.Required"
+                              [(ngModel)]="selectedModelClassOption" name="modelClass" id="modelClass"
+                              (onSelect)="modelClassChange($event)" [disabled]="isModelClassDisabled"
+                              (onDeSelect)="modelClassDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.ENDOFLIFEIND' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.endOfLifeInd?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                              [data]="endOfLifeIndList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.endOfLifeInd?.Required"
+                              [(ngModel)]="selectedEndOfLifeIndOption" name="endOfLifeInd" id="endOfLifeInd"
+                              (onSelect)="endOfLifeIndChange($event)" [disabled]="isEndOfLifeIndDisabled"
+                              (onDeSelect)="endOfLifeIndDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'MODELMASTER.RECEIPTSORTGROUP' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.receiptSortGroup?.Required">
+                            </rmlabel>
+                            <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                              [data]="receiptSortGroupList"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.receiptSortGroup?.Required"
+                              [(ngModel)]="selectedReceiptSortGroupOption" name="receiptSortGroup" id="receiptSortGroup"
+                              (onSelect)="receiptSortGroupChange($event)" [disabled]="isReceiptSortGroupDisabled"
+                              (onDeSelect)="receiptSortGroupDeselect()">
+                            </ng-multiselect-dropdown>
+                          </div>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                          <fieldset class="assignValue-fieldset m-0">
+                            <legend class="assignValue-legend">
+                              {{'MODELMASTER.GROUPHDRAUTOMATION' | translate}}
+                            </legend>
+                            <div class="form-row">
+                              <div class="col">
+                                <div class="form-group">
+                                  <rmlabel [label]="'MODELMASTER.AUTOMATEDCLEANING' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.automatedCleaning?.Required">
+                                  </rmlabel>
+                                  <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                                    [data]="automatedCleaningList"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.automatedCleaning?.Required"
+                                    [(ngModel)]="selectedAutomatedCleaningOption" name="automatedCleaning" id="automatedCleaning"
+                                    (onSelect)="automatedCleaningChange($event)" [disabled]="isAutomatedCleaningDisabled"
+                                    (onDeSelect)="automatedCleaningDeselect()">
+                                  </ng-multiselect-dropdown>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group">
+                                  <rmlabel [label]="'MODELMASTER.AUTOMATEDGRADING' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.automatedGrading?.Required">
+                                  </rmlabel>
+                                  <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                                    [data]="automatedGradingList"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.automatedGrading?.Required"
+                                    [(ngModel)]="selectedAutomatedGradingOption" name="automatedGrading" id="automatedGrading"
+                                    (onSelect)="automatedGradingChange($event)" [disabled]="isAutomatedGradingDisabled"
+                                    (onDeSelect)="automatedGradingDeselect()">
+                                  </ng-multiselect-dropdown>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group">
+                                  <rmlabel [label]="'MODELMASTER.AUTOMATEDPREPROCESSING' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.automatedPreProcessing?.Required">
+                                  </rmlabel>
+                                  <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                                    [data]="automatedPreProcessingList"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.automatedPreProcessing?.Required"
+                                    [(ngModel)]="selectedAutomatedPreProcessingOption" name="automatedPreProcessing" id="automatedPreProcessing"
+                                    (onSelect)="automatedPreProcessingChange($event)" [disabled]="isAutomatedPreProcessingDisabled"
+                                    (onDeSelect)="automatedPreProcessingDeselect()">
+                                  </ng-multiselect-dropdown>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group">
+                                  <rmlabel [label]="'MODELMASTER.AUTOMATEDPOSTPROCESSING' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.automatedPostProcessing?.Required">
+                                  </rmlabel>
+                                  <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                                    [data]="automatedPostProcessingList"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.automatedPostProcessing?.Required"
+                                    [(ngModel)]="selectedAutomatedPostProcessingOption" name="automatedPostProcessing" id="automatedPostProcessing"
+                                    (onSelect)="automatedPostProcessingChange($event)" [disabled]="isAutomatedPostProcessingDisabled"
+                                    (onDeSelect)="automatedPostProcessingDeselect()">
+                                  </ng-multiselect-dropdown>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group">
+                                  <rmlabel [label]="'MODELMASTER.AUTOMATEDTESTING' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.automatedTesting?.Required">
+                                  </rmlabel>
+                                  <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                                    [data]="automatedTestingList"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.automatedTesting?.Required"
+                                    [(ngModel)]="selectedAutomatedTestingOption" name="automatedTesting" id="automatedTesting"
+                                    (onSelect)="automatedTestingChange($event)" [disabled]="isAutomatedTestingDisabled"
+                                    (onDeSelect)="automatedTestingDeselect()">
+                                  </ng-multiselect-dropdown>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-group">
+                                  <rmlabel [label]="'MODELMASTER.AUTOMATEDFLOWCAPABLE' | translate"
+                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.automatedFlowCapable?.Required">
+                                  </rmlabel>
+                                  <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" 
+                                    [data]="AutomatedFlowCapableList"
+                                    [requiredIf]="masterPageService.hideControls.controlProperties?.automatedFlowCapable?.Required"
+                                    [(ngModel)]="selectedAutomatedFlowCapableOption" name="automatedFlowCapable" id="automatedFlowCapable"
+                                    (onSelect)="automatedFlowCapableChange($event)" [disabled]="isAutomatedFlowCapableDisabled"
+                                    (onDeSelect)="automatedFlowCapableDeselect()">
+                                  </ng-multiselect-dropdown>
+                                </div>
+                              </div>
+                            </div>
+                            </fieldset>
+
+
+                          
+                        </div>  
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="modelMasterList">
+                    <div class="col-12">
+                      <rmgrid [(gridproperties)]="modelMasterList" (emitEditDetails)="editModelMaster($event)"
+                        [isCancelIconShow]="false">
+                      </rmgrid>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tab>
+            <tab [heading]="'MODELMASTER.ATTRIBUTE' | translate" id="tab-attribute"
+              [disabled]="isSearch && !isEditMode">
+              <div class="tab-pane">
+                <div class="p-2">
+                  <div ngModelGroup="attributeConfig" #attributeCtrls="ngModelGroup">
+                    <div class="form-row justify-content-between">
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <rmlabel [label]="'MODELMASTER.TYPE_CD' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.typeCode?.Required">
+                          </rmlabel>
+                          <ng-multiselect-dropdown tabindex="0" [settings]="dropdownSettings" [data]="typeCodeList" 
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.typeCode?.Required"
+                            [(ngModel)]="selectedTypeCode" name="typeCode" id="typeCode"
+                            (onSelect)="typeCodeChange($event)" [disabled]="isTypeCodeDisabled"
+                            (onDeSelect)="typeCodeDeSelect()">
+                          </ng-multiselect-dropdown>
+                        </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="text-right mt-4">
+                          <rmbutton [id]="'atttributeAdd'" [class]="'btn btn-round-black mr-1'"
+                            [buttonname]="'COMMON.ADD' | translate" [iconstyle]="'fa fa-plus'"
+                            [disabled]="!(masterCtrls.valid && attributeCtrls.valid)" (onclick)="addAttributes()">
+                          </rmbutton>
+                          <rmbutton [id]="'attrClear'" [class]="'btn btn-round-black'"
+                            [buttonname]="'COMMON.CLEAR' | translate" [iconstyle]="'far fa-times-circle'" [disabled]=""
+                            (onclick)="clearAttributeForm()">
+                          </rmbutton>
+                        </div>
+                      </div>
+                    </div>
+                    <fieldset class=" model-fieldset custom-col">
+                      <legend class="model-legend">Criteria</legend>
+                      <div class="form-row">
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria1') ? getCriteriaLbl('Criteria1') : 'Criteria1'"
+                              [isAsterisk]="getCriteriaLbl('Criteria1')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria1'" [id]="'criteria1'" [(ngModel)]="rxModelAttribute.CRITERIA1"
+                              [disabled]="!getCriteriaLbl('Criteria1') || isCriteria1Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria1')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria2') ? getCriteriaLbl('Criteria2') : 'Criteria2'"
+                              [isAsterisk]="getCriteriaLbl('Criteria2')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria2'" [id]="'criteria2'" [(ngModel)]="rxModelAttribute.CRITERIA2"
+                              [disabled]="!getCriteriaLbl('Criteria2') || isCriteria2Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria2')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria3') ? getCriteriaLbl('Criteria3') : 'Criteria3'"
+                              [isAsterisk]="getCriteriaLbl('Criteria3')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria3'" [id]="'criteria3'" [(ngModel)]="rxModelAttribute.CRITERIA3"
+                              [disabled]="!getCriteriaLbl('Criteria3') || isCriteria3Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria3')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria4') ? getCriteriaLbl('Criteria4') : 'Criteria4'"
+                              [isAsterisk]="getCriteriaLbl('Criteria4')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria4'" [id]="'criteria4'" [(ngModel)]="rxModelAttribute.CRITERIA4"
+                              [disabled]="!getCriteriaLbl('Criteria4') || isCriteria4Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria4')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria5') ? getCriteriaLbl('Criteria5') : 'Criteria5'"
+                              [isAsterisk]="getCriteriaLbl('Criteria5')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria5'" [id]="'criteria5'" [(ngModel)]="rxModelAttribute.CRITERIA5"
+                              [disabled]="!getCriteriaLbl('Criteria5') || isCriteria5Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria5')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-row">
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria6') ? getCriteriaLbl('Criteria6') : 'Criteria6'"
+                              [isAsterisk]="getCriteriaLbl('Criteria6')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria6'" [id]="'criteria6'" [(ngModel)]="rxModelAttribute.CRITERIA6"
+                              [disabled]="!getCriteriaLbl('Criteria6') || isCriteria6Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria6')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria7') ? getCriteriaLbl('Criteria7') : 'Criteria7'"
+                              [isAsterisk]="getCriteriaLbl('Criteria7')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria7'" [id]="'criteria7'" [(ngModel)]="rxModelAttribute.CRITERIA7"
+                              [disabled]="!getCriteriaLbl('Criteria7') || isCriteria7Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria7')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria8') ? getCriteriaLbl('Criteria8') : 'Criteria8'"
+                              [isAsterisk]="getCriteriaLbl('Criteria8')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria8'" [id]="'criteria8'" [(ngModel)]="rxModelAttribute.CRITERIA8"
+                              [disabled]="!getCriteriaLbl('Criteria8') || isCriteria8Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria8')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria9') ? getCriteriaLbl('Criteria9') : 'Criteria9'"
+                              [isAsterisk]="getCriteriaLbl('Criteria9')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria9'" [id]="'criteria9'" [(ngModel)]="rxModelAttribute.CRITERIA9"
+                              [disabled]="!getCriteriaLbl('Criteria9') || isCriteria9Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria9')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="getCriteriaLbl('Criteria10') ? getCriteriaLbl('Criteria10') : 'Criteria10'"
+                              [isAsterisk]="getCriteriaLbl('Criteria10')">
+                            </rmlabel>
+                            <rmtextbox [name]="'criteria10'" [id]="'criteria10'"
+                              [(ngModel)]="rxModelAttribute.CRITERIA10"
+                              [disabled]="!getCriteriaLbl('Criteria10') || isCriteria10Disabled" [placeholder]="''"
+                              [textBoxPattern]="criteriaPattern" [requiredIf]="getCriteriaLbl('Criteria10')">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <fieldset class="model-fieldset mt-2 custom-col">
+                      <legend class="model-legend">Values</legend>
+                      <div class="form-row">
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'Value1'"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.value1?.Required">
+                            </rmlabel>
+                            <rmtextbox [name]="'value1'" [id]="'value1'" [(ngModel)]="rxModelAttribute.VALUE1"
+                              [disabled]="isValue1Disabled" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.value1?.Required">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'Value2'"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.value2?.Required">
+                            </rmlabel>
+                            <rmtextbox [name]="'value2'" [id]="'value2'" [(ngModel)]="rxModelAttribute.VALUE2"
+                              [disabled]="isValue2Disabled" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.value2?.Required">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'Value3'"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.value3?.Required">
+                            </rmlabel>
+                            <rmtextbox [name]="'value3'" [id]="'value3'" [(ngModel)]="rxModelAttribute.VALUE3"
+                              [disabled]="isValue3Disabled" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.value3?.Required">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'Value4'"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.value4?.Required">
+                            </rmlabel>
+                            <rmtextbox [name]="'value4'" [id]="'value4'" [(ngModel)]="rxModelAttribute.VALUE4"
+                              [disabled]="isValue4Disabled" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.value4?.Required">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class="form-group">
+                            <rmlabel [label]="'Value5'"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.value5?.Required">
+                            </rmlabel>
+                            <rmtextbox [name]="'value5'" [id]="'value5'" [(ngModel)]="rxModelAttribute.VALUE5"
+                              [disabled]="isValue5Disabled" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.value5?.Required">
+                            </rmtextbox>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <div class="row pt-3">
+                      <div [ngClass]="attributeList && attributeList?.Elements.length  ? 'col-6':'col'"
+                        *ngIf="tempAttributeList.length">
+                        <div class="model-table border p-2">
+                          <h4 class="bg-light mt-n2 mx-n2 mb-2 p-2">Adding New Attributes</h4>
+                          <rmgrid id="tempAttributeGrid" [(gridproperties)]="tempAttributeResResponse"
+                            (emitDeleteDetails)="deleteTempAttributeRow($event)" [isCancelIconShow]="false">
+                          </rmgrid>
+                        </div>
+                      </div>
+                      <div [ngClass]="tempAttributeList.length ? 'col-6':'col'"
+                        *ngIf="attributeList && attributeList?.Elements.length">
+                        <div class="model-table border p-2">
+                          <h4 class="bg-light mt-n2 mx-n2 mb-2 p-2"> Attributes</h4>
+                          <rmgrid id="attributeGrid" [(gridproperties)]="attributeList"
+                            (emitEditDetails)="editModelAttribute($event)" [isCancelIconShow]="false">
+                          </rmgrid>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tab>
+            <tab [heading]="'MODELMASTER.SOFTWAREVERSION' | translate" id="tab-swversion"
+              [disabled]="isSearch && !isEditMode">
+              <div class="tab-pane">
+                <div class="p-2">
+                  <div ngModelGroup="softwareConfig" #swVersionCtrls="ngModelGroup">
+                    <div class="form-row justify-content-end">
+                      <div class="text-right">
+                        <rmbutton [id]="'swAdd'" *ngIf="!hideSWVersionAdd" [class]="'btn btn-round-black mr-1'"
+                          [buttonname]="'COMMON.ADD' | translate" [iconstyle]="'fas fa-plus'"
+                          [disabled]="!(masterCtrls.valid && swVersionCtrls.valid)" (onclick)="addSoftwareVersion()">
+                        </rmbutton>
+                        <rmbutton [id]="'swClear'" [class]="'btn btn-round-black'"
+                          [buttonname]="'COMMON.CLEAR' | translate" [iconstyle]="'far fa-times-circle'" [disabled]=""
+                          (onclick)="clearSWVersionForm()">
+                        </rmbutton>
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <rmlabel [label]="'MODELMASTER.SOFTWAREVERSION' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.softwatreVersion?.Required">
+                          </rmlabel>
+                          <rmtextbox [name]="'softwatreVersion'" [id]="'softwatreVersion'"
+                            [(ngModel)]="rxSoftwareVersions.SOFTWARE_VERSION"
+                            [textBoxPattern]="controlConfigData.softwareVersion"
+                            [errorMessage]="appService.getErrorText('2660079')" [disabled]="" [placeholder]="''"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.softwatreVersion?.Required">
+                          </rmtextbox>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <rmlabel [label]="'MODELMASTER.LATEST_SOFTWARE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.latestVersion?.Required">
+                          </rmlabel>
+                          <rmtextbox [name]="'latestVersion'" [id]="'latestVersion'"
+                            [(ngModel)]="rxSoftwareVersions.LATEST_SOFTWARE"
+                            [textBoxPattern]="controlConfigData.softwareVersion"
+                            [errorMessage]="appService.getErrorText('2660079')" [disabled]="" [placeholder]="''"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.latestVersion?.Required">
+                          </rmtextbox>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <rmlabel [label]="'COMMON.STARTDATE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.startDate?.Required">
+                          </rmlabel>
+                          <div class="input-group">
+                            <input name="startDate" id="startDate" type="text" class="form-control" bsDatepicker
+                              [value]="rxSoftwareVersions.START_DT" #stDp="bsDatepicker" [minDate]="minDate"
+                              autocomplete="off" [bsConfig]="bsConfig" (bsValueChange)="onStartDateChange($event)"
+                              [(ngModel)]="rxSoftwareVersions.START_DT" (keydown)="$event.preventDefault()"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.startDate?.Required" />
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="startDate" (click)="stDp.show()">
+                                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <rmlabel [label]="'COMMON.ENDDATE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.endDate?.Required">
+                          </rmlabel>
+                          <div class="input-group">
+                            <input name="endDate" id="endDate" type="text" class="form-control" bsDatepicker
+                              #eDp="bsDatepicker" [minDate]="endMinDate" [value]="rxSoftwareVersions.END_DT"
+                              autocomplete="off" [bsConfig]="bsConfig" (bsValueChange)="onEndDateChange($event)" [(ngModel)]="rxSoftwareVersions.END_DT"
+                              (keydown)="$event.preventDefault()"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.endDate?.Required" />
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="endDate" (click)="eDp.show()">
+                                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row pt-3">
+                      <div [ngClass]="softwareVersionDetails && softwareVersionDetails?.Elements.length ? 'col-6':'col'"
+                        *ngIf="tesmpSoftwareVersionList.length">
+                        <div class="model-table border p-2">
+                          <h4 class="bg-light mt-n2 mx-n2 mb-2 p-2">Adding New Software Version</h4>
+                          <rmgrid id="tempAttributeGrid" [(gridproperties)]="tempSoftwareVersionResponse"
+                            (emitDeleteDetails)="deleteTempSWVersionRow($event)" [isCancelIconShow]="false">
+                          </rmgrid>
+                        </div>
+                      </div>
+                      <div [ngClass]="tesmpSoftwareVersionList.length ? 'col-6':'col'"
+                        *ngIf="softwareVersionDetails && softwareVersionDetails?.Elements.length">
+                        <div class="model-table border p-2">
+                          <h4 class="bg-light mt-n2 mx-n2 mb-2 p-2">Software Version</h4>
+                          <rmgrid [(gridproperties)]="softwareVersionDetails" id="swVersionGrid"
+                            (emitEditDetails)="editModelSoftwareDtl($event)" [isCancelIconShow]="false">
+                          </rmgrid>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </tab>
+          </tabset>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

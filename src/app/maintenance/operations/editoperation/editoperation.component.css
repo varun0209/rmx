@@ -1,0 +1,10 @@
+.test-grid{
+    background: #0868ac;
+    color: #fff;
+}
+.operations .mat-expansion-panel-header:focus, .operations .mat-expansion-panel-header:hover {
+    background: #e4e4e4 !important;
+  }
+  .parser-setup-expansion .mat-expansion-panel-header, .parser-setup-expansion .mat-expansion-panel-header:hover, .parser-setup-expansion .mat-expansion-panel-header:focus{
+    background-color: #0868AC !important;
+  }

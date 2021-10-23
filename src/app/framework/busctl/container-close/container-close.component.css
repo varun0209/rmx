@@ -1,0 +1,27 @@
+.alert-container-close{
+    min-height: 60px;
+    border: 1px #c0c0c0 solid;
+    border-left: 5px #44483c solid;
+    border-radius: 0;
+    display: flex;
+    font-size: 14px;
+    
+}
+    .info-icon{
+        background: #44483c;
+        height: 22px;
+        width: 22px;
+        line-height: 22px;
+        border-radius: 25px;
+        color: #fff;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+        margin-right: 10px;
+    }
+    .alert-container-close .btn{
+        width: 35px;
+        font-size: 18px;
+        margin: 5px;
+        padding: 4px 4px;
+}

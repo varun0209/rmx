@@ -1,0 +1,25 @@
+.esn-fieldset{
+    display: block;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+    min-inline-size: min-content;
+    border: 2px solid #cccccc;
+    box-shadow: 2px 2px 8px #cccccc;  
+    }
+    
+  .esn-legend{
+    display: block;
+    width: unset;
+    max-width: 100%;
+    padding: 2px 4px;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    color: rgb(255,255,255);
+    white-space: normal;
+    border-radius: 5px;
+    background-color: rgb(8,104,172);
+  }

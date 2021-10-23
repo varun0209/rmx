@@ -1,0 +1,12 @@
+<div class="row mb-3">
+    <div class="col-md-6">
+      <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'"
+        [buttonname]="'COMMON.CLEAR' | translate" [iconstyle]="'fas fa-times-circle'"
+        (onclick)="clearRouteCal();"></rmbutton>
+    </div>
+    <div class="col-md-6">
+        <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'routeProcess'" (onclick)="process()"
+        [disabled]="isProcessRouteDisabled" [buttonname]="'DEVICEMANAGEMENT.PROCESS' | translate" [iconstyle]="'fas fa-cogs'">
+      </rmbutton>
+    </div>
+  </div>

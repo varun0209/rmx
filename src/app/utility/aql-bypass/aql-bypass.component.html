@@ -1,0 +1,40 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="container-fluid padding-bottom">
+  <div class="container-fluid">
+    <form #aqlForm="ngForm">
+      <div class="row">
+        <div class="form-group col-md-3 col-sm-12 mt-1">
+          <rmdropdown [name]="'searchkeydropdown'" [id]="'searchkeyDropdown'" #searchkeyDropDown [class]="'form-control'"
+                      [dpOptions]="searchDropdownList" [disabled]="isSearchDropDownDisabled" [(ngModel)]="searchDropdownVal" [value]="searchDropdownVal"
+                      (onChangeVal)="changeSearchDropdown($event.value)"></rmdropdown>
+        </div>
+        <div class="form-group col-md-3 col-sm-12 mt-1">
+          <rmtextbox [(ngModel)]="searchKey" name="searchKey" #searchkeyInput [id]="'searchKey'" [placeholder]="''"
+                     (isInputValueEmpty)="isInputValueEmpty()" [divClass]="'input-group'" [hideSearchIcon]='true' (onChangeVal)="changeSearchInput()"
+                     [searchIconBtnDisabled]="isSearchIconBtnDisabled" (searchEventEmit)="searchReceiptOrAuthKey()" (enter)="searchReceiptOrAuthKey()"
+                     [disabled]="isSearchKeyInputDisabled"></rmtextbox>
+        </div>
+        <div class="form-group col-md-6 d-flex align-items-center">
+          <div class="btn-margin-top">
+            <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'" [disabled]="isResetBtnDisabled" (onclick)="reset()"
+                      [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+            </rmbutton>
+            <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'byPass'" [disabled]="isBypassBtnDisabled" (onclick)="AQLByPass()"
+                      [buttonname]="'Bypass'" [iconstyle]="'far fa-save'"></rmbutton>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12 pl-0 pr-0">
+          <div class="card-body pb-0">
+            <div class="row" *ngIf="receiptOrAuthData">
+              <div class="col-12 p-1">
+                <rmgrid [(gridproperties)]="receiptOrAuthData" (emitEditDetails)="editReceiptOrAuthDetailRow($event)">
+                </rmgrid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

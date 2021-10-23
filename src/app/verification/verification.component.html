@@ -1,0 +1,164 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="row">
+          <div [ngClass]=" (masterPageService?.gridContainerDetails?.Elements?.length) ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'" *ngIf="!masterPageService.hideControls.controlProperties?.inboundContainer?.Hidden">
+            <container-summary [inbContainerDisabled]="masterPageService.disabledContainer" [id]="'ClearContainer'"
+              (emitSerialNumber)="getAutoPopulatedSerailNum($event);" (receiptKey)="getVerificationStatus($event)"
+              (emitcontainerID)="getinbContainerID($event)" (emitCurrentOperationId)="setCurrentOperationId($event)"
+              (emitContainerSummaryProperties)="containerSummaryProperties($event)"
+              (containerList)="getContainerList($event)" (clear)="Clear()" [uiData]="uiData">
+            </container-summary>
+          </div>
+        </div>
+        <div class="row" *ngIf="inboundProperties">
+          <div class="d-flex align-content-end flex-wrap" *ngFor="let header of headingsobj">
+            <div class="p-3" [ngClass]="inboundProperties[header]=='' ? 'pt-4':'p-3'">
+              {{header}} : <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+            </div>
+          </div>
+        </div>
+        <div class="row pt-2">
+          <div [ngClass]="(masterPageService?.gridContainerDetails?.Elements?.length) ? 'col-md-6 col-sm-12': 'col-md-3 col-sm-12'"
+            *ngIf="!masterPageService.hideControls.controlProperties?.serialNumber?.Hidden">
+            <div class="form-group">
+              <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"></rmlabel>
+              <rmtextbox [(ngModel)]="serialNumber" #serialNumberInput
+                [disabled]="transactionService.disabledSerialNumber" [id]="'serialNumber'" [placeholder]="''"
+                (enter)="validateTestSerialNumber($event,serialNumberInput)" (onChangeVal)="changeInput()"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumber?.Required" [uiData]="uiData" 
+                [isSerialNumber]="true" [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+            </div>
+          </div>
+          <div [ngClass]="(masterPageService?.gridContainerDetails?.Elements?.length) ? 'col-md-6 col-sm-12': 'col-md-3 col-sm-12'"
+            *ngIf="!masterPageService.hideControls.controlProperties?.containerSuggestion?.Hidden">
+            <div class="flex-fill">
+              <div class="card card-border">
+                <div class="card-body  p-0">
+                  <container-suggestion *ngIf="controlConfig?.containerInputId"
+                    [csLabel]="controlConfig?.containerInputId | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.containerInputId?.Required"
+                    [class]="'form-control'" [id]="'containerInputId'" (focusContainer)="getSuggestContainer($event)"
+                    (validateContainerValue)="validateContainer($event)"
+                    [inbContainerId]="inbContainerID" (emitCheckContainer)="checkContainer($event)"
+                    (emitvalidateContainer)="validateContainerResponse($event)"
+                    (emitValidateContainerFailResponse)="emitValidateContainerFailResponse($event)" [uiData]="uiData">
+                  </container-suggestion>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="row mt-3" *ngIf="masterPageService.operCategoryTests.length>0">
+          <div class="col-sm-12 mb-3">
+            <div class="flex-fill">
+              <div class="card">
+                <div class="card-header test-header-bg">{{masterPageService.categoryName}}</div>
+                <div class="card-body  p-0">
+
+                  <div>
+                    <table class="table  testTable table-responsive" id="style-4">
+
+                      <ng-container *ngFor="let item of masterPageService.operCategoryTests; index as parentIndex">
+                        <tbody>
+                          <tr
+                            [ngClass]="{'resultPass': item?.DisplayProps?.RESULT == 'PASS' && appService.hideControls.transactionResult?.Show, 'resultFail': item?.DisplayProps?.RESULT == 'FAIL' && appService.hideControls.transactionResult?.Show}"
+                            class="ml-2">
+
+                            <td>
+                              <rmbutton *ngIf="item.ShowTestTransResults == 'Y'"
+                                [id]="appService.getElementId(item.OperationId)"
+                                [class]="'btn btn-round-black btn-sm mr-2'"
+                                [iconstyle]=" item.isEditable ? 'fas fa-minus' : 'fas fa-plus'"
+                                (onclick)="showTransResults(item)"></rmbutton>
+                              <rmbutton *ngIf="item.Status == testStatus.retest"
+                                [buttonname]="testBtnName.retest | translate"
+                                [id]="appService.getElementId(testBtnName.retest,item.OperationId)"
+                                [class]="'btn btn-round-black btn-sm'" [iconstyle]="'fa fa-recycle'"
+                                (onclick)="updateBatchDetailsTrans('Y');showAutoManual(item)"></rmbutton>
+                              <ng-container *ngIf="item.TestType == 'M' || item.TestType == 'B'">
+                                <rmbutton *ngIf="!item.isEditable && item.Status !== testStatus.retest"
+                                  [buttonname]="controlConfig?.testBtnNameManual | translate"
+                                  [id]="appService.getElementId(testBtnName.manual,item.OperationId)"
+                                  [class]="'btn btn-round-black btn-sm'" (onclick)="getTransaction(item,parentIndex)"
+                                  [iconstyle]="'fa fa-cogs'"
+                                  [disabled]="transactionService.isManualDisabled  || item.Status == testStatus.noteligible">
+                                </rmbutton>
+                              </ng-container>
+                              <rmbutton *ngIf="item.isEditable &&  item.Status !== testStatus.retest"
+                                [buttonname]="testBtnName.done | translate" [id]="testBtnName.done"
+                                [class]="'btn btn-round-black btn-sm mr-2'" [iconstyle]="'fa fa-check-circle'"
+                                [disabled]="transactionService.isDoneDisabled" (onclick)="doneManualTransaction(item)">
+                              </rmbutton>
+                              <rmbutton *ngIf="item.isEditable &&  item.Status !== testStatus.retest"
+                                [buttonname]="testBtnName.cancel | translate" [id]="testBtnName.cancel"
+                                [class]="'btn btn-round-black btn-sm'" [iconstyle]="'fa fa-ban'"
+                                (onclick)="transactionService.cancelTransaction(item,parentIndex)"></rmbutton>
+                            </td>
+                            <td
+                              [ngClass]="transactionService.isManualDisabled  || item.Status == testStatus.noteligible ? 'text-muted' : ''"
+                              class="tdwhiteSpace py-3">
+                              {{item.OperationId}} &#8213; {{item.Description}}
+
+                            </td>
+                            <td class="tdwhiteSpace">
+                              <div class="row  ml-3" *ngIf="displayProperites">
+                                <div class="mr-2 d-flex align-content-end flex-wrap"
+                                  *ngFor="let header of displayPropheadingobj">
+                                  <div [ngClass]="displayProperites[header]=='' ? 'pt-1':''">
+                                    {{header}} :
+                                    <rmbadge [badgenumber]="displayProperites[header]"></rmbadge>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
+
+
+                          </tr>
+                        </tbody>
+                        <tbody id="tableScroll"
+                          [ngClass]="transactionService.transactions.length > 0 ?'dynamicscroll':''"
+                          *ngIf="transactionService.transactions.length > 0 ">
+                          <ng-container *ngIf="item.isEditable">
+                            <tr class="noBorder align-middle p-2 ml-4"
+                              *ngFor="let transaction of transactionService.transactions; index as i" [id]="i">
+                              <td></td>
+                              <td class="pl-2 py-0" colspan="4" *ngIf="transaction.TransControls.length > 0 ">
+                                <dynamicpanel [questionwidth]="'questionwidth'" [setrowPadding]="'set-width'"
+                                  [title]="'Testing'" [setContainer]="'container-fluid px-2'"
+                                  [setDynamicpanelDescMaxwith]="'dynamic-desc-maxwidth-testing'"
+                                  [setDynamicPanelBorder]="'dynamicpanel-border'" [dynamicFormClass]="'form-inline'"
+                                  [cards]="transaction"
+                                  (cardlistChange)=getTransAtrributeValues(transaction,$event,i,item,parentIndex)>
+                                </dynamicpanel>
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </tbody>
+                      </ng-container>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 clearfix">
+              <rmbutton [class]="'btn btn-round-black mr-1 float-right'"
+              *ngIf="!masterPageService.hideControls.controlProperties?.moveBatch?.Hidden" [id]="'moveContainer'"
+              [disabled]="(isSaveDisabled && serialNumber=='') ? isMoveDisabled :true"  [buttonname]="moveBatchButton | translate"
+              (onclick)="moveBatch()" [iconstyle]="moveBatchButton === commonEnum.MOVEBATCH ? 'fa fa-plus' : 'fa fa-archive'"></rmbutton>
+              <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [disabled]="isSaveDisabled"
+                [buttonname]="'COMMON.SAVE'| translate" [id]="'save'" (onclick)="saveSerialNum()"
+                [iconstyle]="'far fa-save'"></rmbutton>
+              <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isTestsClearDisabled"
+                [buttonname]="'COMMON.CLEAR'| translate" (onclick)="serialNumberClear()"
+                [iconstyle]="'fas fa-times-circle'"></rmbutton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

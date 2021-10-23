@@ -1,0 +1,50 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+        <div class="row">
+          <div [ngClass]="serialNumberList.length ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'"
+            *ngIf="!masterPageService.hideControls.controlProperties?.inboundContainer?.Hidden">
+            <container-summary [inbContainerDisabled]="masterPageService.disabledContainer" [id]="'inboundContainer'"
+              (emitcontainerID)="getinbContainerID($event)" (containerList)="getContainerList($event)" (emitCurrentOperationId)="setCurrentOperationId($event)"
+              (receiptKey)="getQueuedTestSerialNumbers($event)" (emitSerialNumber)="getAutoPopulatedSerailNum()"
+              (emitContainerSummaryProperties)="containerSummaryProperties($event)" (clear)="inboundContainerReset()"
+              [uiData]="uiData" [isDynamicButton]="true" [dynamicButtonId]="'processNKInbound'"
+              [isDynamicButtonDisabled]="isNKInboundProcessDisabled" [dynamicButtonName]="'COMMON.PROCESS'"
+              [dynamicButtonIcon]="'fas fa-cogs'" (dynamicButtonClick)="updateNKInboundDevices()">
+            </container-summary>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div [ngClass]="serialNumberList.length ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'">
+            <div *ngIf="inboundProperties">
+              <div class="d-inline-flex align-content-end" *ngFor="let header of headingsobj">
+                <div class="px-2 py-1" [ngClass]="inboundProperties[header]=='' ? 'pt-4':'px-2 py-1'">
+                  {{header}} : <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="row" *ngIf="colorCodeDetails">
+          <div [ngClass]="serialNumberList.length ? 'col-md-6' : 'col-md-3 col-sm-12'">
+            <div *ngIf="colorCodeDetails.ColorCode" [ngStyle]="{'background': colorCodeDetails.ColorCode}"
+              class="dot-on-box"></div>
+            <p class="text-center mt-4" *ngIf="colorCodeDetails.Color"> {{ 'COMMON.PLACEA' | translate }} <strong class="text-bg-color"
+                [ngStyle]="{'color': colorCodeDetails.Color}">{{colorCodeDetails.Color}}</strong> {{ 'COMMON.DOTBOX' | translate }}
+            </p>
+          </div>
+        </div>
+        <div class="row"  *ngIf="serialNumberList.length && appService.checkDevice();">
+          <div class="col-sm-12  mt-3">
+            <mat-expansion-panel>
+              <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px" class="bg-light">
+                <mat-panel-title> {{'COMMON.CONTAINERDETAILS' | translate}} </mat-panel-title>
+              </mat-expansion-panel-header>
+              <rmgrid [(gridproperties)]="masterPageService.gridContainerDetails"></rmgrid>
+            </mat-expansion-panel>
+          </div>
+        </div>
+  
+    </div>
+  </div>

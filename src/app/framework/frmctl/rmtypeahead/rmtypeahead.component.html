@@ -1,0 +1,23 @@
+﻿
+<div class="input-group rcv-sku-form-group position-relative sku-autocomplete">
+  <input type="search" #skuInput autocomplete="off" [(ngModel)]="SKU" [readonly]="skuDisabled" (input)="getEligibleSKUs()"
+  [typeaheadOptionField]="typeaheadOptionField" [id]="id" spellcheck="false" 
+  (typeaheadOnSelect)="typeaheadOnSelect($event)" [placeholder]="placeholder" name="sku" [value]="skuInput.value.toUpperCase().trim()"
+  [typeaheadScrollable]="true" [typeahead]="skus" class="form-control searchIcon" [typeaheadWaitMs]="waitTime"
+  [typeaheadOptionsLimit]="typeaheadOptionsLimit" [typeaheadItemTemplate]="customItemTemplate" class="form-control">
+  <span class="suggested-conatiner-badge">
+    <rmbadge [badgenumber]="selectedSKUModel"></rmbadge>
+  </span>
+  <div class="input-group-append">
+    <button class="btn btn-outline-secondary ml-1" type="button" [disabled]="isSkuBtnDisabled">
+      <i class="far fa-window-restore"></i>
+      <!-- <span *showItBootstrap="['lg','xl','md','sm']">SKU Override</span> -->
+    </button>
+  </div>
+</div>
+
+<ng-template #customItemTemplate let-model="item" let-index="index">
+  <span>{{model.Sku}}</span><span class="float-right skumodel"> {{model.Model}}</span>
+</ng-template>
+
+

@@ -1,0 +1,86 @@
+﻿.padding-bottom {
+  padding-bottom: 22px;
+}
+
+/* .db-mt {
+  margin-top: 40px;
+} */
+
+span.suggested-conatiner-badge {
+  position: absolute;
+  top: -24px;
+  right: 40px;
+}
+
+.input-width {
+  width: 79px;
+  flex: unset !important;
+  padding-right: 0px;  
+  /* height: 58.5%; */
+  height:33.5px;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+  opacity: 1;
+  height: 30px;
+}
+
+.sn-retest{
+  margin-top: 20px;
+}
+
+
+@media (min-width: 576px) {
+  .move-mt {
+    margin-top: 25px;
+  }
+}
+
+@media (min-width:768px) {
+  .fqa-mt {
+    margin-top: 11px;
+    padding-left: 26px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .count-case-lable {
+    width: 75px;
+  }
+  
+}
+
+@media (max-width: 1280px) {
+  /* .container {
+    width: 50vw;
+  }    */
+  .input-width {    
+    height:29px
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {  
+  .batch-mt {
+    padding-left: 45px;
+    margin-top: 21px;
+  }
+
+  .fqa-mt {
+    margin-top: 25px;
+    padding-left: 26px;
+  }
+  .input-width {    
+    height:26.25px
+  }
+}
+
+
+@media (max-width: 767px) {
+   .input-width {    
+    height:33.5px
+  }
+}
+
+
+
+

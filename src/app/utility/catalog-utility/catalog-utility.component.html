@@ -1,0 +1,65 @@
+<xpo-dialog-title>
+    {{'Item Lookup Popup' | translate}}
+</xpo-dialog-title>
+
+<xpo-dialog-content>
+    <form #popupCatalogForm="ngForm">
+        <div class='container-fluid p-3 item-lookup-popup'>
+            <div class="form-row m-0 mt-3">
+                <div class="form-group col">
+                    <rmlabel [label]="'CATALOGUTIL.CARRIER' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.carrier?.Required"></rmlabel>
+                    <rmdropdown [name]="'catCarrierCode'" [id]="'catCarrierCode'" #carrierCodeDropDown
+                        [class]="'form-control'" [dpOptions]="carrierCodeList" [(ngModel)]="popupCatalog.Carrier"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.carrier?.Required"
+                        [value]="popupCatalog.Carrier" (onChangeVal)="changecarrierCode($event); changeInput()">
+                    </rmdropdown>
+                </div>
+
+                <div class="form-group col">
+                    <rmlabel [label]="'CATALOGUTIL.OEM' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.oem?.Required"></rmlabel>
+                    <rmdropdown [name]="'catOEM'" [id]="'catOEM'" #oemDropDown [class]="'form-control'"
+                        [dpOptions]="oemList" [(ngModel)]="popupCatalog.OEM" [value]="popupCatalog.OEM"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.oem?.Required"
+                        (onChangeVal)="changeOEMCode($event); changeInput()">
+                    </rmdropdown>
+                </div>
+
+                <div class="form-group col">
+                    <rmlabel [label]="'CATALOGUTIL.MODEL' | translate"></rmlabel>
+                    <rmtextbox [name]="'catModel'" [disabled]="isModelDisabled" [id]="'catModel'" [placeholder]="''"
+                        [divClass]="'input-group'" [maxlength]="appConfig?.utilityCatalog?.modelTextLength"
+                        [textBoxPattern]="catalogModelPattern" [(ngModel)]="popupCatalog.Model"
+                        (onChangeVal)="changeInput()">
+                    </rmtextbox>
+                </div>
+
+                <div class="col-auto text-right mt-2 align-self-center">
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'catSearch'"
+                        [disabled]="!popupCatalogForm.valid" [buttonname]="'COMMON.SEARCH' | translate"
+                        [iconstyle]="'fas fa-search'" (onclick)="getDeviceCatalogList()"></rmbutton>
+                    <rmbutton [buttonname]="'COMMON.CLEAR' | translate" [class]="'btn btn-round-black'"
+                        [id]="'catClear'" [iconstyle]="'fas fa-times-circle'" (onclick)="clearData()">
+                    </rmbutton>
+                </div>
+            </div>
+
+            <div *ngIf="catalogList && catalogList?.Elements.length; else noDataFound">
+                <div class="col-12 p-1">
+                    <rmgrid [(gridproperties)]="catalogList" (emitEditDetails)="editCatalogList($event)"
+                        [isCancelIconShow]="false">
+                    </rmgrid>
+                </div>
+            </div>
+            <ng-template #noDataFound>
+                <div class="img--height d-flex justify-content-center align-items-center mt-5">
+                    <div>
+                        <img width=96 height=115 src="assets/images/no-data-found.png">
+                        <h3>NO DATA FOUND</h3>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </form>
+</xpo-dialog-content>

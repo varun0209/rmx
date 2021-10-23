@@ -1,0 +1,45 @@
+﻿<div class="container db-mt padding-bottom">
+  <div class="d-flex flex-row flex-wrap">
+    <div>
+      <figure class="figure" *ngFor="let item of dashBoardicons">
+        <a *ngIf="item.HasSubMenu == false" (click)="mainMenu(item)" id="{{item.OperationId}}" [routerLink]='rightClicked' (contextmenu)="onRightClicked(item)">
+          <div class="card pointer">
+            <img class="card-img-top img-fluid" src="assets/images/dashboard/{{item.Title}}.png">
+            <figcaption class="figure-caption">{{item.Title| translate}}</figcaption>
+          </div>
+        </a>
+        <div *ngIf="item.HasSubMenu == true">
+          <a class="card pointer" data-toggle="modal" [attr.data-target]="'#' + item.Title.replace( ' ','')">
+            <img class="card-img-top img-fluid" src="assets/images/dashboard/{{item.Title}}.png" alt="{{item.Title}}">
+            <figcaption class="figure-caption">{{item.Title| translate}}</figcaption>
+          </a>
+        </div>
+
+        <div class="modal" id="{{item.Title.replace( ' ','')}}" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="d-flex justify-content-between mb-2">
+                  <h2 class="text-center d-inline-flex float-left"><span class="sub-menu-title">{{item.Title | translate}}</span></h2>
+                  <span class="menu-search">
+                   <form class="form-inline md-form form-sm mt-0">
+                     <i class="fas fa-search" aria-hidden="true"></i>
+                     <input class="form-control form-control-sm w-75" type="text"  name="searchKey" placeholder="Search..." [(ngModel)]="searchKey" autocomplete="off"  aria-label="Search">
+                   </form>
+                  </span>
+                 </div>
+                <nav class="nav justify-content-md-center ustify-content-sm-center sub-menu-modal" data-dismiss="modal">
+                 
+                  <a *ngFor="let subitem of item.SubMenu  | customOrderBy : 'Title' : false | filter:searchKey" id="{{subitem.OperationId}}" class="text-center pointer figure-utility" (click)="subMneuClicked(subitem.RouterLink,subitem)"
+                    [routerLink]='rightClicked' (contextmenu)="onRightClicked(subitem)">
+                    <span class="d-block sub-menu-icon"><img class="card-img-top img-fluid" [src]="'assets/images/dashboard/sub-menu-icons/'+subitem.Title+'-'+subitem.OperationId+'.png'"  (error)="imageErrorHandler(item.Title, $event)" alt="{{item.Title}}"></span> <span class="d-block pt-2 sub-menu-text">{{subitem.Title| translate}}</span>
+                  </a>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </div>
+</div>

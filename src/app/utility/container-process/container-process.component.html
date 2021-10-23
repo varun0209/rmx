@@ -1,0 +1,67 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+      <div class="row mb-1">
+        <div class="col-lg-6" *ngIf="!masterPageService.hideControls.controlProperties?.inboundContainer?.Hidden">
+          <container-summary [inbContainerDisabled]="masterPageService.disabledContainer" [id]="'ClearContainer'"
+            (emitSerialNumber)="getAutoPopulatedSerailNum($event)" (emitCurrentOperationId)="setCurrentOperationId($event)"
+            (emitContainerSummaryProperties)="containerSummaryProperties($event)"
+            (emitcontainerID)="getinbContainerID($event)" (containerList)="getContainerList($event)"
+            (clear)="resetClear()" [uiData]="uiData">
+          </container-summary>
+        </div>
+      </div>
+
+      <div class="row mb-3" *ngIf="inboundProperties">
+        <div class="d-flex align-content-end flex-wrap" *ngFor="let header of headingsobj">
+          <div class="p-3" [ngClass]="inboundProperties[header]=='' ? 'pt-4':'p-3'">{{header}} :
+            <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-lg-3 mb-3">
+          <rmlabel [label]="'CONTAINERPROCESS.TRANSACTION' | translate" [isAsterisk]="'true'">
+          </rmlabel>
+          <ng-multiselect-dropdown #transation [placeholder]="''" [settings]="dropdownSettings" [data]="transactionList" 
+            [requiredIf]="'true'" [(ngModel)]="transactions" name="transaction" id="transaction" (onSelect)="getRecordData()"
+            [disabled]="isTransactionDisabled" (onDeSelect)="onItemDeSelect()">
+          </ng-multiselect-dropdown> 
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-lg-3 mb-3 d-flex justify-content-between">
+          <rmbutton [class]="'btn btn-round-black'" [id]="'Clear'" [disabled]="isClearDisabled"
+            [buttonname]="'COMMON.CLEAR'| translate" (onclick)="clear()" [iconstyle]="'fas fa-times-circle'">
+          </rmbutton>
+          <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'record'" [disabled]="isRecordDisabled"
+            [buttonname]="'CONTAINERPROCESS.RECORD'| translate" [iconstyle]="'fas fa-check-circle'"
+            (click)="recordTransation()">
+          </rmbutton>
+        </div>
+    </div>
+  </div>
+
+  <ng-template #containerConfirmation>
+    <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+      {{'CONTAINERPROCESS.CONFIRMTRANSACTION' | translate}}
+      <button mat-icon-button (click)="masterPageService.hideDialog();">
+        <xpo-icon iconName="clear"></xpo-icon>
+      </button>
+    </h4>
+  <xpo-dialog-content>
+    <div class="modal-body m-body">
+      <div class="d-flex">
+        <i class="fas fa-question-circle ques-icon"></i> 
+        <span class="text-center"> {{containerPopupMessage}}</span> 
+      </div>
+    </div>
+  </xpo-dialog-content>
+  <mat-dialog-actions>
+    <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'"
+            (onclick)="masterPageService.hideDialog();"></rmbutton>
+    <rmbutton [buttonname]="'COMMON.CANCEL' | translate" [class]="'btn btn-round-black'"
+            (onclick)="deSelectCheckBox(); masterPageService.hideDialog();"></rmbutton>
+  </mat-dialog-actions>
+  </ng-template>

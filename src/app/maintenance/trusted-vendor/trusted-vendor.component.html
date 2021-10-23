@@ -1,0 +1,76 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <form #trustedVendorForm="ngForm">
+      <div class="mb-1 d-flex justify-content-end">
+        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'search'" [buttonname]="'COMMON.SEARCH'| translate"
+          [iconstyle]="'fa fa-search'" [disabled]="isSearchBtnDisabled" (onclick)="getVendorCIStatesList()">
+        </rmbutton>
+        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'clear'" [buttonname]="'COMMON.CLEAR'| translate"
+          [iconstyle]="'far fa-times-circle'" [disabled]="" (onclick)="clear()">
+        </rmbutton>
+        <rmbutton [class]="'btn btn-round-black ml-1'" [id]="'add'" *ngIf="trustedVendorForm" [disabled]="!trustedVendorForm.valid"
+          (onclick)="addOrUpdateVendor()" [buttonname]="btnName"
+          [iconstyle]="btnName == commonEnum.add ?'fas fa-plus':'far fa-save'">
+        </rmbutton>
+      </div>
+      <div class="card p-2 my-3">
+        <div class="form-row">
+          <div class="col-md-3 col-sm-12">
+            <div class="form-group">
+              <rmlabel [label]="'COMMON.VENDORID' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.vendorId?.Required"></rmlabel>
+              <ng-multiselect-dropdown  [settings]="dropdownSettings" [data]="vendorLsit"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.vendorId?.Required"
+                [(ngModel)]="selectedVendor" name="vendorId" id="vendorId" (onSelect)="onSelectVedor($event)"
+                (onDeSelect)="onDeSelectVendor()" [disabled]="isVendorIDDisabled" tabindex="0">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+
+          <div class="col-md-3 col-sm-12">
+            <div class="form-group">
+              <rmlabel [label]="'COMMON.DISPOSITION' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.disposition?.Required"></rmlabel>
+              <ng-multiselect-dropdown  [settings]="dropdownSettings" [data]="dispositionList"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.disposition?.Required"
+                [(ngModel)]="selectedDisposition" name="disposition" id="disposition"
+                (onSelect)="onSelectDisposition($event)" (onDeSelect)="onDeSelectDisposition()"
+                [disabled]="isDispositionDisabled" tabindex="0">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-12">
+            <div class="form-group">
+              <rmlabel [label]="'COMMON.RECEIPTTYPE' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.receiptType?.Required"></rmlabel>
+              <ng-multiselect-dropdown  [settings]="dropdownSettings" [data]="receiptTypeList"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.receiptType?.Required"
+                [(ngModel)]="selectedReceiptType" name="receiptType" id="receiptType"
+                (onSelect)="onSelectReceiptType($event)" (onDeSelect)="onDeSelectReceiptType()"
+                [disabled]="isReceiptTypeDisabled" tabindex="0">
+              </ng-multiselect-dropdown>
+            </div>
+          </div>
+          <!-- <div class="col-md-3">
+            <div class="form-group">
+              <rmlabel [label]="'Value5'" [isAsterisk]="true">
+              </rmlabel>
+              <rmtextbox [name]="'value5'" [id]="'value5'" [disabled]="" [placeholder]="''" [(ngModel)]="selectedVendor"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.receiptType?.Required">
+              </rmtextbox>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </form>
+
+    <div class="row">
+      <div class="col-md-12 mb-3 form-group"
+        *ngIf="vendorCIStateCnfigsList && vendorCIStateCnfigsList?.Elements.length">
+        <rmgrid [(gridproperties)]="vendorCIStateCnfigsList" [isCancelIconShow]="false"
+          (emitEditDetails)="editTrustedVendor($event)" (emitDeleteDetails)="deletePopup($event)">
+        </rmgrid>
+      </div>
+    </div>
+  </div>
+</div>

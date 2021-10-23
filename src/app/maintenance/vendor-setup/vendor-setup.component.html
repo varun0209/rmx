@@ -1,0 +1,190 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <form #vendorForm="ngForm">
+      <div ngModelGroup="carrierCodeConfig" class="px-2" #vendorCtrls="ngModelGroup">
+
+        <div class="mb-1 d-flex justify-content-end">
+
+          <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'clear'" [buttonname]="'COMMON.CLEAR'| translate"
+            [iconstyle]="'far fa-times-circle'" [disabled]="isClearBtnDisabled" (click)="clear()">
+          </rmbutton>
+          <rmbutton [class]="'btn btn-round-black ml-1'" [id]="'add'" *ngIf="vendorCtrls"
+            [disabled]=" !(vendorCtrls.valid)" (onclick)="addOrUpdateVendor()" [buttonname]="btnName"
+            [iconstyle]="btnName == commonEnum.add ?'fas fa-plus':'far fa-save'">
+          </rmbutton>
+
+        </div>
+
+
+        <div class="row">
+
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.VENDORID' | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.vendorId?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.VendorId" [name]="'vendorId'" [class]="'form-control'"
+              [disabled]="isVendorIDDisabled" (enter)="getVendors()"
+              [requiredIf]="masterPageService.hideControls.controlProperties?.vendorId?.Required" [id]="'vendorId'"
+              [isAllowEmptyValue]="true" (onChangeVal)="changeInput()" [placeholder]="''" [divClass]="'input-group'"
+              [hideSearchIcon]="true" [searchIconBtnDisabled]="isSearchBtnDisabled"
+              (searchEventEmit)="getVendors(); changeInput();"
+              [maxlength]="appConfig.vendorSetup.vendorIdTextboxLength">
+            </rmtextbox>
+
+          </div>
+
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.VENDORNAME' | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.vendorName?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.VendorName" [textBoxPattern]="textBoxPattern"
+              [requiredIf]="masterPageService.hideControls.controlProperties?.vendorName?.Required"
+              [name]="'vendorName'" [class]="'form-control'" [id]="'vendorName'" (onChangeVal)="changeInput()"
+              [placeholder]="''" [maxlength]="appConfig.vendorSetup.vendorNameTextboxLength">
+            </rmtextbox>
+
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.COUNTRY' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.country?.Required"></rmlabel>
+            <rmmultiselect [name]="'country'" class="w-100" [id]="'country'" [placeHolder]="''" [data]="countries"
+              [requiredIf]="masterPageService.hideControls.controlProperties?.country?.Required"
+              [dropdownSettings]="countryDropdownSettings" [(ngModel)]="vendor.Country" [selectedItems]="selectedCountry"
+              (onSelectedItem)="onSelectCountry($event)" (onDeSelectItem)="onDeSelectCountry($event)"
+              tabindex="0">
+            </rmmultiselect>
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.STATE' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.state?.Required"></rmlabel>
+            <rmmultiselect [name]="'state'" class="w-100" [id]="'state'" [placeHolder]="''" [data]="states"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.state?.Required"
+            [dropdownSettings]="stateDropdownSettings" [(ngModel)]="vendor.State" [selectedItems]="selectedState"
+              (onSelectedItem)="onSelectState($event)" (onDeSelectItem)="onDeSelectState($event)"
+              tabindex="0">
+            </rmmultiselect>
+
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.ADDRESS1' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.address1?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.Address1" [name]="'address1'" [class]="'form-control'" [id]="'address1'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.address1?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.addressTextboxLength">
+            </rmtextbox>
+
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.ADDRESS2' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.address2?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.Address2" [name]="'address2'" [class]="'form-control'" [id]="'address2'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.address2?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.addressTextboxLength">
+            </rmtextbox>
+
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.ADDRESS3' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.address3?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.Address3" [name]="'address3'" [class]="'form-control'" [id]="'address3'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.address3?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.addressTextboxLength">
+            </rmtextbox>
+
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.ADDRESS4' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.address4?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.Address4" [name]="'address4'" [class]="'form-control'" [id]="'address4'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.address4?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.addressTextboxLength">
+            </rmtextbox>
+
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.CONTACT1' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.contact1?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.Contact1" [name]="'contact1'" [class]="'form-control'" [id]="'contact1'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.contact1?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.contactTextboxLength">
+            </rmtextbox>
+
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.CONTACT2' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.contact2?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.Contact2" [name]="'contact2'" [class]="'form-control'" [id]="'contact2'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.contact2?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.contactTextboxLength">
+            </rmtextbox>
+
+          </div>
+
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.ZIPCODE' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.zip?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.Zip" [name]="'zip'" [class]="'form-control'" [id]="'zip'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.zip?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.zipCodeTextboxLength">
+            </rmtextbox>
+
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.PHONE' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.phone?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.Phone" [name]="'phone'" [class]="'form-control'" [id]="'phone'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.phone?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.phoneTextboxLength">
+            </rmtextbox>
+
+          </div>
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.CITY' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.city?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.City" [name]="'city'" [class]="'form-control'" [id]="'city'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.city?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.cityTextboxLength">
+            </rmtextbox>
+
+          </div>
+
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.COMPANY' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.company?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.Company" [name]="'company'" [class]="'form-control'" [id]="'company'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.company?.Required"
+            (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.companyTextboxLength">
+            </rmtextbox>
+
+          </div>
+
+          <div class="col-md-3 col-sm-12 mb-3 form-group">
+            <rmlabel [label]="'VENDORSETUP.ALTCONTACTTITLE' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.altContactTitle?.Required"></rmlabel>
+            <rmtextbox [(ngModel)]="vendor.AltContactTitle" [name]="'altContactTitle'" [class]="'form-control'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.altContactTitle?.Required"
+            [id]="'altContactTitle'" (onChangeVal)="changeInput()" [placeholder]="''" [textBoxPattern]="textBoxPattern"
+            [maxlength]="appConfig.vendorSetup.altContactTitleTextboxLength">
+            </rmtextbox>
+
+          </div>
+
+          <div class="col-md-12 mb-3 form-group" *ngIf="vendorList">
+            <rmgrid [(gridproperties)]="vendorList" [isCancelIconShow]="false" (emitEditDetails)="editVendor($event)">
+            </rmgrid>
+          </div>
+
+        </div>
+
+      </div>
+    </form>
+  </div>
+</div>

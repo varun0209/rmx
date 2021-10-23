@@ -1,0 +1,35 @@
+@mixin TextTreatment-header--small() {
+  font-size: $xpo-header-fontSize--small;
+  font-weight: $xpo-fontWeight--bold;
+  letter-spacing: $xpo-header-letterSpacing--small;
+  line-height: $xpo-header-lineHeight--small;
+}
+
+@mixin TextTreatment-header--medium() {
+  font-size: $xpo-header-fontSize--medium;
+  font-weight: $xpo-fontWeight--bold;
+  letter-spacing: $xpo-header-letterSpacing--medium;
+  line-height: $xpo-header-lineHeight--medium;
+}
+
+@mixin TextTreatment-header--large() {
+  font-size: $xpo-header-fontSize--large;
+  font-weight: $xpo-fontWeight--bold;
+  letter-spacing: $xpo-header-letterSpacing--large;
+  line-height: $xpo-header-lineHeight--large;
+}
+
+
+// Regular text mixins
+@mixin TextTreatment--small() {
+  font-size: $xpo-fontSize--small;
+  line-height: $xpo-lineHeight--small;
+}
+
+@mixin TextTreatment--medium() {
+  font-size: $xpo-fontSize--medium;
+}
+
+@mixin TextTreatment--large() {
+  font-size: $xpo-fontSize--large;
+}

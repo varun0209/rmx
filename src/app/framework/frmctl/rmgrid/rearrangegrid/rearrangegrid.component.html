@@ -1,0 +1,39 @@
+
+<xpo-dialog-title>
+ {{'COMMON.REARRANGEGRID' | translate}}
+</xpo-dialog-title>
+<xpo-dialog-content>
+  <div class="modal-body mx-3 m-body">
+  <div class="row">
+    <div class="col-6">
+      <h1 class="mb-2">{{'COMMON.ALLCOLUMNS' | translate}}</h1>
+      <div cdkDropList #allColumns="cdkDropList" [cdkDropListData]="data?.inputData"
+        [cdkDropListConnectedTo]="[displayColumns]" class="list scrollbar" (cdkDropListDropped)="drop($event)"
+        id="style-4">
+        <div class="box" *ngFor="let item of data?.inputData" cdkDrag>{{item.name}}</div>
+      </div>
+    </div>
+    <div class="col-6">
+      <h1 class="mb-2">{{'COMMON.DISPLAYCOLUMNS' | translate}}</h1>
+      <div cdkDropList #displayColumns="cdkDropList" [cdkDropListData]="outputData"
+        [cdkDropListConnectedTo]="[allColumns]" class="list scrollbar" (cdkDropListDropped)="drop($event)" id="style-4">
+        <div class="box" *ngFor="let item of outputData" cdkDrag>{{item.name}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+</xpo-dialog-content>
+
+<xpo-dialog-actions>
+  <!-- <div class="d-flex mt-3">
+    <div class="ml-auto"> -->
+      <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'"
+        [disabled]="outputData.length >= 1 ? false: true" [iconstyle]="'fas fa-check-square'"
+        (onclick)="updateChanges()">
+      </rmbutton>
+    <!-- </div>
+  </div> -->
+</xpo-dialog-actions>
+
+<!-- </div> -->
+

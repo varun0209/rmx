@@ -1,0 +1,219 @@
+﻿{
+  "receiving": {
+    "skuwaitTime": "700",
+    "griditemsPerPage": {
+      "automation": "18",
+      "receiptTrans": "5",
+      "receiptDetail": "12"
+    },
+    "gridSearchVisible": "true"
+  },
+  "dockreceiving": {
+    "griditemsPerPage": "10"
+  },
+  "splInbound": {
+    "griditemsPerPage": "5"
+  },
+  "nci": {
+    "griditemsPerPage": "10",
+    "skuwaitTime": "700",
+    "bufferSize": 30,
+    "bufferDataToDisplay": 30,
+    "skuLength": 6
+  },
+  "location": {
+    "bufferSize": 30,
+    "bufferDataToDisplay": 30
+  },
+  "testing": {
+    "queueInterval": "3000",
+    "griditemsPerPage": "12"
+  },
+  "fqa": {
+    "queueInterval": "3000",
+    "griditemsPerPage": "12"
+  },
+  "grading": {
+    "queueInterval": "3000",
+    "griditemsPerPage": "12"
+  },
+  "repair": {
+    "skuwaitTime": "700"
+  },
+  "audit": {
+    "queueInterval": "3000",
+    "griditemsPerPage": "12",
+    "checkCodeTextboxLength": "15",
+    "auditPointTextboxLength": "15"
+  },
+  "sortgroupsetup": {
+    "sortgroupTextboxLength": "1",
+    "boxsizeTextboxLength": "3",
+    "formulaNameTextboxLength": "50",
+    "formulaTextareaLength": "1000",
+    "maxDaysToKeep": "360",
+    "maxCategoryRank": "100"
+  },
+  "attribute": {
+    "attributeNameTextboxLength": "30"
+  },
+  "sampling": {
+    "descriptionLength": "100"
+  },
+  "route": {
+    "routeIDWaitTime": "700",
+    "descriptionLength": "100"
+  },
+  "containermanagement": {
+    "griditemsPerPage": "6"
+  },
+  "rmacapture": {
+    "rmaTextboxLength": "50"
+  },
+  "vendorSetup": {
+    "vendorIdTextboxLength": "15",
+    "vendorNameTextboxLength": "45",
+    "addressTextboxLength": "45",
+    "cityTextboxLength": "45",
+    "companyTextboxLength": "45",
+    "contactTextboxLength": "45",
+    "zipCodeTextboxLength": "30",
+    "phoneTextboxLength": "30",
+    "altContactTitleTextboxLength": "20"
+  },
+  "skuTransfer": {
+    "skuLength": 6
+  },
+  "wmxSkuTransfer": {
+    "skuLength": 6
+  },
+  "reprintLable": {
+    "griditemsPerPage": "10"
+  },
+  "default": {
+    "griditemsPerPage": "12",
+    "textboxLength": "100",
+    "textareaLength": "500",
+    "skuLength": 6
+  },
+  "masterConfigs": {
+    "pageSize": "5",
+    "displayedListColumns": [
+      "value",
+      "actions"
+    ],
+    "displayedJsonColumns": [
+      "key",
+      "value",
+      "actions"
+    ],
+    "displayedMainColumns": [
+      "key",
+      "description",
+      "value",
+      "mandatory",
+      "actions"
+    ]
+  },
+  "operation": {
+    "operationDescription": "200",
+    "parserDescription": "250",
+    "parserType": "15",
+    "fileDir": "250",
+    "parsertype": "50",
+    "archiveDir": "250",
+    "operationName": "30",
+    "module": "10",
+    "parentName": "30",
+    "origination": "20",
+    "category": "50",
+    "route": "200",
+    "numOfParsers": "3",
+    "fileFormats": [
+      "XML",
+      "CSV",
+      "TXT"
+    ],
+    "displayedListColumns": [
+      "value",
+      "actions"
+    ],
+    "displayedJsonColumns": [
+      "key",
+      "value",
+      "actions"
+    ],
+    "parserDetailPageSize": "3",
+    "gridPageSize": "5",
+    "duplicateMessage": "Cannot add duplicate Keys to the JSON"
+  },
+  "programCriteria": {
+    "description_maxLength": "1000",
+    "assignValuesGrid_pageSize": "4",
+    "programName_maxLength": "50",
+    "programGroup_maxLength": "50"
+  },
+  "closeBatch": {
+    "UIData": {
+      "OperationId": "6430",
+      "OperCategory": "CLOSEBATCH"
+    },
+    "Title": "Close Batch"
+  },
+  "modelPopupConfig": {
+    "UIData": {
+      "OperationId": "6405",
+      "Category": "SERIALNUMBERMOVEPOPUP"
+    }    
+  },
+  "sapReason": {
+    "fromvalueTextboxLength": "50",
+    "tovalueTextboxLength": "50"
+  },
+  "groupValueSetup": {
+    "groupIDTextboxLength": "50",
+    "descriptionTextboxLength": "100"
+    },
+  "fileName": {
+    "ModelMaster": "RXMODEL",
+    "ModelAttribute": "RXMODELATTRIBUTE"
+  },
+  "carrier": {
+    "CarrierCode": 20,
+    "CarrierName": 50
+  },
+  "codeList": {
+    "groupName": 50,
+    "key": 50,
+    "value": 2000
+  },
+  "deviceCatalog": {
+    "griditemsPerPage": "10",
+    "skuwaitTime": "700",
+    "bufferSize": 30,
+    "bufferDataToDisplay": 30,
+    "skuLength": 3,
+    "itemIDTextLength": "30",
+    "itemDescriptionPattern": "500",
+    "modelTextLength": "50",
+    "baseModelTextLength": "30",
+    "colorTextLength": "30",
+    "sizeTextLength": "30"
+  },
+  "utilityCatalog": {
+    "modelTextLength": "50"
+  },
+  "deviceSerialMap": {
+    "griditemsPerPage": "10",
+    "manufacturerIdLength": "10",
+    "rangeStart": "10",
+    "rangeEnd": "10",
+    "skuwaitTime": "700",
+    "bufferSize": 30,
+    "bufferDataToDisplay": 30,
+    "skuLength": 6
+  },
+  "catalogSkuLookup": {
+    "griditemsPerPage": "10"
+  }
+}

@@ -1,0 +1,53 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <div class="row">
+      <div [ngClass]="batchQueData.length>0 ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <rmlabel [label]="'RECEIPTINJECTION.RMTOTEID' | translate"></rmlabel>
+              <rmtextbox [(ngModel)]="toteId" #tote [id]="'toteId'" [placeholder]="''"
+                (enter)="validateRMInboundContainer(tote)" (onChangeVal)="changeInput($event)"
+                [disabled]="isToteDisabled"></rmtextbox>
+            </div>
+          </div>
+          <div class="col-md-6 clear-btn">
+            <div [ngClass]="quantity > 0 ? 'mb-4':'mb-3'" class="btn-margin-top">
+              <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Reset'" [disabled]="isResetDisabled"
+                [buttonname]="'COMMON.RESET' | translate" (onclick)="resetClear()" [iconstyle]="'fas fa-times-circle'"></rmbutton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <ng-container *ngIf="inboundProperties">
+        <div class="d-flex align-content-end flex-wrap" *ngFor="let header of headingsobj">
+          <!-- <div class="p-3">{{header}} :
+            <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+          </div> -->
+          <div class="p-3">{{header}} :
+              <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+            </div>
+        </div>
+      </ng-container>
+        <div class="p-3" *ngIf="batchId">
+          Batch Id : <rmbadge [badgenumber]="batchId"></rmbadge>
+        </div>
+    </div>
+
+
+    <div class="row pt-2" *ngIf="receiptDeviceList">
+      <div class="col-md-12">
+        <rmgrid [(gridproperties)]="receiptDeviceList"></rmgrid>
+
+      </div>
+      <div class="col-md-12 float-right">
+        <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [disabled]="isProcessDisabled"
+        [buttonname]="'COMMON.PROCESS'| translate" [id]="'process'" (onclick)="TransferProcess()" [iconstyle]="'fas fa-cogs'">
+        </rmbutton>
+      </div>
+    </div>
+  </div>
+</div>
+<button hidden id="stopProcessQueue"></button>

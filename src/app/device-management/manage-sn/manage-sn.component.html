@@ -1,0 +1,132 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="row m-0">
+    <div class="col-md-12 p-0">
+      <div class="container-fluid">
+        <div class="row">
+          <div [ngClass]="checkGridList() ? 'col-md-12' : 'col-md-6'">
+            <div class="row">
+              <div class="col-md-12" *ngIf="!masterPageService.hideControls.controlProperties.inboundContainer?.Hidden">
+                <container-summary [inbContainerDisabled]="masterPageService.disabledContainer" (clear)="resetClear()"
+                  (emitContainerSummaryProperties)="containerSummaryProperties($event)" (emitCurrentOperationId)="setCurrentOperationId($event)"
+                  (containerList)="getContainerList($event)" (emitcontainerID)="getinbContainerID($event)"
+                  (emitSerialNumber)="getAutoPopulatedSerialNum($event,serialNumberInput)" [uiData]="uiData">
+                </container-summary>
+              </div>
+            </div>
+            <div class="row" *ngIf="inboundProperties">
+              <div class="d-flex align-content-end flex-wrap" *ngFor="let header of headingsobj">
+                <div class="p-3" [ngClass]="inboundProperties[header]=='' ? 'pt-4':'p-3'">{{header}} :
+                  <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-sm-12 mt-2">
+                <rmlabel [label]="'DEVICEMANAGEMENT.OPTIONS' | translate" [isAsterisk]="'true'"></rmlabel>
+                <div class="mb-2">
+                  <rmdropdown [name]="'opCategorydropdown'" [id]="'opCategorydropdown'" [disabled]="optionDisable"
+                    [value]="selectedDeviceMode" [dpOptions]="options" (onChangeVal)="changeDeviceMode($event)"
+                    [class]="'form-control'"></rmdropdown>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-12 mt-4 d-flex align-items-center">
+                <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'processAll'"
+                  *ngIf="!(masterPageService.hideControls.controlProperties?.containerLevelCheck?.Hidden)"
+                  [buttonname]="'Process All Serials' | translate" [disabled]="isProcessAllDisabled"
+                  [iconstyle]="'fas fa-times-circle'" (onclick)="processAll();"></rmbutton>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-sm-12 mt-2">
+                <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"
+                  [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"></rmlabel>
+                <div class="mb-2">
+                  <rmtextbox [(ngModel)]="serialNumber" #serialNumberInput
+                    [disabled]="masterPageService.disabledSerialNumber" [id]="'serialNumber'" [placeholder]="''"
+                    (enter)="validateSerialNumber($event,serialNumberInput)" [uiData]="uiData" [isSerialNumber]="true"
+                    [textBoxPattern]="controlConfig?.barCodePattern"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"></rmtextbox>
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-12 mt-2"
+                *ngIf="!masterPageService.hideControls.controlProperties.containerSuggestion?.Hidden">
+                <container-suggestion *ngIf="controlConfig?.containerInputId" [csLabel]="'Container ID' | translate"
+                  [isAsterisk]="masterPageService.hideControls.controlProperties?.containerInputId?.Required"
+                  [class]="'form-control'" [id]="'containerInputId'" [isContainerDisabled]="isContainerDisabled"
+                  (focusContainer)="getSuggestContainer($event)" (validateContainerValue)="validateContainer($event)"
+                  (emitCheckContainer)="checkContainer($event)"
+                  (getSuggestAutoCompleteContainerResponse)="getSuggestAutoCompleteContainerResponse($event)"
+                  (emitvalidateContainer)="validateContainerResponse($event)"
+                  (emitValidateContainerFailResponse)="emitValidateContainerFailResponse($event)" [uiData]="uiData">
+                </container-suggestion>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="col-md-12 col-sm-12">
+                <rmlabel [label]="'DEVICEMANAGEMENT.REASON' | translate" [isAsterisk]="isReasonRequired"></rmlabel>
+                <div *ngIf="!enableReasonTextbox">
+                  <rmdropdown [dpOptions]="reasonsList" [disabled]="isReasonDisabled" [name]="'Reason'" [id]="'Reason'"
+                    [value]="selectedReason.Id" [(ngModel)]="selectedReason.Text"
+                    (onChangeVal)="onSelectedReason($event)" tabindex="2"></rmdropdown>
+                </div>
+                <div *ngIf="enableReasonTextbox">
+                  <rmtextarea #reasons [rows]="'rows'" [disabled]="isReasonDisabled" [name]="'Reason'" [id]="'Reason'"
+                    [placeholder]="''" (onChangeVal)="onSelectedReason(reasons.value)"
+                    [(ngModel)]="selectedReason.Text"> </rmtextarea>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-12 col-sm-12">
+                <app-attribute-updates [attrDeviceMgmt]="attrDeviceMgmt" [uiData]="uiData"
+                  *ngIf="(selectedDeviceMode == deviceModes.dataElements && enableDynamicSelector)"
+                  (clearAttribute)="clearSerialNumber();" (emitAttrDevice)="emitDevice($event)"></app-attribute-updates>
+              </div>
+              <div class="col-md-12 col-sm-12">
+                <app-route-calculate *ngIf="(selectedDeviceMode== deviceModes.routeCalculate && enableDynamicSelector)"
+                  [isProcessRouteDisabled]="isProcessRouteDisabled" (emitClearRouteCal)="clearSerialNumber();"
+                  (emitProcessRoute)="process();">
+                </app-route-calculate>
+              </div>
+              <div class="col-md-12 col-sm-12">
+                <app-esn-remove-revive
+                  *ngIf="((selectedDeviceMode== deviceModes.esnRemove || selectedDeviceMode== deviceModes.esnRevive) && enableDynamicSelector)"
+                  [isProcessDisabled]="isProcessRouteDisabled" [isDaysToExpireDisabled]="isDaysToExpireDisabled"
+                  (emitClear)="clearSerialNumber();" [selectedDay]="dmDevice.DaysToExpire" [daysToExpire]="daysToExpire"
+                  (emitComment)="getComments($event)" [selectedDeviceMode]="selectedDeviceMode"
+                  (emitDaysToExpire)="getDaysToExpire($event)" (emitProcess)="process()">
+                </app-esn-remove-revive>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-12">
+            <app-rollback *ngIf="(gridData.length > 0 && selectedDeviceMode== deviceModes.rollback)"
+              (clearRollbackData)="clearSerialNumber();" [buttonName]="'DEVICEMANAGEMENT.ROLLBACK' | translate"
+              (checkedIndex)="getSelectedIndex($event)" [gridProperties]="gridData"
+              [isRollbackDisabled]="isRollbackDisabled" (emitSaveOperation)="process()">
+            </app-rollback>
+          </div>
+          <div class="col-md-12">
+            <app-esn-swap *ngIf="(selectedDeviceMode== deviceModes.esnSwap && enableDynamicSelector)"
+              (clearSerialNumber)="clearSerialNumber();" (emitEsnDevice)="emitDevice($event)" [uiData]="uiData"
+              [deviceMgmtDevice]="deviceMgmt" (emitReset)="resetClear()" [dmDevice]="dmDevice">
+            </app-esn-swap>
+            <app-sku-transfer *ngIf="(selectedDeviceMode== deviceModes.skuTransfer && enableDynamicSelector)"
+              (clearSerialNumber)="clearSerialNumber();" [skuLength]="appConfig.skuTransfer.skuLength"
+              [originalSku]="originalSku" [buttonName]="'DEVICEMANAGEMENT.TRANSFER' | translate"
+              [deviceMgmtDevice]="deviceMgmt" [skuDisabled]="skuDisabled" [skuObject]="skuObject" [dmDevice]="dmDevice"
+              (emitDevice)="emitDevice($event)">
+            </app-sku-transfer>
+            <app-software-update *ngIf="(selectedDeviceMode == deviceModes.softwareVersion && enableDynamicSelector)"
+              [uiData]="uiData" [controlConfig]="controlConfig" (emitProcess)="process()" (emitClear)="clearSerialNumber();" [dmDevice]="dmDevice"
+              [isProcessDisabled]="isProcessRouteDisabled" (emitDevice)="emitDevice($event)" (clearSoftwareVersion)="clearSerialNumber()"
+              [deviceMgmt]="deviceMgmt">
+            </app-software-update>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

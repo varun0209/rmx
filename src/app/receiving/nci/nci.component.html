@@ -1,0 +1,275 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+      <div class="d-flex justify-content-end">
+          <div class="form-inline">
+            <rmbutton [class]="'btn btn-round-black'" [buttonname]="'COMMON.SEARCH' | translate" [iconstyle]="'fas fa-search'"
+              [disabled]="" (onclick)="openModal()"></rmbutton>
+            <rmbutton [class]="'btn btn-round-black mx-1'" [buttonname]="'COMMON.CLEAR' | translate"
+              [iconstyle]="'far fa-times-circle'" [disabled]="" (onclick)="Clear()"></rmbutton>
+            <rmbutton [class]="'btn btn-round-black'" [buttonname]="'COMMON.SAVE' | translate" [iconstyle]="'far fa-save'"
+              [disabled]="!(nciForm.valid && checkNciId() && isSKUSelected)" (onclick)="insertNci()" *ngIf="showSave">
+            </rmbutton>
+            <rmbutton [class]="'btn btn-round-black'" [buttonname]="'COMMON.UPDATE' | translate" [iconstyle]="'far fa-save'"
+              [disabled]="!(nciForm.valid && isSKUSelected)" (onclick)="updateNci()" *ngIf="!showSave">
+            </rmbutton>
+          </div>
+        </div>
+        <form #nciForm="ngForm">
+          <fieldset class="rm-card mt-2">
+            <tabset #staticTabs>
+              <tab heading="Main" id="tab-main">
+                <div class="tab-pane pb-2">
+                  <div class="container-fluid">
+                        <div class="form-row mt-2">
+                          <div class="col">
+                            <div class="form-group">
+                              <rmlabel [label]="'NCIR.NCIKEY' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.nciId?.Required"></rmlabel>
+                              <rmtextbox [(ngModel)]="NciInfo.NCIKey" name="nciId" [class]="'form-control'" #nciIdInput
+                                [disabled]="nciIdDisabled" [id]="'nciId'" [placeholder]="''"[prependiIconStyle]="'fas fa-plus'"
+                                [divClass]="'input-group'" [hidePrependIcon]="true"  [prependiconBtnDisabled]="isAddNciId"
+                                (prependIconEevntEmit)="getNciId()" [requiredIf]="masterPageService.hideControls.controlProperties?.nciId?.Required">
+                              </rmtextbox>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group">
+                              <rmlabel [label]="'COMMON.SKU' | translate"
+                                [isAsterisk]="masterPageService.hideControls.controlProperties?.sku?.Required"></rmlabel>
+                              <rmngtypeahead [id]="'skuInputid'" name="Sku"  [configData]="configData" [label]="'Sku'" [value]="'Sku'" [placeholder]="''"
+                              [bufferSize]="appConfig.nci.bufferSize" [skuLength]="appConfig.nci.skuLength" [bufferDataToDisplay]="appConfig.nci.bufferDataToDisplay" [typeaheadPattern]="controlConfig.SKuPattern" [errorMessage]="appService.getErrorText('2660078')"
+                              (emitTypeAheadValue)="typeaheadResponse($event)" [editTypeAhead]="editTypeAhead" [clearTypeAhead]="clearTypeAhead"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.sku?.Required"
+                              ></rmngtypeahead>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group">
+                          <rmlabel [label]="'NCIR.REFERENCETYPE' | translate"
+                                [isAsterisk]="masterPageService.hideControls.controlProperties?.dockType?.Required"></rmlabel>
+                              <rmdropdown name="DockType" [id]="'DockType'" #docktypedropdown [class]="'form-control'"
+                                [disabled]="isDockTypeDisabled" [(ngModel)]="NciInfo.DockType" [value]="NciInfo.DockType"
+                                (onChangeVal)="changedockType($event)" [dpOptions]="dockTypeOptions"
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.dockType?.Required">
+                              </rmdropdown>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group">
+                          <rmlabel [label]="'NCIR.REFERENCEVALUE' | translate"
+                                [isAsterisk]="masterPageService.hideControls.controlProperties?.dockValue?.Required">
+                              </rmlabel>
+                              <rmtextbox [(ngModel)]="NciInfo.DockValue" name="DockValue" [class]="'form-control'"
+                                #dockValueInput [disabled]="isDocValueDisabled" [id]="'Dockvalue'" [placeholder]="''" (enter)="getExpectedQuantity()"
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.dockValue?.Required">
+                              </rmtextbox>
+                            </div>
+                          </div>
+                          <div class="qty">
+                              <div class="form-group">
+                            <rmlabel [label]="'NCIR.QUANTITYEXP' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.quantityExp?.Required">
+                            </rmlabel>
+                            <input type="number" id="quantityExp" name="quantityExp" [(ngModel)]="NciInfo.ExpectedQty"
+                              [class]="'form-control pl-1 pr-0'" [disabled]="isQantityExpDisabled" [value]="quantityExp" 
+                           [numberPattern]="nciOrderedQuantityPattern" [requiredIf]="masterPageService.hideControls.controlProperties?.quantityExp?.Required">
+                              </div>
+                          </div>
+                          <div class="qty">
+                              <div class="form-group">
+                            <rmlabel [label]="'NCIR.QUANTITYREC' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.quantityRec?.Required">
+                            </rmlabel>
+                            <input type="number" id="quantityRec" name="quantityRec" [(ngModel)]="NciInfo.ReceivedQty"
+                            [class]="'form-control pl-1 pr-0'" [disabled]="isQuantityRecpDisabled" [value]="quantityRec"
+                              [numberPattern]="nciReceivedQuantityPattern"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.quantityRec?.Required">
+                          </div>
+                        </div>
+                        </div>
+                        <div class="form-row">
+                      <div class="col mb-sm-2">
+                            <rmlabel [label]="'NCIR.DISPOSITIONDATE' | translate"></rmlabel>
+                            <div class="date">
+                              <div class="input-group input-append date" id="datePicker">
+                                <input type="text" name="DispositionDate" class="form-control" #dp1="bsDatepicker"
+                              [value]="NciInfo.DispositionDate" (bsValueChange)="dispositionDateChange($event)" bsDatepicker
+                              [bsConfig]="{dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue'}"
+                                  [minDate]="minDate" [outsideClick]="true" [disabled]="isDispositionDateDisabled">
+                                <div class="input-group-append">
+                                  <fieldset class="btn btn-sm input-group-text" [disabled]="isDispositionDateDisabled"
+                                    (click)="dp1.show()">
+                                    <a>
+                                      <i class="fas fa-calendar-alt"></i>
+                                    </a>
+                                  </fieldset>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group">
+                          <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"></rmlabel>
+                          <rmtextbox [(ngModel)]="NciInfo.SerialNumber" name="serialNumber" [class]="'form-control'"
+                            #serialNumberInput [disabled]="isSerialNumberDisabled" [id]="'serialNumber'" [placeholder]="''"
+                            [uiData]="uiData" [isSerialNumber]="true"
+                            [textBoxPattern]="controlConfig?.barCodePattern">
+                              </rmtextbox>
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="form-group">
+                              <rmlabel [label]="'NCIR.STATUS' | translate"></rmlabel>
+                              <rmdropdown name="Status" [id]="'status'" #StatusInput [class]="'form-control'"
+                                [disabled]="isStatusDisabled" [(ngModel)]="NciInfo.Status" [value]="NciInfo.Status"
+                                (onChangeVal)="changStatus($event)" [dpOptions]="statusOptions"></rmdropdown>
+                            </div>
+                          </div>
+                      <div class="div-readonly-date" *ngIf="NciInfo.AddDate">
+                        <div class="readonly-date mt-2">
+                          <span [ngClass]="NciInfo.EditDate ? '' : 'addDate-position'"><label>Add Date:</label> {{NciInfo.AddDate}}</span>
+                          <span *ngIf="NciInfo.EditDate"><label>Edit Date:</label> {{NciInfo.EditDate}}</span>
+                        </div>
+                      </div>
+                          <div class="nci-print">
+                            <rmtoggle name="nciPrint" [label]="'NCIR.PRINT'| translate" [togglelblClass]="'mt-0'"
+                          [id]="'nciPrint'" [disabled]="nciPrintDisabled" [(ngModel)]="isNciPrint" [toggleval]="isNciPrint"
+                          (onChangeVal)="changeisNciPrint($event)"></rmtoggle>
+                          </div>
+
+                        </div>
+                        <div class="row">
+                          <ng-container *ngIf="!masterPageService.hideControls.controlProperties?.reason?.Hidden">
+                          <div [ngClass]="masterPageService.hideControls.controlProperties?.routing?.Hidden ? 'col-md-6' : 'col-md-4'" class="col-sm-12 px-3">
+                            <fieldset class="nci-fieldset m-0">
+                              <legend class="nci-legend">Reason</legend>
+                                    <div class="form-group">
+                                      <rmlabel [label]="'NCIR.PRIMARYREASON' | translate"
+                                        [isAsterisk]="masterPageService.hideControls.controlProperties?.primaryReason?.Required">
+                                      </rmlabel>
+                            <ng-multiselect-dropdown name="Primaryreason" [placeholder]="''" [disabled]="isPrimayReasonDisabled" [settings]="dropdownSettings" [data]="primayReasonList" 
+                              (onDeSelect)="primaryReasonDeselect()" [(ngModel)]="primarySelectedItem"
+                              (onSelect)="changePrimaryReason($event)"
+                                        [requiredIf]="masterPageService.hideControls.controlProperties?.primaryReason?.Required">
+                                      </ng-multiselect-dropdown>
+                                    </div>
+                                    <div class="form-group">
+                                      <rmlabel [label]="'NCIR.REASON2' | translate"></rmlabel>
+                                      <ng-multiselect-dropdown name="Reason2" [placeholder]="''" [settings]="dropdownSettings" [data]="reason2List"
+                                        [(ngModel)]="reason2SelectedItem" (onDeSelect)="reason2Deselect()"
+                                        (onSelect)="changeReason2($event)" [disabled]="isReasoan2Disabled">
+                                      </ng-multiselect-dropdown>
+                                    </div>
+                                    <div class="form-group">
+                                      <rmlabel [label]="'NCIR.REASON3' | translate"></rmlabel>
+                                      <ng-multiselect-dropdown name="Reason3" [placeholder]="''" [settings]="dropdownSettings" [data]="reason3List"
+                                         [(ngModel)]="reason3SelectedItem" (onDeSelect)="reason3Deselect()"
+                                         (onSelect)="changeReason3($event)" [disabled]="isReasoan3Disabled">
+                                      </ng-multiselect-dropdown>
+                                    </div>
+                            </fieldset>
+                          </div>
+                          </ng-container>
+                          <ng-container *ngIf="!masterPageService.hideControls.controlProperties?.action?.Hidden">
+                          <div [ngClass]="masterPageService.hideControls.controlProperties?.routing?.Hidden ? 'col-md-6' : 'col-md-4'" class="col-sm-12 px-3">
+                            <fieldset class="nci-fieldset m-0">
+                              <legend class="nci-legend">Action</legend>
+                                    <div class="form-group">
+                                      <rmlabel [label]="'NCIR.COMMENTS' | translate"></rmlabel>
+                                      <rmtextarea [rows]="4" [id]="'Comments'" name="Comments" [(ngModel)]="NciInfo.Comments"
+                                        [placeholder]="''" [disabled]="isCommentsDisabled">
+                                      </rmtextarea>
+                                    </div>
+
+                                    <div class="form-group mb-1">
+                                      <rmlabel [label]="'NCIR.ACTIONTAKEN' | translate"></rmlabel>
+                                      <rmtextarea [rows]="2" [id]="'ActionTaken'" name="ActionTaken" [placeholder]="''"
+                                        [(ngModel)]="NciInfo.ActionTaken" [disabled]="isActionTakenDisabled">
+                                      </rmtextarea>
+                                    </div>
+                            </fieldset>
+                          </div>
+                        </ng-container>
+                          <ng-container *ngIf="!masterPageService.hideControls.controlProperties?.routing?.Hidden">
+                          <div  [ngClass]="masterPageService.hideControls.controlProperties?.routing?.Hidden ? 'col-md-6':'col-md-4'" class="col-sm-12 px-3">
+                            <fieldset class="nci-fieldset m-0 pb-3">
+                              <legend class="nci-legend">Routing</legend>
+                                    <div class="form-group">
+                                      <rmlabel [label]="'NCIR.ROUTE1' | translate"></rmlabel>
+                                      <rmdropdown name="Route1" [id]="'Route1'" #route1dropdown [class]="'form-control'"
+                                        [disabled]="isRoute1Disabled" [(ngModel)]="NciInfo.Route1" [value]="NciInfo.Route1"
+                                        (onChangeVal)="changeRoute1($event)" [dpOptions]="route1List"></rmdropdown>
+                                    </div>
+
+                                    <div class="form-group">
+                                      <rmlabel [label]="'NCIR.ROUTE2' | translate"></rmlabel>
+                                      <rmdropdown name="Route 2" [id]="'Route 2'" #route2dropdown [class]="'form-control'"
+                                        [disabled]="isRoute2Disabled" [(ngModel)]="NciInfo.Route2" [value]="NciInfo.Route2"
+                                        (onChangeVal)="changeRoute2($event)" [dpOptions]="route2List"></rmdropdown>
+                                    </div>
+                                    <div class="form-group">
+                                      <rmlabel [label]="'NCIR.ROUTE3' | translate"></rmlabel>
+                                      <rmdropdown name="Route 3" [id]="'Route 3'" #statusdropdown [class]="'form-control'"
+                                        [disabled]="isRoute3Disabled" [(ngModel)]="NciInfo.Route3" [value]="NciInfo.Route3"
+                                        (onChangeVal)="changeRoute3($event)" [dpOptions]="route3List"></rmdropdown>
+                                    </div>
+                            </fieldset>
+                          </div>
+                        </ng-container>
+                        </div>
+                      </div>
+                    </div>
+              </tab>
+              <!-- Another Tab -->
+              <tab heading="Vendor" id="tab-vendor" *ngIf="!masterPageService.hideControls.controlProperties?.vendorTab?.Hidden">
+                <div class="tab-pane">
+                  <vendortab [NciInfo]="NciInfo" [vendorList]="vendorList" [carrierOptions]="carrierOptions"
+                  [isVendorDisabled]="isVendorDisabled" [carrierSettings]="carrierSettings" [carrierSelectedItem]="carrierSelectedItem"
+                  [carrierDisabled]="carrierDisabled" [isCarrierRefDisabled]="isCarrierRefDisabled"
+                  (onChangeVal)="changeVendor($event)" (onSelect)="changeCarrierType($event)" (onDeSelect)="carrierDeselect()"
+                  (searchEventEmit)="getCarrierByRef()" (enter)="getCarrierByRef()">
+                </vendortab>
+                </div>
+              </tab>
+            </tabset>
+          </fieldset>
+          <fieldset class="rm-card mt-2" *ngIf="masterPageService.hideControls.controlProperties?.vendorTab?.Hidden">
+            <tabset #staticTabs>
+              <tab heading="Vendor" id="tab-vendor">
+                <div class="tab-pane">
+                  <vendortab [NciInfo]="NciInfo" [vendorList]="vendorList" [carrierOptions]="carrierOptions"
+                  [isVendorDisabled]="isVendorDisabled" [carrierSettings]="carrierSettings" [carrierSelectedItem]="carrierSelectedItem"
+                  [carrierDisabled]="carrierDisabled" [isCarrierRefDisabled]="isCarrierRefDisabled"
+                  (onChangeVal)="changeVendor($event)" (onSelect)="changeCarrierType($event)" (onDeSelect)="carrierDeselect()"
+                  (searchEventEmit)="getCarrierByRef()" (enter)="getCarrierByRef()">
+                </vendortab>
+                </div>
+              </tab>
+            </tabset>
+          </fieldset>
+        </form>
+  </div>
+
+</div>
+<ng-template #popTemplate>
+  <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    {{title  | translate}}
+    <button mat-icon-button (click)="dialogRef.close()">
+        <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+</h1>
+<xpo-dialog-content>
+  <div class="modal-body">
+        <div class="container-fluid">
+          <div class="form-group mb-2 ml-0 col-6">
+              <rmlabel [label]="'NCIR.NCIID_V' | translate"></rmlabel>
+              <rmtextbox [(ngModel)]="nciId" name="nciIdsearch" [class]="'form-control'" #nciIdSearchInput
+                [hideSearchIcon]="true" [id]="'nciIdsearch'" [placeholder]="'COMMON.SEARCH' | translate"
+                [iconstyle]="'fas fa-search'" [isAllowEmptyValue]="true" [divClass]="'input-group'" [flag]="flag"
+                (searchEventEmit)="getNciData()" (enter)="getNciData($event)">
+              </rmtextbox>
+          </div>
+          <rmgrid [gridproperties]="nciList"  (emitEditDetails)="editNciDetailRow($event)"></rmgrid>
+        </div>
+  </div>
+</xpo-dialog-content>
+</ng-template>

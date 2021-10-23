@@ -1,0 +1,26 @@
+    <xpo-dialog-title>
+        <h4 *ngIf="DialogData.IsGroup === false" class="modal-title pull-left">{{'PROGRAMNAMEMAINT.TITLE' | translate }} </h4>
+        <h4 *ngIf="DialogData.IsGroup === true"  class="modal-title pull-left">{{'PROGRAMGROUPMAINT.TITLE' | translate }} </h4>
+    </xpo-dialog-title>
+  
+    <xpo-dialog-content>
+      <div class="form-group position-relative">
+        <div class='container-fluid'>
+          <div class="row">
+            <div class="col mb-3 form-group">
+              <rmlabel *ngIf="DialogData.IsGroup === false" [label]="'PROGRAMNAMEMAINT.TAB' | translate" [isAsterisk]='true'></rmlabel>
+              <rmlabel *ngIf="DialogData.IsGroup === true"  [label]="'PROGRAMGROUPMAINT.TAB' | translate" [isAsterisk]='true'></rmlabel>
+              <rmtextarea [allowMaxlengthTextarea]="false" [rows]="'1'" [placeholder]="''" [(ngModel)]="DialogData.Text"
+                          [textAreaPattern]='textboxPattern' [allowUppercase]='true'
+                          [maxlength]="DialogData.IsGroup ? appConfig.programCriteria.programGroup_maxLength : appConfig.programCriteria.programName_maxLength" 
+                          [id]="'description'" name="'description'" (onChangeVal)="changedName()"
+                          ></rmtextarea>
+            </div>
+          </div>
+  
+          <div class="row">
+            <rmbutton [disabled]="!DialogData.Text || !DialogData.Active" [buttonname]="'COMMON.SAVE' | translate" [class]="'btn btn-round-black'" (onclick)="saveNameGroup()"></rmbutton>
+          </div>
+        </div>
+      </div>
+    </xpo-dialog-content>

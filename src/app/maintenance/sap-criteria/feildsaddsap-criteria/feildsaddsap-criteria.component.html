@@ -1,0 +1,21 @@
+<div class="feildsaddSapCriteria">
+  <div class="row operations">
+    <div class="col-3 my-1" *ngFor="let SapChangeTypeMissedKeyvalue of sapChangeTypeMissedFields.Fields">
+      <div class="key-details"> 
+        <span class="d-block key-lable">{{SapChangeTypeMissedKeyvalue.KEY}}</span>
+        <rmtextbox class="d-block" [name]="'misfeildValue'" [id]="'misfeildValue'" [class]="'key-value'" [textBoxPattern]="textBoxPattern"
+          [placeholder]="''" [(ngModel)]="SapChangeTypeMissedKeyvalue.VALUE" [isAllowEmptyValue]="true"
+          (onChangeVal)="onTextChanged()" >
+        </rmtextbox> 
+      </div>
+    </div>
+    <div class="col-12 my-1 mt-3 text-right">
+      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'clear'" [buttonname]="'COMMON.CLEAR'| translate"
+        [iconstyle]="'far fa-times-circle'" (click)="clear(sapChangeTypeMissedFields)">
+      </rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'" [buttonname]="'COMMON.SAVE'| translate"
+        [iconstyle]="'fas fa-save'" [disabled]="isMisFieldsSaveBtnDisabled"  (onclick)="misfeildssave()">
+      </rmbutton>
+    </div>
+  </div>
+</div>

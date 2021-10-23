@@ -1,0 +1,104 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="container-fluid padding-bottom">
+  <form #CalProcessingConfigForm="ngForm">
+    <div class="row">
+      <div class="col-md-12 mb-2 col-sm-12">
+        <div class="float-right">
+          <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'search'"
+            [buttonname]="'COMMON.SEARCH' | translate" [iconstyle]="'fas fa-search'"
+            (click)="getCallprocessingConfig()"></rmbutton>
+          <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'" [disabled]="isResetBtnDisabled"
+            (onclick)="clearCalProcessingConfig(); gridClear()" [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+          </rmbutton>
+          <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'"
+            [disabled]="!CalProcessingConfigForm.valid || isValidateAddBtnFlag " *ngIf="CalProcessingConfigForm"
+            (onclick)="addOrUpdateCalProcessingConfig()" [buttonname]="btnName"
+            [iconstyle]="btnName==commonButton.add ?'fas fa-plus':'far fa-save'">
+          </rmbutton>
+        </div>
+      </div>
+    </div>
+    <div class="form-row mt-2">
+      <div class="form-group col-lg-2">
+        <rmlabel [label]="'CALLPROCESSINGCONFIG.PROCESSNAME' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.processName?.Required"></rmlabel>
+        <rmdropdown [name]="'processName'" [id]="'processName'" [class]="'form-control'"
+          [dpOptions]="processNamesList" [disabled]="isProcessNameDisabled" [(ngModel)]="calProcessingConfig.PROCESS_NAME"
+          [value]="calProcessingConfig.PROCESS_NAME" (onChangeVal)="changeProcessName($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.processName?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-2">
+        <rmlabel [label]="'CALLPROCESSINGCONFIG.OEM' | translate"
+        [isAsterisk]="masterPageService.hideControls.controlProperties?.oemcd?.Required"></rmlabel>
+        <rmdropdown [name]="'oemCode'" [id]="'oemCode'" [class]="'form-control'"
+          [dpOptions]="oemCodesList" [(ngModel)]="calProcessingConfig.OEM_CD" [value]="calProcessingConfig.OEM_CD"
+          (onChangeVal)="onOEMDropdownChange($event.value)" [disabled]="isOemCodeDisabled"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.oemcd?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-2">
+        <rmlabel [label]="'CALLPROCESSINGCONFIG.MODEL' | translate"
+        [isAsterisk]="masterPageService.hideControls.controlProperties?.model?.Required"></rmlabel>
+        <rmdropdown [name]="'oemModels'" [id]="'oemModels'" [class]="'form-control'"
+          [dpOptions]="oemModels" (onChangeVal)="changeOemModel($event.value)" [(ngModel)]="calProcessingConfig.MODEL"
+          [value]="calProcessingConfig.MODEL" [disabled]="isOemModelsDisabled"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.model?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col">
+        <rmlabel [label]="'CALLPROCESSINGCONFIG.INITIALDAYSTOCALL' | translate"
+        [isAsterisk]="masterPageService.hideControls.controlProperties?.initialCall?.Required">
+        </rmlabel>
+        <input type="number" [id]="'initialCall'" [name]="'initialCall'" [(ngModel)]="calProcessingConfig.INITIAL_CALL"
+          class="form-control" [numberPattern]="initialCallNumberPattern"
+          [value]="calProcessingConfig.INITIAL_CALL" (input)="onInitialCallChangeVal($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.initialCall?.Required">
+      </div>
+      <div class="form-group col">
+        <rmlabel [label]="'CALLPROCESSINGCONFIG.POSTINITIALSCHEDULEDDAYS' | translate"
+        [isAsterisk]="masterPageService.hideControls.controlProperties?.postInitialScheduledDays?.Required">
+        </rmlabel>
+        <input type="number" [id]="'postInitialScheduledDays'" [name]="'postInitialScheduledDays'" [(ngModel)]="calProcessingConfig.SCHED_CALL"
+          class="form-control" [numberPattern]="postInitialScheduledDaysNumberPattern"
+          [value]="calProcessingConfig.SCHED_CALL" (input)="onPostInitialScheduledDaysChangeVal($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.postInitialScheduledDays?.Required">
+      </div>
+      <div class="form-group col">
+        <rmlabel [label]="'CALLPROCESSINGCONFIG.MAXDAYSTOCALL' | translate"
+        [isAsterisk]="masterPageService.hideControls.controlProperties?.maxDaysToCall?.Required">
+        </rmlabel>
+        <input type="number" [id]="'maxDaysToCall'" [name]="'maxDaysToCall'" [(ngModel)]="calProcessingConfig.MAX_CALL_DAYS"
+          class="form-control" [numberPattern]="maxDaysToCallNumberPattern"
+          [value]="calProcessingConfig.MAX_CALL_DAYS" (input)="onMaxDaysToCallChangeVal($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.maxDaysToCall?.Required">
+      </div>
+      <div class="form-group col ml-2">
+        <div class="d-flex">
+          <rmtoggle [label]="'COMMON.ACTIVE' | translate" [togglelblClassLabel]="'pr-5 pb-2'" [togglelblClass]="''"
+            [id]="'active'" name="disposEngineConfigActive" [(ngModel)]="calProcessingConfig.ACTIVE"
+            (onChangeVal)="onActiveChange($event)" [toggleval]="calProcessingConfig.ACTIVE == 'Y'? true:false"
+            [disabled]="isActiveToggle">
+          </rmtoggle>
+        </div>
+      </div>
+    </div>
+  </form>
+  <div class="row">
+    <div class="col-12">
+      <app-rule-setup [ruleSetupObject]="ruleSetupObject" [editruleSetup]="editruleSetup"
+        (emitEnableAddOrSave)="emitEnableAddOrSave($event)"></app-rule-setup>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 pl-0 pr-0">
+      <div class="card-body pb-0">
+        <div class="row" *ngIf="calProcessingConfigList && calProcessingConfigList?.Elements.length">
+          <div class="col-12 p-1">
+            <rmgrid [(gridproperties)]="calProcessingConfigList" (emitEditDetails)="editCalProcessingConfig($event)"
+              [isCancelIconShow]="false"></rmgrid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

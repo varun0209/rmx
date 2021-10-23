@@ -1,0 +1,17 @@
+span.suggested-conatiner-badge {
+  position: absolute;
+  top: -24px;
+  right: 40px;
+}
+
+/* card-border */
+.card-border {
+  border: 0px;
+}
+
+.suggested-container,
+.category {
+  font-size: 14px;
+  margin-top: -5px;
+  display: inline-block;
+}

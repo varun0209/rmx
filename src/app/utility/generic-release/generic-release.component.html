@@ -1,0 +1,134 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <form>
+      <div class="row" #genericReleaseForm="ngModelGroup" ngModelGroup="genericReleaseForm">
+        <div [ngClass]="checkOperationList() ? 'col-md-12 col-sm-12' : 'col-md-6 col-sm-12'">
+          <div class="row">
+            <div class="col-md-12 col-sm-12"
+              *ngIf="!masterPageService.hideControls.controlProperties?.inboundContainer?.Hidden">
+              <container-summary [inbContainerDisabled]="masterPageService.disabledContainer" [id]="'ClearContainer'"
+                (emitSerialNumber)="getAutoPopulatedSerailNum($event)" (emitcontainerID)="getinbContainerID($event)"
+                (emitContainerSummaryProperties)="containerSummaryProperties($event)" (emitCurrentOperationId)="setCurrentOperationId($event)"
+                (containerList)="getContainerList($event)" (clear)="resetClear()" [uiData]="uiData">
+              </container-summary>
+            </div>
+
+          </div>
+
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"></rmlabel>
+              <rmtextbox [(ngModel)]="serialNumber" #serialNumberInput [disabled]="isSerialNumberDisabled"
+                [id]="'serialNumber'" [name]="'serialNumber'" [placeholder]="''"
+                (enter)="validateTestSerialNumber($event,serialNumberInput)"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"
+                [uiData]="uiData" [isSerialNumber]="true"
+                [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+            </div>
+            <div class="col-md-6 d-flex align-items-center">
+              <rmbutton [class]="'btn btn-round-black mr-1'" [disabled]="processAllDisabled"
+                *ngIf="!(masterPageService.hideControls.controlProperties?.containerLevelHold?.Hidden)"
+                [buttonname]="'Process All Serials'| translate" [id]="'processId'" (onclick)="processAll()"
+                [iconstyle]="'fas fa-cogs'">
+              </rmbutton>
+
+              <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'auto'" [disabled]="isAutoDisabled"
+                [buttonname]="'Auto'| translate" [iconstyle]="'fas fa-times-circle'">
+              </rmbutton>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div class="col-md-6 col-sm-12 mb-3">
+              <rmlabel [label]="'GENERICRELEASE.RELEASETYPE' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.releaseType?.Required"></rmlabel>
+              <rmdropdown [name]="'releaseType'" [id]="'releaseType'" [class]="'form-control'"
+                [dpOptions]="releaseTypesList" [disabled]="isReleaseTypeDisabled" [(ngModel)]="releaseType"
+                [value]="releaseType" (onChangeVal)="onReleaseTypeChange($event)"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.releaseType?.Required">
+              </rmdropdown>
+            </div>
+
+            <div class="col-md-6 col-sm-12 "
+              *ngIf="!masterPageService.hideControls.controlProperties.containerSuggestion?.Hidden">
+              <div class="flex-fill">
+                <container-suggestion *ngIf="controlConfig?.containerInputId"
+                  [csLabel]="controlConfig?.containerInputId | translate"
+                  [isAsterisk]="masterPageService.hideControls.controlProperties?.containerInputId?.Required"
+                  [class]="'form-control'" [id]="'containerInputId'" (focusContainer)="getSuggestContainer($event)"
+                  (validateContainerValue)="validateContainer($event)" [inbContainerId]="inbContainerID"
+                  (emitCheckContainer)="checkContainer($event)"
+                  (emitvalidateContainer)="validateContainerResponse($event)"
+                  (emitValidateContainerFailResponse)="emitValidateContainerFailResponse($event)" [uiData]="uiData">
+                </container-suggestion>
+              </div>
+            </div>
+
+          </div>
+
+
+          <div class="row" *ngIf="isRouteReason">
+            <div class="col-md-12 col-sm-12 mb-3">
+              <rmlabel [label]="'GENERICRELEASE.HOLDREASON' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.reason?.Required"></rmlabel>
+              <rmtextarea [(ngModel)]="isRouteReason" [rows]="1" [placeholder]="'COMMON.DESCRIPTION' | translate"
+                [disabled]="true" [id]="'routeReason'" name="routeReason" [allowAutoResize]="true"></rmtextarea>
+            </div>
+
+          </div>
+
+          <div class="row" *ngIf="masterPageService.nextRoutesList.length">
+
+            <div class="col-md-12 col-sm-12 mb-3">
+              <rmlabel [label]="'GENERICRELEASE.NEXTROUTES' | translate"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.nextRoutes?.Required"></rmlabel>
+              <rmdropdown [name]="'nextRoutes'" [id]="'nextRoutes'" [class]="'form-control'"
+                [dpOptions]="masterPageService.nextRoutesList" [disabled]="masterPageService.isNextRoutesDisabled"
+                [(ngModel)]="nextRoutes" [value]="nextRoutes" (onChangeVal)="onNextRoutersChange($event)"
+                [requiredIf]="masterPageService.hideControls.controlProperties?.nextRoutes?.Required">
+              </rmdropdown>
+            </div>
+
+          </div>
+
+
+          <div class="row mb-3">
+            <div class="d-flex justify-content-between"
+              [ngClass]="controlConfig?.containerInputId ? 'col-md-12': 'col-md-6 col-sm-12'">
+              <div class="mr-auto">
+                <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Clear'" [disabled]="isClearDisabled"
+                  [buttonname]="'COMMON.CLEAR'| translate" (onclick)="clear()" [iconstyle]="'fas fa-times-circle'">
+                </rmbutton>
+              </div>
+              <div class="pr-1">
+                <div class="btn-group">
+                  <button type="button" class="btn  btn-round-black" (click)="dinamicReleaseAPI()" id='Release'
+                    [disabled]="isEnableDynamicButton">{{(releaseOptionSelected == '') ? 'Select' : releaseOptionSelected}}</button>
+                  <button type="button" class="btn  btn-round-black dropdown-toggle dropdown-toggle-split"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="releaseOptions"
+                    [disabled]="isReleaseOptionsDisabled">
+                  </button>
+                  <div class="dropdown-menu  dropdown-menu-right"  >
+                    <div *ngFor="let release of releaseOptionsList">
+                      <a class="dropdown-item" (click)="changeReleaseOptions(release.Id)">{{release.Text}}</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="pl-1">
+                <rmbutton [class]="'btn btn-round-black mr-1'" [disabled]="isSaveDisabled"
+                  [buttonname]="'COMMON.SAVE'| translate" [id]="'save'" (onclick)="saveTransaction()"
+                  [iconstyle]="'far fa-save'">
+                </rmbutton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,15 @@
+﻿.redColor{
+    color: rgb(204, 0, 0);
+  }
+  .blueColor{
+    color:rgb(8,104,172);
+  }
+
+  i {
+    font-size: 1.25em;
+  } 
+  @media (min-width: 360px) and (max-width: 639.98px) {
+    i {
+    font-size: 1.00em !important;
+      } 
+    }

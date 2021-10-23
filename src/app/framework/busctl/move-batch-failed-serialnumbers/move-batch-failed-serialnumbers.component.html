@@ -1,0 +1,49 @@
+
+<div class="mx-auto mt-3" *ngIf="showAlert && !appErrService.specialCharErrMsg">
+<rmalert [class]="'w-50'" [text]="text"></rmalert>
+</div>
+<div class="mx-auto mt-3" *ngIf="appErrService.specialCharErrMsg">
+<rmalert [class]="'w-50'" [text]="appErrService.specialCharErrMsg"></rmalert>
+</div>
+<div class="row mt-4">
+  <div class="col-md-12 mb-2" *ngIf="!hideInboundContainer">
+    <rmlabel [label]="controlConfig.inboundContainer | translate"></rmlabel>
+    <rmtextbox [(ngModel)]="containerId" #inputContainerId [disabled]="isContainerDisabled" [placeholder]="''"
+      (enter)="getFailedDevices($event)" (onChangeVal)="changeContainer(inputContainerId)"
+      (clearEmit)="clearEmit($event)" [id]="'containerId'" [flag]="true">
+    </rmtextbox>
+  </div>
+  <div class="col-md-12 mb-2" *ngIf="serialNumbers?.Elements?.length">
+    <div>
+      <rmgrid [(gridproperties)]="serialNumbers"></rmgrid>
+    </div>
+  </div>
+  <div class="mb-2" [ngClass]="hideInboundContainer? 'col-md-6' : 'col-md-12'">
+    <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"></rmlabel>
+    <rmtextbox [(ngModel)]="serialNumber" #inputSerial [disabled]="isSerialNumDisabled" [placeholder]="''"
+      [id]="'serialNmbr'" (onChangeVal)="changeInput(inputSerial)" (clearEmit)="clearEmit($event)"
+      (enter)="validateMoveSerialNumber(inputSerial)" [flag]="true" [uiData]="uiData" [isSerialNumber]="true"
+      [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+  </div>
+  <div class="mb-2" [ngClass]="hideInboundContainer? 'col-md-6' : 'col-md-12'">
+    <container-suggestion *ngIf="controlConfig?.containerInputId"
+      [csLabel]="controlConfig?.containerInputId | translate" [class]="'form-control'" [id]="'batchContainerId'"
+      name="containerInputId" (focusContainer)="getSuggestContainer($event)" (emitContainerId)="getContainerId($event)"
+      (validateContainerValue)="validateContainer($event)" [inbContainerId]="containerId"
+      (emitCheckContainer)="checkContainer($event)" (emitvalidateContainer)="validateContainerResponse($event)"
+      (emitValidateContainerFailResponse)="emitValidateContainerFailResponse($event)" [uiData]="uiData">
+    </container-suggestion>
+  </div>
+  <div class="col-md-12">
+    <div class="mt-2 clearfix">
+      <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'moveSerialNumber'" [disabled]="isMoveDisabled"
+      [buttonname]="'COMMON.MOVE' | translate" (onclick)="getUpdateDevice()" [iconstyle]="'fa fa-plus'"></rmbutton>
+      <rmbutton *ngIf="!hideInboundContainer" [class]="'btn btn-round-black mr-1 float-right'" [id]="'close'" [disabled]="isBatchCloseDisabled"
+        [buttonname]="'COMMON.CLOSEBATCH' | translate" (onclick)="closeSamplingBatch(); spinner.show();"
+        [iconstyle]="'fa fa-archive'">
+      </rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled"
+        [buttonname]="'COMMON.CLEAR' | translate" (onclick)="Clear()" [iconstyle]="'fas fa-times-circle'"></rmbutton>
+    </div>
+  </div>
+</div>

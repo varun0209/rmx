@@ -1,0 +1,37 @@
+﻿<div class="grid-scroll-ch">
+  <table class="table-responsive-sm table mb-0 child-table" *ngIf="varchildelements && Isshowchild" [ngClass]=" isGridRearranged? '':'fixed-layout-ch'">
+    <thead *ngIf="varchildelements.length >0">
+      <th class="border-right-0">
+        <!-- <th [style.width]="childcolumnwidth+'%'" style="border-right: 0px"> -->
+      </th>
+
+   <ng-container *ngFor="let childcolumn of childcolumns">
+      <th class="border-left-0" *ngIf="childcolumn.name != 'Index'">
+              {{childcolumn.name}}
+        </th>
+   </ng-container>
+
+    </thead>
+    <ng-container *ngFor="let childelement of varchildelements;let i=index">
+      <tr [ngClass]="{'highlightRow': childelement == selectedChild && editHighlight && !parentEditMode}">
+        <td class="fixed-width-ch t-align-center-ch">
+          <!-- <td [style.width]="childcolumnwidth+'%'" style="text-align: center"> -->
+          <div class="d-flex">
+            <span class="pointer margin-right-ch" (click)="editrow(childelement,i)" *ngIf="editvisible">
+              <i class="fas fa-pen" [ngClass]="{ 'highlightIcon': childelement == selectedChild  && editHighlight && !parentEditMode}"></i></span>
+              <span class="pointer margin-right-ch" (click)="deleterow(i)" *ngIf="deletevisible"><i class="fa fa-fw fa-trash-alt"></i></span>
+              <span (click)="childRowView(childelement)" class="pl-1 cursorPointer">
+                <i class="fas fa-eye"></i>
+              </span>
+            </div>
+        </td>
+        <ng-container *ngFor="let childcolumn of childcolumns" >
+            <td class="childgrid-word-wrap" *ngIf="childcolumn.name != 'Index'">
+                    {{childelement[childcolumn.name]}}
+                </td>
+        </ng-container>
+
+      </tr>
+    </ng-container>
+  </table>
+</div>

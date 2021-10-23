@@ -1,0 +1,11 @@
+<div [ngClass]="toggleDivClass" class="checkbox clearfix">
+  <label [ngClass]="togglelblClassLabel">{{label}}</label>
+  <label [ngClass]="togglelblClass" class="switch">
+    <input type="checkbox" [name]="name" [(ngModel)]="toggleval" [disabled]="disabled" [id]="id"
+      (change)="onChangeData()" [checked]=toggleval>
+    <div class="slider round">
+      <span class="on">{{trueLabel}}</span><span class="off">{{falseLabel}}</span>
+    </div>
+
+  </label>
+</div>

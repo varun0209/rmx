@@ -1,0 +1,10 @@
+﻿
+<!-- <div (paste)="allowCopyPaste('paste')" (drag)="allowCopyPaste('drag')" (drop)="allowCopyPaste('drop')" (copy)="allowCopyPaste('copy')" (cut)="allowCopyPaste('cut')"> -->
+  <master-page></master-page>
+  <div [ngClass]="isremovePageMargin? 'noheader-mt' : 'header-mt'">
+      <div [ngClass]="masterPageService.navbarPageStatus ? 'contentPadding' : 'nocontentPadding'">
+          <!-- <router-outlet></router-outlet> -->
+        </div>
+  </div>
+<!-- </div> -->
+<ngx-spinner type="ball-spin" size="medium" loadingText="Loading..."></ngx-spinner>

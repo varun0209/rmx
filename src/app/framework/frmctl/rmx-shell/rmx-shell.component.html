@@ -1,0 +1,155 @@
+<header xpo-header>
+  <xpo-header-hamburger *ngIf="hasRoutes" (click)="onMenuClick()"></xpo-header-hamburger>
+  <ng-content ngProjectAs="xpo-header-app-name" select="xpo-header-app-name"></ng-content>
+  <ng-content ngProjectAs="xpo-header-sub-app-name" select="xpo-header-sub-app-name"></ng-content>
+  <ng-content ngProjectAs="xpo-header-items" select="xpo-header-items"></ng-content>
+  <ng-content ngProjectAs="xpo-header-actions" select="xpo-header-actions"></ng-content>
+</header>
+
+<xpo-tab-drawer #drawer [showCollapseButton]="false" [mode]="isTablet ? 'over' : 'side'" [(opened)]="isDrawerOpen">
+  <div class="xpo-Shell-sidebar">
+    <nav xpo-vertical-tabs>
+      <ng-container *ngFor="let routerLink of routes">
+        <!-- routes with subnavs -->
+        <ng-container *ngIf="!!routerLink.children?.length; else singleLink">
+          <xpo-vertical-tab-group [title]="routerLink.label">
+            <!-- <img [src]="'assets/images/navbaricons/'+ routerLink.label +'.png'" class="navsubImg"  alt=""> -->
+            <ng-container *ngFor="let childLink of routerLink.children">
+              <a
+                *ngIf="!childLink.children"
+                (click)="handleLinkClick(childLink)"
+                xpo-vertical-tab
+                routerLinkActive
+                class="xpo-VerticalTab--is-child d-flex"
+                #rla="routerLinkActive"
+                [url]="childLink.path"
+                [queryParams]="childLink.queryParams"
+                [queryParamsHandling]="childLink.queryParamsHandling || ''"
+                [isActive]="rla.isActive"
+                [external]="childLink.openInNewTab"
+                [routerLink]="childLink.path"
+              >
+              <img [src]="'assets/images/navbaricons/'+ childLink.label +'.png'" (error)="imageErrorHandler(routerLink.label, $event)" class="navsubImg"  alt="">
+               <span> {{ childLink.label }} </span>
+              </a>
+              <xpo-vertical-tab-group *ngIf="!!childLink.children?.length" [title]="childLink.label">
+                <a
+                  *ngFor="let subChildLink of childLink.children"
+                  (click)="handleLinkClick(subChildLink)"
+                  xpo-vertical-tab
+                  routerLinkActive
+                  class="xpo-VerticalTab--is-child"
+                  #rla="routerLinkActive"
+                  [url]="subChildLink.path"
+                  [queryParams]="subChildLink.queryParams"
+                  [queryParamsHandling]="subChildLink.queryParamsHandling || ''"
+                  [isActive]="rla.isActive"
+                  [external]="subChildLink.openInNewTab"
+                  [routerLink]="subChildLink.path"
+                >
+                <img [src]="'assets/images/navbaricons/'+ subChildLink.label +'.png'" class="navsubImg"  alt="">
+                  {{ subChildLink.label }}
+                </a>
+              </xpo-vertical-tab-group>
+            </ng-container>
+          </xpo-vertical-tab-group>
+        </ng-container>
+
+        <ng-template #singleLink>
+          <a
+            xpo-vertical-tab
+            routerLinkActive
+            (click)="handleLinkClick(routerLink)"
+            #rla="routerLinkActive"
+            [url]="routerLink.path"
+            [queryParams]="routerLink.queryParams"
+            [queryParamsHandling]="routerLink.queryParamsHandling || ''"
+            [isActive]="rla.isActive"
+            [external]="routerLink.openInNewTab"
+            [routerLink]="routerLink.path"
+            class="single-menu"
+          >
+          <img [src]="'assets/images/navbaricons/'+ routerLink.label +'.png'" class="navsubImg"  alt="">
+            {{ routerLink.label }}
+          </a>
+        </ng-template>
+      </ng-container>
+    </nav>
+
+    <div class="xpo-Shell-navFooter">
+      <div class="xpo-Shell-navFooter-poweredBy"></div>
+      <div *ngIf="versionNumber" class="xpo-Shell-navFooter-versionNumber">
+        <span>v{{ versionNumber }}</span> ({{environment}})
+      </div>
+      <ng-content select="xpo-shell-sidebar-actions"></ng-content>
+    </div>
+  </div>
+
+  <xpo-tab-drawer-content class="xpo-Shell-drawerContent">
+    <ng-content></ng-content>
+  </xpo-tab-drawer-content>
+</xpo-tab-drawer>
+
+
+
+
+
+
+<!-- 
+<header xpo-header>
+  <xpo-header-hamburger *ngIf="hasRoutes" (click)="onMenuClick()"></xpo-header-hamburger>
+  <ng-content ngProjectAs="xpo-header-app-name" select="xpo-header-app-name"></ng-content>
+  <ng-content ngProjectAs="xpo-header-sub-app-name" select="xpo-header-sub-app-name"></ng-content>
+  <ng-content ngProjectAs="xpo-header-items" select="xpo-header-items"></ng-content>
+  <ng-content ngProjectAs="xpo-header-actions" select="xpo-header-actions"></ng-content>
+</header>
+
+<xpo-tab-drawer #drawer [showCollapseButton]="false" [mode]="isTablet ? 'over' : 'side'" [(opened)]="isDrawerOpen">
+  <div class="rmx-Shell-sidebar">
+    <nav xpo-vertical-tabs>
+      <ng-container *ngFor="let routerLink of routes">
+        routes with subnavs -->
+        <!-- <ng-container *ngIf="routerLink.SubMenu; else singleLink">
+          <xpo-vertical-tab-group [title]="routerLink.Title">
+            <ng-container *ngFor="let childLink of routerLink.SubMenu">
+              <a *ngIf="!childLink.SubMenu" (click)="handleLinkClick(childLink)" xpo-vertical-tab routerLinkActive
+                class="xpo-VerticalTab-is--child" id="{{childLink.Title}}-{{childLink.OperationId}}" [url]="childLink.RouterLink"
+                #rla="routerLinkActive" [isActive]="rla.isActive" [routerLink]="childLink.RouterLink">
+                <img [src]="'assets/images/navbaricons/'+childLink.Title+'.png'" class="navsubImg"  alt="">
+                <span class="pl-2">{{childLink.Title | translate}}</span>
+              </a>
+              <xpo-vertical-tab-group *ngIf="childLink.SubMenu" [title]="childLink.Title">
+                <a *ngFor="let subChildLink of childLink.SubMenu" (click)="handleLinkClick(subChildLink)" xpo-vertical-tab
+                  routerLinkActive class="xpo-VerticalTab--is-child" #rla="routerLinkActive" [routerLink]="subChildLink.RouterLink"
+                  [url]="subChildLink.RouterLink" [isActive]="rla.isActive" id="{{subChildLink.OperationId}}">
+                  <img [src]="'assets/images/navbaricons/'+childLink.Title+'-'+subChildLink.OperationId+'.png'" class="navsubImg"  alt="">
+                  {{ subChildLink.Title }}
+                </a>
+              </xpo-vertical-tab-group>
+            </ng-container>
+          </xpo-vertical-tab-group>
+        </ng-container>
+
+        <ng-template #singleLink>
+          <a xpo-vertical-tab routerLinkActive #rla="routerLinkActive" (click)="handleLinkClick(routerLink)"
+            id="{{routerLink.Title}}" class="pointer" [isActive]="rla.isActive"  [routerLink]="routerLink.RouterLink">
+            <span class="pl-2">{{routerLink.Title | translate}}</span>
+          </a>
+        </ng-template>
+      </ng-container>
+    </nav>
+    <div class="rmx-Shell-navFooter">
+      <div class="rmx-Shell-navFooter-poweredBy"></div>
+      <div *ngIf="versionNumber" class="rmx-Shell-navFooter-versionNumber">
+        <span>v{{ versionNumber }}</span>
+      </div>
+      <ng-content select="rmx-shell-sidebar-actions"></ng-content>
+    </div>
+  </div>
+
+  <xpo-tab-drawer-content>
+
+    <ng-content></ng-content>
+  </xpo-tab-drawer-content>
+
+</xpo-tab-drawer> --> 

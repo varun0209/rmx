@@ -1,0 +1,196 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="container-fluid padding-bottom">
+  <div class="row operations">
+    <div class="col-md-12 align-self-center text-right">
+      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'clear'" [buttonname]="'COMMON.CLEAR'| translate"
+        [iconstyle]="'far fa-times-circle'" [disabled]="isClearBtnDisabled" (click)="clear()">
+      </rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'" [buttonname]="'SAPCRITERIA.ADD'| translate"
+        [iconstyle]="'fas fa-plus-circle'" [disabled]="" (click)="addNewSapCriteria()">
+      </rmbutton>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group col">
+      <rmlabel [label]="'SAPCRITERIA.OPERATIONID' | translate"></rmlabel>
+      <rmdropdown [name]="'operationids'" [id]="'operationids'" [dpOptions]="operationidsList"
+        [(ngModel)]="searchData.OPERATIONID" [value]="searchData.OPERATIONID" (onChangeVal)="onOperationChange($event)">
+      </rmdropdown>
+    </div>
+    <div class="form-group col">
+      <rmlabel [label]="'SAPCRITERIA.CHANGELEVEL' | translate">
+      </rmlabel>
+      <rmdropdown tabindex="0" [name]="'changelevel'" [id]="'changelevel'" [dpOptions]="sapChangeLevelList"
+        [(ngModel)]="searchData.SAPCHANGELEVEL" [value]="searchData.SAPCHANGELEVEL"
+        (onChangeVal)="onChangeLevelChange($event)">
+      </rmdropdown>
+    </div>
+    <div class="form-group col">
+      <rmlabel [label]="'SAPCRITERIA.SAPCHANGETYPE' | translate">
+      </rmlabel>
+      <rmdropdown tabindex="0" [name]="'sapchangetype'" [id]="'sapchangetype'" [dpOptions]="sapChangeTypeList"
+        [(ngModel)]="searchData.SAPCHANGETYPE" [value]="searchData.SAPCHANGETYPE"
+        (onChangeVal)="onChangeTypeChange($event)">
+      </rmdropdown>
+    </div>
+    <div class="col-auto pr-1 mt-1 mr-1 align-self-center">
+      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'search'" [buttonname]="'COMMON.SEARCH' | translate"
+        [iconstyle]="'fas fa-search'" [disabled]="isSearchBtnDisabled" (onclick)="getSearchData()"></rmbutton>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="criteria-search-results ">
+        <div class="criteria-card" [ngClass]="[ isEditEnable ? 'card-full-view' : '']"
+          *ngFor="let sapTransCri of searchArrey">
+          <div class="expand-card">
+            <span class="edit-controls mx-1" (click)=onEditClick(sapTransCri)><i class="fas fa-edit"></i></span>
+            <span class="collapse-card mx-1 mt-1px" (click)=onCancelClick(sapTransCri)>
+              <i class="far fa-times-circle"></i></span>
+            <span class="expand mx-1" (click)=onExpandClick(sapTransCri)><i class="fas fa-plus-circle"></i></span>
+          </div>
+          <div class="row">
+            <div class="col-6 mb-3 full-card-col">
+              <rmlabel [label]="'SAPCRITERIA.OPERATIONID' | translate"></rmlabel>
+              <span class="key-value">{{sapTransCri.OPERATIONID}}</span>
+            </div>
+            <div class="col-6 mb-3 full-card-col">
+              <rmlabel [label]="'SAPCRITERIA.SAPCHANGETYPE' | translate"></rmlabel>
+              <span class="key-value" *ngIf="!isEditEnable">{{sapTransCri.SAP_CHANGE_TYPE}}</span>
+              <span class="key-value" *ngIf="isEditEnable">{{selectedSapTransCriteria.SAP_CHANGE_TYPE}}</span>
+            </div>
+            <div class="col-5 mb-3 full-card-col">
+              <rmlabel [label]="'SAPCRITERIA.CHANGELEVEL' | translate"></rmlabel>
+              <span class="key-value" *ngIf="!isEditEnable">{{sapTransCri.CHANGE_LEVEL}}</span>
+              <span class="key-value" *ngIf="isEditEnable">{{selectedSapTransCriteria.CHANGE_LEVEL}}</span>
+            </div>
+            <div class="col-3 full-card-col">
+              <rmlabel [label]="'SAPCRITERIA.RANK' | translate"></rmlabel>
+              <span class="key-value" *ngIf="!isEditEnable">{{sapTransCri.RULE_RANK}}</span>
+              <span class="key-value" *ngIf="isEditEnable">{{selectedSapTransCriteria.RULE_RANK}}</span>
+            </div>
+            <div class="col-4 full-card-col">
+              <rmtoggle [label]="'SAPCRITERIA.ACTIVE' | translate" *ngIf="!isEditEnable" [togglelblClass]="'mt-1'"
+                class="my-1 d-block" [toggleval]="sapTransCri.ACTIVE == commonEnum.yes? true:false"
+                (onChangeVal)="onToggleChange($event)" [disabled]="!isActiveToggaleEnable">
+              </rmtoggle>
+              <rmtoggle [label]="'SAPCRITERIA.ACTIVE' | translate" *ngIf="isEditEnable" [togglelblClass]="'mt-1'"
+                class="my-1 d-block" [toggleval]="selectedSapTransCriteria.ACTIVE == commonEnum.yes? true:false"
+                (onChangeVal)="onToggleChange($event)" [disabled]="!isActiveToggaleEnable">
+              </rmtoggle>
+            </div>
+            <div class="col full-card-rule">
+              <rmlabel [label]="'SAPCRITERIA.RULE' | translate"></rmlabel>
+              <span class="key-value" *ngIf="!isEditEnable">{{sapTransCri.RULE}}</span>
+              <span class="key-value" *ngIf="isEditEnable">{{selectedSapTransCriteria.RULE}}</span>
+              <span class="edit-rule-text" *ngIf="isShowFeilds"
+                (click)="editRule(editRuleModel)">{{'SAPCRITERIA.EDITRULE' | translate}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <div class="card-full-details">
+                <div class="key-details" *ngFor="let sapChangeTypeKeyvalue of sapChangeTypeFields.Fields">
+                  <span class="d-block key-lable">{{sapChangeTypeKeyvalue.KEY}}</span>
+                  <span class="key-value" *ngIf="!isEditFeildsEnable">{{sapChangeTypeKeyvalue.VALUE}}</span>
+                  <rmtextbox class="d-block mr-3" [name]="'feildValue'" [id]="'feildValue'" [class]="'key-value'"
+                    [textBoxPattern]="textBoxPattern" *ngIf="isEditFeildsEnable" [placeholder]="''"
+                    [(ngModel)]="sapChangeTypeKeyvalue.VALUE" [disabled]="sapChangeTypeKeyvalue.FieldDisabled"
+                    [isAllowEmptyValue]="true">
+                  </rmtextbox>
+                </div>
+                <div class="col-md-12 align-self-center text-right">
+                  <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'update'"
+                    [buttonname]="'SAPCRITERIA.UPDATE'| translate" [iconstyle]="'fas fa-save'" [disabled]=""
+                    *ngIf="isShowFeilds" (click)="update()">
+                  </rmbutton>
+                  <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'feilds'"
+                    [buttonname]="'SAPCRITERIA.FIELDS'| translate" [iconstyle]="'fas fa-plus-circle'" [disabled]=""
+                    *ngIf="isShowFeilds" (click)="addfeildsSapCriteria(addfeildsSapCriteria)">
+                  </rmbutton>
+                  <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'SAPCRITERIA.RESET'| translate"
+                    id="reset" [iconstyle]="'fas fa-redo'" *ngIf="isShowFeilds"
+                    (onclick)=reset(selectedSapTransCriteria)>
+                  </rmbutton>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #addSapCriteriaModel>
+  <div class="modal-header bgheader">
+    <h4 class="modal-title pull-left">{{'SAPCRITERIA.ADDNEWSAPCRITERIA' | translate}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="masterPageService.hideModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group position-relative">
+      <app-addsap-criteria [drowdownList]="drowdownList" (emitSubmitSapCriteria)="addSapCriteriaData($event)">
+      </app-addsap-criteria>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #feildsaddSapCriteriaModel>
+  <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    {{'SAPCRITERIA.MISSEDFIELDSUPDATE' | translate}}
+    <button mat-icon-button (click)="masterPageService.hideDialog()">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h4>
+  <xpo-dialog-content>
+    <div class="modal-body">
+      <div class="form-group position-relative">
+        <app-feildsaddsap-criteria (showEvent)="feildsaddSapCriteriaData($event)"
+          [sapTransCriteria]="selectedSapTransCriteria" [sapChangeTypeMissedFields]="sapChangeTypeMissedFields">
+        </app-feildsaddsap-criteria>
+      </div>
+    </div>
+  </xpo-dialog-content>
+</ng-template>
+
+
+
+<ng-template #editRuleModel>
+  <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    {{'SAPCRITERIA.RULESETUP' | translate}}
+    <button mat-icon-button (click)="hideRuleModal()">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h4>
+  <xpo-dialog-content>
+    <div class="modal-body">
+      <app-rule-setup-editor [ruleSetupObject]="ruleSetupObject" [editruleSetup]="editruleSetup"
+        (emitEnableAddOrSave)="emitEnableAddOrSave($event)"></app-rule-setup-editor>
+    </div>
+  </xpo-dialog-content>
+</ng-template>
+
+
+
+<ng-template #updateConfirmation>
+  <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    {{'SAPCRITERIA.POPUPCONIRM' | translate}}
+    <button mat-icon-button (click)="masterPageService.hideDialog()">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h4>
+  <xpo-dialog-content>
+    <div class="modal-body m-body">
+      <div class="d-flex mb-4">
+        <i class="fas fa-question-circle ques-icon font-30"></i>
+        <span class="text-center align-self-center ml-3"> {{'SAPCRITERIA.CONFIRMPOPUPMSG' | translate}}</span>
+      </div>
+    </div>
+  </xpo-dialog-content>
+<mat-dialog-actions>
+    <button mat-button type="button" (click)="masterPageService.hideDialog()">Close</button>
+    <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="confirmation(true)">
+    </rmbutton>
+</mat-dialog-actions>
+</ng-template>

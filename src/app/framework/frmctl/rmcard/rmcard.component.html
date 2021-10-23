@@ -1,0 +1,23 @@
+<div class="card">
+  <div class="card-header" *ngIf="cardHeader">
+    {{cardHeader}}
+  </div>
+  <img class="card-img-top" *ngIf="src" [src]="src" [alt]="alt">
+  <div class="card-body" *ngIf="cardBody">
+    <h5 class="card-title">{{cardTitle}}</h5>
+    <p class="card-text">{{cardBody}}</p>
+  </div>
+  <ul class="list-group list-group-flush " >
+   <div  class="borderLeft"  *ngFor="let item of listGroupItems; let i = index">
+    <li class="list-group-item" [ngClass]="listGroupItems.length >1 ? 'borderBottom': ''" > <rmlabel [label]="item.listItem"></rmlabel>
+     <span class="float-right" > <rmlabel [label]="item.listItemDetails"></rmlabel> </span></li>
+    </div>
+  </ul>
+  <div class="card-body" *ngIf="cardLink">
+    <a href="#" class="card-link">{{cardLink}}</a>
+    <a href="#" class="card-link">{{cardAnotherLink}}</a>
+  </div>
+  <div class="card-footer" *ngIf="cardFooter">
+    {{cardFooter}}
+  </div>
+</div>

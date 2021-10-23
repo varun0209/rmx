@@ -1,0 +1,39 @@
+<ng-container *ngFor="let field of fieldArray; let i = index; first as isFirst; last as isLast">
+  <div class="harvest-custom">
+    <div class="form-row">
+      <div [ngClass]="formStyle" class="col sku-autocomplete">
+        <label *ngIf="isFirst" [ngClass]="lblClass" class="mr-1" for="sku">SKU</label>
+        <input [ngClass]="{'mt-2' : !isFirst}" type="search" id="{{'sku'+i+transactionId}}" #skuInput
+          [(ngModel)]="field.Part" [typeahead]="partsList" typeaheadOptionField="Part" autocomplete="off"
+          (typeaheadOnSelect)="typeaheadOnSelect($event,i)" [typeaheadItemTemplate]="customItemTemplate"
+          [placeholder]="lblClass == 'sr-only' ? 'SKU' : ''" [typeaheadWaitMs]="waitTime"
+          [typeaheadOptionsLimit]="0" [value]="skuInput.value.toUpperCase().trim()"
+          class="form-control searchIcon" (keydown)="omit_special_char($event)"
+          (keyup)="clearClass('sku'+i+transactionId)" [disabled]="disabled && field.isPartDisabled">
+          <!-- (input)="getEligibleSKUs($event)" -->
+        <ng-template #customItemTemplate let-model="item" let-index="index">
+          <span>{{model.Model}}</span><span class="float-right skumodel">
+            {{model.Part}}</span>
+        </ng-template>
+        <div class="col mt-1 p-0 d-flex justify-content-between">
+          <div *ngIf="field.MaxRPI" class="badge badge-pill badge-secondry bg-dark text-white py-1 px-3 mr-3">MaxRPI: {{field.MaxRPI}}</div>
+          <div *ngIf="field.WmxInvBal" class="badge badge-pill badge-secondry bg-dark text-white py-1 px-3">WmxInvBal: {{field.WmxInvBal}}</div>
+        </div>
+      </div>
+      <div class="col" [ngClass]="formStyle" class="qtyWidth pr-2">
+        <label *ngIf="isFirst" [ngClass]="lblClass" class="mr-1" for="qty">Qty.</label>
+        <input [ngClass]="{'mt-2' : !isFirst}" type="number" class="form-control pr-0" id="{{'qty'+i+transactionId}}"
+          [(ngModel)]="field.Quantity" (keyup)="clearClass('qty'+i+transactionId)"
+          [placeholder]="lblClass == 'sr-only' ? 'Qty.' : ''" min="1" max="100" numbersOnly [disabled]="disabled || isQtyDisabled">
+          <div class="mt-1 text-center">
+            <button *ngIf="isLast" [disabled]="(!(field.Quantity && field.Part && field.Model)) || isDoneDisabled"
+              (click)="addData(i,field,'sku'+i+transactionId, 'qty'+i+transactionId)"
+              class="btn btn-primary btn-sm add-btn mr-2">
+              <i class="fa fa-check" aria-hidden="true"></i></button>
+            <button *ngIf="isLast" [disabled]="isAdd" class="btn btn-primary btn-sm add-btn"
+              (click)="addFieldValue(field,'sku'+i+transactionId, 'qty'+i+transactionId)"><i class="fas fa-plus"></i></button>
+          </div>
+      </div>     
+    </div>    
+  </div>
+</ng-container>

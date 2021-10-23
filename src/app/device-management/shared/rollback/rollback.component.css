@@ -1,0 +1,56 @@
+.testTable {
+    width: 100%;
+    margin-bottom: 0em;  
+  }
+  
+  .testTable td {
+    white-space: nowrap;
+    padding: 1.1rem;
+  }
+  
+  .testTable th {
+    white-space: nowrap;
+    padding: 1.1rem;
+  } 
+  .testTable tr td:last-child {
+    width: 100%;
+    
+  }
+   
+    
+  /*scrollbar for table*/
+  .scrollbar {
+    /* max-height: 338px; */
+      max-width: auto;
+      overflow-x: scroll;
+      margin: auto;
+  }
+    
+  #style-4::-webkit-scrollbar {
+      width: 4px !important;
+      height: 4px;
+  }
+    
+  #style-4::-webkit-scrollbar-thumb {
+     background-color: #555555;
+     border: 1px solid #555555;
+  }
+
+  .selectedOption{
+     display: none;
+  }
+    
+  .canrollback{
+     display: none;
+  }
+
+  .dynamicScroll{
+     display: block;
+     max-height: 415px;
+     overflow: auto;
+     border-top:unset;
+  }
+    
+  .checkbox-position{
+     position: relative;
+  }

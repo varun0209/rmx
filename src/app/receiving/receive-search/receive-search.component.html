@@ -1,0 +1,45 @@
+  <ng-container>
+    <div [ngClass]="!appErrService.alertFlag ? 'main-container-noalert' : 'main-container-onalert'"
+      class="container-fluid container-mb">
+      <div class="form-row form-group">
+        <div class="col-md-6 mb-3" *ngIf="!(masterPageService.hideControls.controlProperties?.automationContainerId?.Hidden)">
+          <rmlabel [label]="controlConfig?.containerInputId | translate"></rmlabel>
+          <rmtextbox [(ngModel)]="containreId" #palletId [id]="'containerId'" [placeholder]="''" [name]="'containerId'"
+            (onChangeVal)="changeInput(searchKey)" (enter)="validatePalletOrContainer()" [disabled]="isPalletIdDisabled">
+          </rmtextbox>
+        </div>
+        <div class="col-md-6 mb-3" *ngIf="!(masterPageService.hideControls.controlProperties?.automationTrackingNum?.Hidden)">
+          <rmlabel [label]="'RECEIVING.TRACKINGNO' | translate"></rmlabel>
+          <rmtextbox [(ngModel)]="trackingNumber" #trackingNo [id]="'trackingNo'" [placeholder]="''" [name]="'trackingNo'"
+            (onChangeVal)="changeInput(searchKey)" (enter)="validateTrackingNumber()" [disabled]="isTrackingNoDisabled">
+          </rmtextbox>
+        </div>
+        <div class="col-md-6">
+          <rmlabel [label]="'Receipt Search' | translate"></rmlabel>
+          <rmtextbox [(ngModel)]="searchInput" #searchKey [id]="'searchKey'" [placeholder]="''" [name]="'searchKey'"
+            (onChangeVal)="changeInput(searchKey)" (enter)="searchInputKey()" [disabled]="issearchKeyDisabled">
+          </rmtextbox>
+        </div>
+        <div class="col-md-6 mt-auto pt-2">
+          <rmbutton [class]="'btn btn-round-black mr-1'" [id]="''" [disabled]="isResetDisabled" (onclick)="clear()"
+            [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+          </rmbutton>
+        </div>
+      </div>
+      <div *ngIf="authListDetails?.Elements.length > 0">
+        <rmgrid [(gridproperties)]="authListDetails" (emitEditDetails)="editAuthDetailRow($event)"></rmgrid>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- <ng-container>
+<div [ngClass]="!appErrService.alertFlag ? 'main-container-noalert' : 'main-container-onalert'"  class="container-fluid container-mb">
+  <div class="form-group">
+    <rmlabel [label]="'Receipt Search' | translate"></rmlabel>
+      <rmtextbox [(ngModel)]="searchInput" #searchKey [id]="'searchKey'" [placeholder]="''" [name]="'searchKey'" (onChangeVal)="changeInput(searchKey)"   (enter)=" searchInputKey()" [disabled]="issearchKeyDisabled"></rmtextbox>
+  </div>
+  <div *ngIf="authListDetails?.Elements.length > 0">
+      <rmgrid [(gridproperties)]="authListDetails" (emitEditDetails)="editAuthDetailRow($event)"></rmgrid>
+  </div>
+</div>
+</ng-container> -->

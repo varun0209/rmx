@@ -1,0 +1,30 @@
+<ng-container *ngFor="let field of fieldArray; let i = index; first as isFirst; last as isLast">
+    <div class="form-row">
+        <div [ngClass]="formStyle" class="col-lg col-sm-6 sku-autocomplete">
+            <label *ngIf="isFirst" [ngClass]="lblClass" class="mr-1" for="sku">SKU</label>
+            <input [ngClass]="{'mt-2' : !isFirst}" type="search" id="{{'sku'+i+transactionId}}" #skuInput
+                [(ngModel)]="field.sku" [typeahead]="skuList" typeaheadOptionField="Sku" autocomplete="off"
+                (typeaheadOnSelect)="typeaheadOnSelect($event,i)" [typeaheadItemTemplate]="customItemTemplate"
+                [placeholder]="lblClass == 'sr-only' ? 'SKU' : ''" [typeaheadWaitMs]="waitTime"
+                [typeaheadOptionsLimit]="typeaheadOptionsLimit" [value]="skuInput.value.toUpperCase().trim()"
+                class="form-control searchIcon" (input)="getEligibleSKUs($event)" (keydown)="omit_special_char($event)" (keyup)="clearClass('sku'+i+transactionId)"
+                [disabled]="disabled">
+            <ng-template #customItemTemplate let-model="item" let-index="index">
+                <span>{{model.Sku}}</span><span class="float-right skumodel">
+                    {{model.Model}}</span>
+            </ng-template>
+        </div>
+        <div [ngClass]="formStyle" class="qtyWidth pr-2">
+            <label *ngIf="isFirst" [ngClass]="lblClass" class="mr-1" for="qty">Qty.</label>
+            <input [ngClass]="{'mt-2' : !isFirst}" type="number" class="form-control pr-0"
+                id="{{'qty'+i+transactionId}}" [(ngModel)]="field.quantity" (keyup)="clearClass('qty'+i+transactionId)" 
+                [placeholder]="lblClass == 'sr-only' ? 'Qty.' : ''" min="1" max="100" numbersOnly [disabled]="disabled">
+        </div>
+    </div>
+    <div class="pt-1">
+    <button *ngIf="isLast" [disabled]="disabled" class="btn btn-primary btn-sm add-btn" (click)="addFieldValue(field,'sku'+i+transactionId, 'qty'+i+transactionId)"><i
+            class="fas fa-plus"></i></button>
+    <button *ngIf="isLast" [disabled]="disabled" (click)="addData(i,field,'sku'+i+transactionId, 'qty'+i+transactionId)" class="btn btn-primary btn-sm add-btn"> <i
+            class="fa fa-check" aria-hidden="true"></i></button>
+        </div>
+</ng-container>

@@ -1,0 +1,48 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <div class="form-row">
+      <div class="col-md-7 px-2">
+        <div class="card">
+          <div class="chart-title d-flex justify-content-between">
+            <span>{{'JRDASHBOARD.TESTINGRESULTSSUMMARY' | translate}} </span>
+          </div>
+          <div class="chart-body">
+            <canvas *ngIf="(testingResultsbarChartData && testingResultsbarChartData.length) else noDataFound"
+              class="next-level-chart" baseChart [datasets]="testingResultsbarChartData"
+              [labels]="testingResultsbarChartLabels" [options]="testingResultsbarChartOptions"
+              [colors]="testingResultsbarChartColor"
+              [legend]="testingResultsbarChartLegend" [chartType]="testingResultsbarChartType">
+            </canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-5  px-2">
+        <div class="card">
+          <div class="chart-title d-flex justify-content-between">
+            <span>{{'JRDASHBOARD.LOCATION' | translate}}</span>
+          </div>
+          <div class="chart-body">
+            <canvas *ngIf="(locationBarChartData && locationBarChartData.length) else noDataFound"
+              class="next-level-chart" baseChart [datasets]="locationBarChartData" [labels]="locationBarChartLabels"
+              [options]="locationBarChartOptions" [colors]="locationBarChartColor" 
+              [legend]="locationBarChartLegend" [chartType]="locationBarChartType">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <ng-template #noDataFound>
+      <div class="row">
+        <div class="col">
+          <div class="img--height text-center">
+            <img width=96 height=115 src="assets/images/no-data-found.png">
+            <h3>NO DATA FOUND</h3>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

@@ -1,0 +1,18 @@
+[
+    {
+        "Id": "REMOVE",
+        "Text": "REMOVE"
+    },
+    {
+        "Id": "REVIVE",
+        "Text": "REVIVE"
+    },
+    {
+        "Id": "FROMLOC/TOLOC",
+        "Text": "FROMLOC/TOLOC"
+    },
+    {
+        "Id": "FROMINV/TOINV",
+        "Text": "FROMINV/TOINV"
+    }
+]

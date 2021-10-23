@@ -1,0 +1,60 @@
+﻿.padding-bottom {
+    padding-bottom: 22px;
+  }
+  .client-container-onalert{
+    margin-top: 1%;
+  } 
+  .rm-card{
+    border: 1px solid rgba(0,0,0,.125);
+    background-color: #ffffff
+  }
+:host ::ng-deep .multiselect-dropdown .dropdown-btn {
+  padding: 5px 12px !important;
+  border : 1px solid #ced4da !important;
+}
+
+
+      
+  /*small devices */
+   @media (min-width: 360px) and (max-width: 639.98px) {
+    .margin-bottom {
+      margin-bottom: 20px;
+    }
+    .client-container-noalert {
+      margin-top: 20%;
+    }
+  }
+  /*ipad devices */
+   @media (min-width: 768px) and (max-width: 1023.98px) {
+  
+     .client-container-noalert {
+      margin-top: 5%;
+    }
+     
+  }
+  
+/*large devices*/
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+ 
+  .client-container-noalert {
+    margin-top: 4%;
+  }
+
+  } 
+/*extra large devices*/
+  @media (min-width: 1280px) and (max-width:1439.98px) {
+ 
+      .client-container-noalert {
+        margin-top: 3%;
+        }
+   
+    }
+
+  /*extra large devices*/
+   @media (min-width:1440px) and (max-width:1919.98px) {
+ 
+     .client-container-noalert {
+      margin-top: 2%;
+    }
+ 
+  } 

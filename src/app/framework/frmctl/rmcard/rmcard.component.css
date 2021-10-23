@@ -1,0 +1,29 @@
+.card{
+    border: 1px solid rgb(8, 104, 172);
+}
+
+.borderLeft{
+    border-left: 4px solid rgb(8, 104, 172);
+    padding: 0px 15px;    
+}
+
+.borderBottom{
+    border-bottom: 3px solid rgb(8, 104, 172) !important;
+    border-bottom-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.list-group div:last-child .borderBottom {
+    border: none !important
+}
+
+.list-group {
+    border: unset;
+}
+.list-group-item{
+    padding: 0.75rem 0rem;
+}
+  
+
+
+

@@ -1,0 +1,15 @@
+/* .group-name{
+    background: #E4E4E4;
+  }
+  
+  .group-name:hover{
+    background: #E9ECEF !important;
+  } */
+  .group-name .mat-expansion-panel-header {
+    background: #e4e4e4;
+    border: 1px #d8d8da solid;
+}
+.group-name .mat-expansion-panel-header:hover {
+  background: #e9ecef !important;
+}
+

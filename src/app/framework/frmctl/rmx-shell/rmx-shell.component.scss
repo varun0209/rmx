@@ -1,0 +1,177 @@
+@import 'src/styles/variables';
+
+.xpo-Shell {
+  $_shell-footerHeight: 40px;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &-ribbon {
+    box-sizing: border-box;
+    height: 48px;
+    border: 1px solid #DEDEDE;
+    background-color: #FFFFFF;
+    text-transform: uppercase;
+    line-height: 30px;
+  }
+
+  &-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &-actions {
+      display: flex;
+      justify-content: center;
+      padding-top: $xpo-contentSpacing;
+    }
+  }
+
+  &-hamburger.mat-icon-button {
+    padding-right: $xpo-contentSpacing;
+  }
+
+  &-navFooter {
+    background-color: $xpo-white;
+    border-top: 1px solid $xpo-grey--100;
+    display: block;
+    margin-top: auto;
+    padding: $xpo-contentSpacing;
+    width: 100%;
+
+    &-poweredBy::after {
+     // background: url('powered-by.svg') no-repeat center;
+      background: url('/assets/images/poweredByGXO.svg') no-repeat center;
+      content: '';
+      display: block;
+      height: 20px;
+      width: 100%;
+    }
+
+    &-versionNumber {
+      color: $xpo-grey--400;
+      font-size: $xpo-fontSize--small;
+      height: 1rem;
+      text-align: center;
+    }
+  }
+  .xpo-VerticalTabGroup .xpo-VerticalTab--is-active+.xpo-VerticalTab-children .xpo-VerticalTab::before {
+    // background-color: #0d94f4;
+    content: "";
+    display: block;
+    height: 48px;
+    position: absolute;
+    width: 4px;
+}
+.navsubImg{
+   width: 20px;
+   height: 20px;
+ }
+}
+.rmx-Shell-sidebar {
+  .xpo-VerticalTabs::-webkit-scrollbar {
+    width:4px;
+    height: 4px;
+  }
+  .xpo-VerticalTabs::-webkit-scrollbar-thumb {
+    background-color: #5d6367;
+    border: 1px #3b3f48 solid;
+    border-radius: 5px;
+  }
+  .xpo-VerticalTab-children .xpo-VerticalTab--is-active .xpo-VerticalTab-title {
+    color: #fd6133 !important;
+  }
+}
+
+.single-menu{
+  margin-left: -30px;
+  .navsubImg{
+    margin-right: 6PX;
+  }
+}
+.xpo-VerticalTab-title{
+  display: flex;
+  align-items: center;
+  color: #000000 !important;
+  span{
+    line-height: 14px;
+  }
+}
+
+xpo-Shell-navFooter-poweredBy::after {
+  background: url('/assets/images/poweredByGXO.svg') no-repeat center;
+}
+.rmx-Shell {
+  $_shell-footerHeight: 40px;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &-ribbon {
+    box-sizing: border-box;
+    height: 48px;
+    border: 1px solid #DEDEDE;
+    background-color: #FFFFFF;
+    text-transform: uppercase;
+    line-height: 30px;
+  }
+
+  &-sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    &-actions {
+      display: flex;
+      justify-content: center;
+      padding-top: $xpo-contentSpacing;
+    }
+  }
+
+  &-hamburger.mat-icon-button {
+    padding-right: $xpo-contentSpacing;
+  }
+
+  &-navFooter {
+    background-color: $xpo-white;
+    border-top: 1px solid $xpo-grey--100;
+    display: block;
+    margin-top: auto;
+    padding: $xpo-contentSpacing;
+    width: 100%;
+
+    &-poweredBy::after {
+      // background: url('powered-by.svg') no-repeat center;
+      content: '';
+      display: block;
+      height: 15px;
+      width: 100%;
+    }
+
+    &-versionNumber {
+      color: $xpo-grey--400;
+      font-size: $xpo-fontSize--small;
+      height: 1rem;
+      text-align: center;
+    }
+  }
+  .xpo-VerticalTabGroup .xpo-VerticalTab--is-active+.xpo-VerticalTab-children .xpo-VerticalTab::before {
+    // background-color: #0d94f4;
+    content: "";
+    display: block;
+    height: 48px;
+    position: absolute;
+    width: 4px;
+}
+.navsubImg{
+   width: 23px;
+   height: 23px;
+   margin-right: 10px;
+ }
+}
+
+.xpo-VerticalTab--is-child .xpo-VerticalTab-groupIndicator {
+  margin-left: 5px !important;
+}

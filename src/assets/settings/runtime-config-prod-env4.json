@@ -1,0 +1,21 @@
+{
+    "comUrl": "http://tsgvm01876.newbreed.com:8010/",
+    "utlUrl": "http://tsgvm01876.newbreed.com:8015/",
+    "secUrl": "http://tsgvm01876.newbreed.com:8020/",
+    "recUrl": "http://tsgvm01876.newbreed.com:8025/",
+    "tstUrl": "http://tsgvm01876.newbreed.com:8030/",
+    "wtUrl": "http://tsgvm01876.newbreed.com:8035/",
+    "env":"PROD",
+    "errorMsg":"7320011: Site configuration is missing in RMX",
+    "invalidUser":"User is already logged in.",
+    "sharedSecurity":{
+    "DataType": "WAREHOUSE",
+    "Application": "RMX"
+  },
+  "clients": [
+    {
+      "clientName": "WHIRLPOOL",
+      "siteIds": ["MDW001", "SEA002", "DFW001", "SJC001", "MDT001", "LAX001", "EWR003", "ATL002", "MEM005", "SLC001", "MCO001"]
+  }
+  ]
+}

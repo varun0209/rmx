@@ -1,0 +1,263 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+        <div class="form-row mb-4">
+          <div class="col-sm-6 col-lg-6 col-md-6">
+            <rmlabel [label]="'TRANSACTIONCONFIG.CATEGORY' | translate"></rmlabel>
+              <rmmulticoldropdown [id]="'category'"  [value]="transactionConfig.OperationId" 
+                (onChangeVal)="onCategoryChange($event)" [dpOptions]="categoryCodeOptions"></rmmulticoldropdown>
+          </div>
+          <div class="col-sm-6 col-lg-6 col-md-6 mt-auto">
+            <rmbutton [class]="'btn btn-round-black float-left'" [id]="'search'" [disabled]="isSearchDisabled"
+              [buttonname]="'COMMON.SEARCH' | translate" [iconstyle]="'fas fa-search'" (click)="searchOperation()"></rmbutton>
+          </div>        
+        </div>
+        <div class="form-row mb-2" *ngIf="operationTrans">
+            <rmgrid [(gridproperties)]="operationTrans"></rmgrid>
+        </div>
+        <div class="form-row mb-3">
+          <div class="col-lg-12">
+            <rmbutton [class]="'btn btn-round-black float-left'" [id]="'save'" [disabled]="!(controlTrans && isValidated)"
+              [buttonname]="'COMMON.SAVE' | translate" [iconstyle]="'fas fa-save'" (click)="insertTransConfig()"></rmbutton>
+            <rmbutton [class]="'btn btn-round-black float-right'" [id]="'delete'" [disabled]="isDeleteDisabled"
+              [buttonname]="'COMMON.DELETE' | translate" [iconstyle]="'fas fa-trash-alt'"></rmbutton>
+          </div>
+        </div>
+    
+    
+        <div class="accordion" id="accordionCollapse">
+          <form #configurationForm="ngForm">
+            <div class="card">
+              <div class="card-header test-header-bg" id="transactionSectionRef" data-toggle="collapse"
+                data-target="#transactionSection" aria-expanded="true" aria-controls="transactionSection">
+                <span class="mb-0">
+                  {{'TRANSACTIONCONFIG.TRANSACTIONSECTION' | translate}}
+                </span>
+              </div>
+              
+              <div id="transactionSection"  class="collapse show" aria-labelledby="transactionSectionRef"
+                data-parent="#accordionCollapse">
+                <div class="card-body">
+                  <div class="form-row">
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                      <rmlabel [label]="'TRANSACTIONCONFIG.OPERATIONID' | translate"></rmlabel>
+                      <rmtextbox  [(ngModel)]="transactionConfig.TransId" #transactionId (onChangeVal)="changeInput($event)"
+                        [disabled]="true" [placeholder]="''" [id]="'transactionId'" name="transactionId"></rmtextbox>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-6">
+                      <rmlabel [label]="'TRANSACTIONCONFIG.TESTTYPE' | translate"></rmlabel>
+                      <rmtextbox [(ngModel)]="transactionConfig.TestType" #TransacType (onChangeVal)="changeInput($event)" [disabled]="isTestTypeDisabled"
+                                 [placeholder]="''" [id]="'testType'" name="testType"></rmtextbox>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                      <rmtextarea [(ngModel)]="transactionConfig.TransDesc" [rows]="'rows'" [placeholder]="'COMMON.DESCRIPTION' | translate" [disabled]="isTransDescriptionDisabled"
+                                  [id]="'transDescription'"  name="transDescription"></rmtextarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header test-header-bg" id="ruleSectionRef" data-toggle="collapse" data-target="#rulesSection"
+                aria-expanded="false" aria-controls="rulesSection">
+                <span class="mb-0">
+                  {{'TRANSACTIONCONFIG.RULESSECTION' | translate}}
+                </span>
+              </div>
+              <div id="rulesSection" class="collapse" aria-labelledby="ruleSectionRef" data-parent="#accordionCollapse">
+                <div class="card-body">
+                  <div class="form-row">
+                    <div class="form-group col-lg-5 col-md-6 col-sm-6">
+                      <rmlabel [label]="'TRANSACTIONCONFIG.TRANSACTIONCODE' | translate"></rmlabel>
+                      <rmdropdown [name]="'transcode'" [id]="'rulesTransCode'" name="'rulesTransCode'"  #rulesTranscode [class]="'form-control'"
+                        [disabled]="isTransCodeDisabled" (onChangeVal)="onTransCodeChange($event)" [(ngModel)]="transactionConfig.TransCodeValue" 
+                        [dpOptions]="transactionCodeOptions" [value]="transactionConfig.TransCodeValue" tabindex="2"></rmdropdown>
+                    </div>
+                    <div class="form-group col-lg-2 col-md-4 col-sm-6 mt-auto">
+                      <rmbutton [class]="'btn btn-round-black'" [id]="'generateTransCode'" [buttonname]="'TRANSACTIONCONFIG.GENTRANSCODE' | translate"  [disabled]="isGenerateTransCodeDisabled"
+                        [iconstyle]="'fas fa-sync mx-1'" (click)="generateTransCode()"></rmbutton>
+                    </div>
+                    <div class="form-group col-lg-5 col-md-6 col-sm-6">
+                      <rmlabel [label]="'TRANSACTIONCONFIG.TRANSACTIONID' | translate"></rmlabel>
+                      <rmtextbox [(ngModel)]="rulesTransactionId" #rulesTransId
+                        (onChangeVal)="changeInput($event)" [disabled]="isRuleTransactionIdDisabled"
+                        [placeholder]="''" [id]="'rulesTransactionId'" name="'rulesTransactionId'"></rmtextbox>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                      <rmtextarea [rows]="'rows'" [placeholder]="'COMMON.DESCRIPTION' | translate"  [(ngModel)]="transactionConfig.TransCodeDesc"  [disabled]="rulesDescriptionDisabled"
+                      [id]="'rulesDescriptionId'" name="'rulesDescriptionId'" ></rmtextarea>
+                    </div>
+                  </div>
+                  <div class="card card-body">
+                    <fieldset ngModelGroup="ruleSetup" #ruleCtrls="ngModelGroup">
+                      <rmlabel [label]="'TRANSACTIONCONFIG.RULESETUP' | translate"></rmlabel>
+                      <div class="form-row mt-2">
+                        <div class="form-group col-sm-4 col-lg-4 col-md-4">
+                          <rmlabel [label]="'TRANSACTIONCONFIG.OBJECT' | translate"></rmlabel>
+    
+                          <rmdropdown [name]="'objectDropdown'" [id]="'objectDropdown'"  [class]="'form-control'"
+                          [disabled]="isObjectDisabled" (onChangeVal)="onObjectDropdownChange($event.value)" [(ngModel)]="objectSelected" 
+                          [dpOptions]="objectOptions" [value]="objectSelected"  [requiredIf]="true"></rmdropdown>
+    
+                          <!-- <select class='form-control'  [(ngModel)]='objectSelected'  [requiredIf]="true" name="objectDropdown" id="objectDropdown"
+                            (ngModelChange)='onObjectDropdownChange($event)' [disabled]="isObjectDisabled">
+                            <option class='option' *ngFor='let option of objectOptions' [value]="option">{{option}}</option>
+                          </select> -->
+                        </div>
+                        <div class="form-group col-sm-4 col-lg-4 col-md-4">
+                          <rmlabel [label]="'TRANSACTIONCONFIG.PROPERTY' | translate"></rmlabel>
+    
+                          <rmdropdown [name]="'propertyDropdown'" [id]="'propertyDropdown'"  [class]="'form-control'"
+                          [disabled]="isPropertydisabled" (onChangeVal)="onPropertyDropdownChange($event.value)" [(ngModel)]="propertySelected" 
+                          [dpOptions]="propertyOptions" [value]="propertySelected"  [requiredIf]="true"></rmdropdown>
+    
+                          <!-- <select class='form-control' [requiredIf]="true" [(ngModel)]='propertySelected' name="propertyDropdown"  id="propertyDropdown"
+                            [disabled]="isPropertydisabled" (ngModelChange)='onPropertyDropdownChange($event)'>
+                            <option class='option' *ngFor='let option of propertyOptions' [value]="option">{{option}}
+                            </option>
+                          </select> -->
+                        </div>
+                        <div class="form-group col-sm-4 col-lg-4 col-md-4">
+                          <rmlabel [label]="'TRANSACTIONCONFIG.OPERATOR' | translate"></rmlabel>
+    
+                          <rmdropdown [name]="'operatorDropdown'" [id]="'operatorDropdown'"  [class]="'form-control'"
+                          [disabled]="isOperatorDisabled" (onChangeVal)="onOperatorChange($event.value)" [(ngModel)]="selectedOperator" 
+                          [dpOptions]="operatorOptions" [value]="selectedOperator"  [requiredIf]="true"></rmdropdown>
+    
+                          <!-- <select class='form-control' [disabled]="isOperatorDisabled" [requiredIf]="true" name="operatorDropdown"  id="operatorDropdown"
+                            [(ngModel)]='selectedOperator' (ngModelChange)='onOperatorChange($event)'>
+                            <option class='option' *ngFor='let option of operatorOptions' [value]="option">{{option}}
+                            </option>
+                          </select> -->
+                        </div>
+    
+                      </div>
+                      <div class="form-row mt-3">
+                        <div class="col-sm-12 col-lg-12 col-md-12">
+                          <rmtextarea [id]="'ruleValue'" name="ruleValue" [rows]="'rows'" [placeholder]="'TRANSACTIONCONFIG.RULEVALUE' | translate" [disabled]="isRuleValueDisabled"  [requiredIf]="true"
+                            [(ngModel)]="ruleValue"></rmtextarea>
+                        </div>
+                      </div>      
+                      <div class="form-row mt-2">
+                          <div class="form-group col-sm-4 col-lg-2 col-md-4">
+                            <rmlabel [label]="'TRANSACTIONCONFIG.APPENDWITH' | translate"></rmlabel>
+                            <rmdropdown [name]="'logicaloperator'" [id]="'logicaloperator'"  [class]="'form-control'"
+                                        [disabled]="enableElement()" (onChangeVal)="onLogicalOperatorChange($event.value)" [(ngModel)]="selectedLogicalOperator" 
+                                        [dpOptions]="logicaloperatorOptions" [value]="selectedLogicalOperator"  [requiredIf]="!enableElement()"></rmdropdown>
+    
+    
+                            <!-- <select class='form-control' [disabled]="enableElement()" id="logicaloperator" name="logicaloperator" [requiredIf]="!enableElement()"
+                              [(ngModel)]='selectedLogicalOperator' (ngModelChange)='onLogicalOperatorChange($event)'>
+                              <option style="display:none"></option>
+                              <option class='option' *ngFor='let option of logicaloperatorOptions' [value]="option">{{option}}
+                              </option>
+                            </select> -->
+                          </div>
+                          <div class="form-group col-sm-2 col-lg-1 col-md-2 offset-lg-9 offset-md-6 mt-auto">
+                            <rmbutton [class]="'btn btn-round-black float-right'" [id]="'add'" [disabled]="!ruleCtrls.valid"
+                              [buttonname]="'COMMON.ADD' | translate" [iconstyle]="'fas fa-plus'" (click)="createRule()"></rmbutton>
+                          </div>
+                       </div>            
+                    
+                  </fieldset>
+                    <div class="form-row mt-3">
+                      <div class="form-group col-lg-12 col-md-12 col-sm-12 ">
+                        <rmtextarea [id]="'formula'"  name="formula" [rows]="3" [placeholder]="'TRANSACTIONCONFIG.FORMULA' | translate" [disabled]="true"
+                          [(ngModel)]="transactionConfig.Formula"></rmtextarea>
+                      </div>
+                      <div class="form-group  col-lg-12 col-md-12 col-sm-12">
+    
+                          <rmbutton [class]="'btn btn-round-black float-left'" [id]="'reset'" [disabled]="isResetDisabled" [buttonname]="'COMMON.RESET' | translate"
+                          (onclick)="resetRuleSetup()" [iconstyle]="'fas fa-redo'"></rmbutton>
+    
+                        <rmbutton [class]="'btn btn-round-black float-right'" [id]="'validate'"[disabled]="isValidateDisabled" [buttonname]="'COMMON.VALIDATE' | translate" [iconstyle]="'fas fa-check'"
+                          (click)="validateRule()"></rmbutton>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header test-header-bg" id="controlsSectionRef" data-toggle="collapse"
+                data-target="#controlsSection" aria-expanded="false" aria-controls="controlsSection">
+                <span class="mb-0">
+                  {{'TRANSACTIONCONFIG.CONTROLSSECTION' | translate}}
+                </span>
+              </div>
+              <div id="controlsSection" class="collapse" aria-labelledby="controlsSectionRef" data-parent="#accordionCollapse">
+                <div class="card-body">
+                    <fieldset ngModelGroup="controlSetup" #transControls="ngModelGroup">
+                  <div class="form-row">
+                    <div class="form-group col-sm-4 col-lg-4 col-md-4">
+                      <rmlabel [label]="'TRANSACTIONCONFIG.CONTROLID' | translate"></rmlabel>
+                      <rmdropdown name="controlIdDropdown" #controlIdDropdown [id]="'controlIdDropdown'" [class]="'form-control'"
+                        [(ngModel)]='selectedControlId' [disabled]="isControlIdDisabled" [value]="selectedControlId"  [requiredIf]="true" 
+                        (onChangeVal)="onControlIdChange($event.value)" [dpOptions]="controlIdOptions" tabindex="2"></rmdropdown>
+                    </div>
+                    <div class="form-group col-sm-4 col-lg-4 col-md-4">
+                      <rmlabel [label]="'TRANSACTIONCONFIG.TYPE' | translate"></rmlabel>
+                      <rmdropdown name="controlTypeDropdown" #controlTypeDropdown [id]="'controlTypeDropdown'" [class]="'form-control'"  [value]="selectedControlType"  [(ngModel)]='selectedControlType'
+                        [disabled]="isTypeDisabled" (onChangeVal)="onTypeChange($event)" [dpOptions]="controlTypeOptions"  [requiredIf]="true"
+                        tabindex="2"></rmdropdown>
+                    </div>
+                    <div class="form-group col-sm-4 col-lg-4 col-md-4">
+                      <rmlabel [label]="'TRANSACTIONCONFIG.VALUE' | translate"></rmlabel>
+                      <rmtextbox [(ngModel)]="controlValue" #valueTextBox [disabled]="isValueDisabled" [placeholder]="''" [requiredIf]="isValueRequired"
+                        [id]="'value'" name="value"></rmtextbox>
+                    </div>
+                  </div>
+                  <div class="form-row mt-3">
+                    <div class="form-group col-sm-6 col-lg-6 col-md-6">
+                      <rmlabel [lblStyle]="'mr-2'" [label]="'TRANSACTIONCONFIG.VALUES' | translate"></rmlabel>
+                      <ng-multiselect-dropdown [placeholder]="''" [settings]="dropdownSettings" [data]="controlValues" [requiredIf]="true" [(ngModel)]="selectedControlVal" name="selectedControlVal"
+                        (onSelect)="onSelectValue($event)" (onSelectAll)="onSelectAllvalue($event)" [disabled]="isControlValuesDisabled">
+                      </ng-multiselect-dropdown>
+                    </div>
+                    <div class="form-group col-sm-6 col-lg-6 col-md-6">
+                      <rmlabel [label]="'TRANSACTIONCONFIG.RANK' | translate"></rmlabel>
+                      <rmdropdown name="controlRankDropdown" #controlRankDropdown  [id]="'controlRankDropdown'" [class]="'form-control'"  [(ngModel)]='controlRank'
+                        [disabled]="isRankDisabled" (onChangeVal)="onRankChange($event)" [dpOptions]="rankOptions" [value]="controlRank"
+                        tabindex="2"></rmdropdown>
+                    </div>
+                  </div>
+                  <div class="form-row mt-3">
+                      <div class="form-group col-sm-6 col-lg-6 col-md-6">
+                          <rmlabel [label]="'TRANSACTIONCONFIG.PARENTCONTROLID' | translate"></rmlabel>
+                          <rmdropdown name="parentControlIddropdown" #parentControlIddropdown [id]="'parentControlIddropdown'" [class]="'form-control'"  [(ngModel)]='parentControlId'
+                            [disabled]="isParentControlIdDisabled" (onChangeVal)="onParentControlIdChange($event.value)" [dpOptions]="parentControlIdOptions" [value]="parentControlId"
+                            tabindex="2"></rmdropdown>
+                      </div>
+                      <div class="form-group col-sm-6 col-lg-6 col-md-6">
+                          <rmlabel [label]="'TRANSACTIONCONFIG.PARENTVALUE' | translate"></rmlabel>
+                          <rmdropdown name="parentControlValueDropdown" #parentControlValueDropdown [id]="'parentControlValueDropdown'" [class]="'form-control'"  [(ngModel)]='parentControlValue'
+                            [disabled]="isParentValueDisabled" (onChangeVal)="onParentValueChange($event)" [dpOptions]="parentValueOptions" [value]="parentControlValue"
+                            tabindex="2"></rmdropdown>
+                        </div>
+                  </div>
+    
+                  <div class="row">
+                    <div class="col-12">
+                        <rmbutton [class]="'btn btn-round-black float-right'" [id]="'addControlClearId'"
+                        [disabled]="isControlClear" [buttonname]="'COMMON.CLEAR' | translate" [iconstyle]="'fas fa-times-circle'"
+                        (onclick)="addControlClear()"></rmbutton>
+    
+                        <rmbutton [class]="'btn btn-round-black float-right mr-1'" [id]="'addControlID'"
+                        [disabled]="!transControls.valid" [buttonname]="'COMMON.'+controlBtnName|translate" [iconstyle]="'fas fa-plus'"
+                        (onclick)="addContolID()"></rmbutton>
+                    </div>
+                  </div>
+                </fieldset>
+                     <div class="row col-12 mt-3" *ngIf="controlTrans">
+                           <rmgrid [(gridproperties)]="controlTrans" (emitEditDetails)="editTransConfigDetailRow($event)" (emitDeleteDetails)="deleteTransConfigDetailRow($event)" ></rmgrid>  
+                    </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+</div>

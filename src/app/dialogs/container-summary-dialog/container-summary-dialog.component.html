@@ -1,0 +1,15 @@
+<xpo-dialog-title>
+    {{title | translate}}
+</xpo-dialog-title>
+<xpo-dialog-content>
+    <div class="modal-body">
+        <div class="form-group position-relative">
+            <ul class="list-group scrollbar" *ngIf="serialNumbers" id="style-4">
+                <rmgrid [(gridproperties)]="serialNumbers" [isScroll]="true"></rmgrid>
+            </ul>
+            <serial-number-move [isOutBoundContainerRequired]='true' [serialNumbers]="serialNumbers" [flag]="flag"
+                [tittle]="modelTittle" [isModalOpen]="isModalOpen" (emitModalClose)="masterPageService.hideDialog()">
+            </serial-number-move>
+        </div>
+    </div>
+</xpo-dialog-content>

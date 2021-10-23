@@ -1,0 +1,40 @@
+/* .addNewSapCriteria{
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
+} */
+.criteria-controls, .criteria-key-value{
+    padding: 10px 5px;
+    border: 1px #0868ac solid;
+    margin: 0;
+}
+.criteria-key-value{
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.section-control-title, .section-key-title{
+    background: #0868ac;
+    color: #fff;
+    padding: 5px;
+    position: absolute;
+    top: -15px;
+    border-radius: 5px;
+    left:10px;
+    z-index: 1;
+}
+.section-key-title{
+    top: 137px; 
+}
+.add-criteria-edit-rule-text{
+    display: block;
+    text-align: right;
+    text-decoration: underline;
+    color: #0667ab;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.add-rule-text{
+    min-height: 55px;
+    background: #eee;
+}

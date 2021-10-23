@@ -1,0 +1,90 @@
+.routeFlow{
+    background: #f2f2f2;
+    border: 1px #0868ac73 solid;
+}
+.wizard-header{
+    background: #0868ac;
+    color: #fff;
+}
+.wizard-inner{
+  background: #f2f2f2;
+  height: 80px;
+  border-radius: 3px;
+  overflow-x: auto;
+  border-bottom: 1px #c9c9c9 solid;
+    }
+    .wizard-inner ul{
+      display: flex;
+      padding-left: 0;
+      margin-bottom: 0;
+      list-style: none;
+      height: 60px;
+    }
+    
+    .wizard-inner ul li{
+      width: 105px;
+      height: 57px;
+      border: 2px solid #0868ac;
+      background: #fff;
+      z-index: 1;
+      margin: 0 14px;
+      float: left;
+      position: relative;
+      border-radius: 5px;
+  }
+    .wizard-inner ul li:first-child{
+      margin-left: 0px !important;
+    }
+    .wizard-inner ul li::before {
+    content: url("assets/images/next-arrow1.png");
+    padding-left: 5px;
+    margin-left: -36px;
+    margin-top: 20px;
+    display: block;
+    }
+    
+    .wizard-inner ul li:first-child:before { content: "."; }
+    .items-align-center{
+      position: absolute;
+      width: 103px;
+      text-align: center;
+      line-height: 15px;
+      top: 8px;
+  }
+    .items-id-size{
+    font-size: 14px;
+    font-weight: bold;
+    }
+    
+    .items-text-size{
+    font-size: 10px;
+    }
+    .eligible-routes-section{
+      max-height: 500px;
+    overflow-y: auto;
+    margin-top: 5px;
+    }
+    .routes-section-heading{
+      font-size:14px;
+    }
+    .breakWord{
+      word-break: break-word;
+    }
+    
+    .append-btn{
+      background-color: #fff;
+        border: 1px #0868ac solid;
+        border-radius: 0;
+        min-width: 60px;
+        padding: 6px 15px;
+        margin: 3px 5px;
+        color: #0868ac;
+    }
+
+    .completedOps {
+      border: 2px #6f6f6f solid !important;
+    }
+
+    .activeOps {
+      border: 2px #11A63B solid !important;
+    }

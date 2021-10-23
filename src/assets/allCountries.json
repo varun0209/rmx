@@ -1,0 +1,11 @@
+{
+  "defName": "USA",
+  "defShortName": "US",
+  "countries": [
+    {
+      "name": "USA",
+      "shortname": "US",
+      "id": "1"
+    }
+  ]
+}

@@ -1,0 +1,802 @@
+<div *showItBootstrap="['lg','xl','md','sm', 'xs']" class="container-fluid">
+  <!-- Receipt Edit  start -->
+  <div  class="d-flex  mr-3">
+    <div class="flex-grow-1 my-1 subheader-title align-self-center">
+      <a class="rmx-cursor" (click)="goBackToSearch()" *ngIf="!hideEditReceiptlbl">
+        <i class="fas fa-angle-double-left"></i>{{'RECEIVING.EDITRECEIPT' | translate}}</a>
+    </div>
+    <!-- for loader-->
+    <div *ngIf="isDeviceDetected" class="col-6 d-flex">
+      <div class="align-self-center">Device Detecting</div>
+      <div class="lds-facebook">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end">
+      <rmtoggle [label]="'COMMON.AUTORECEIVING' | translate" [toggleDivClass]="'d-flex py-2 px-1'"
+        [togglelblClassLabel]="'pr-2 pb-2'" [id]="'auto'" name="auto" (onChangeVal)="onAutoOrManualChange()"
+        [toggleval]="isAutoOrManual" *ngIf="showAutoOrManual">
+      </rmtoggle>
+      <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'RECEIVING.POST' | translate"
+        [iconstyle]="'fa fa-share-square'" (click)="postReceipt()" *ngIf="false"
+        [disabled]="!(receivingService.ReceiptTrans?.Elements.length > 0)"></rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.DELETE'| translate"
+        [iconstyle]="'fas fa-trash-alt'" *ngIf="false"
+        (click)="openModal(DeleteReceiptConfirmation, 'confirmDelete', 'dialog-width-sm')"
+        [disabled]="receivingService.ReceiptTrans?.Elements.length > 0"></rmbutton>
+      <rmbutton [class]="'btn btn-round-black'"
+        (click)="openModal(utilitymodal,'receiptdetails',  'dialog-width-lg')"
+        [buttonname]="'COMMON.DETAIL' | translate" [iconstyle]="'fas fa-info-circle'" *ngIf="false"></rmbutton>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <mat-expansion-panel class="mt-1 p-0" [expanded]="isReceiptSection">
+        <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px" class="bg-light"
+          (click)="expandReceiptPanel()">
+          <mat-panel-title>{{'RECEIVING.RECEIPT' | translate | uppercase}}
+            <span *ngIf="!isReceiptSection" class="d-xs-none">
+              <span class="mr-5 ml-5" *ngIf="receivingService.updatedReceipt.Receiptkey">
+                {{'RECEIVING.RECEIPTKEY' | translate}}: <strong>{{receivingService.updatedReceipt.Receiptkey}}</strong>
+              </span>
+              <span class="mr-3" *ngIf="receivingService.updatedReceipt.ExternReceiptkey">
+                {{'RECEIVING.EXTERNRECEIPTKEY' | translate}}:
+                <strong>{{receivingService.updatedReceipt.ExternReceiptkey}}</strong>
+              </span>
+            </span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="rm-card mt-1 col">
+          <ul class="nav nav-tabs" id="tab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="receipt-tab" data-toggle="tab" href="#receipt" role="tab"
+                aria-controls="receipt" aria-selected="true">{{'RECEIVING.RECEIPT' | translate}}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="custInfo-tab" data-toggle="tab" href="#custInfo" role="tab"
+                aria-controls="custInfo" aria-selected="true">{{'RECEIVING.CUSTOMERINFO' | translate}}</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="others-tab" data-toggle="tab" href="#others" role="tab" aria-controls="others"
+                aria-selected="true">{{'RECEIVING.OTHERS' | translate}}</a>
+            </li>
+          </ul>
+          <div class="tab-content  p-2">
+            <div class="tab-pane fade show active" id="receipt" role="tabpanel" aria-labelledby="receipt-tab">
+              <div class="form-row">
+                <div class="col-lg-4 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.RECEIPTKEY' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.receiptKey?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isReceiptKey" [id]="'receiptKey'"
+                    [(ngModel)]="receivingService.updatedReceipt.Receiptkey" name="receiptKey"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.receiptKey?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.EXTERNRECEIPTKEY' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.externReceiptKey?.Required">
+                  </rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isExtReceiptKey" [id]="'externReceiptKey'"
+                    [(ngModel)]="receivingService.updatedReceipt.ExternReceiptkey" name="externReceiptKey"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.externReceiptKey?.Required">
+                  </rmtextbox>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.RECEIPTSOURCE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.receiptSource?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isReceiptSource" [id]="'receiptSource'"
+                    [(ngModel)]="receivingService.updatedReceipt.ReceiptSource" name="receiptSource"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.receiptSource?.Required">
+                  </rmtextbox>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.RECEIPTTYPE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.receiptType?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isReceiptType" [id]="'receiptType'"
+                    [(ngModel)]="receivingService.updatedReceipt.ReceiptType" name="receiptType"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.receiptType?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-4 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.CARRIERREFERENCE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.carrierReference?.Required">
+                  </rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isCarrierReference" [id]="'carrierReference'"
+                    [(ngModel)]="receivingService.updatedReceipt.CarrierReference" name="carrierReference"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.carrierReference?.Required">
+                  </rmtextbox>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade show" id="custInfo" role="tabpanel" aria-labelledby="custInfo-tab">
+              <div class="form-row">
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.CUSOMERNAME' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.customerName?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isCustomerName" [id]="'customerName'"
+                    [(ngModel)]="receivingService.updatedReceipt.CustomerName" name="customerName"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.customerName?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.ADDRESS1' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.address1?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isAddress1" [id]="'address1'"
+                    [(ngModel)]="receivingService.updatedReceipt.Address1" name="address1"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.address1?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.ADDRESS2' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.address2?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isAddress2" [id]="'address2'"
+                    [(ngModel)]="receivingService.updatedReceipt.Address2" name="address2"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.address2?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.ADDRESS3' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.address3?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isAddress3" [id]="'address3'"
+                    [(ngModel)]="receivingService.updatedReceipt.Address3" name="address3"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.address3?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.ADDRESS4' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.address4?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isAddress4" [id]="'address4'"
+                    [(ngModel)]="receivingService.updatedReceipt.Address4" name="address4"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.address4?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.CITY' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.city?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isCity" [id]="'city'"
+                    [(ngModel)]="receivingService.updatedReceipt.City" name="city"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.city?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.STATE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.state?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isState" [id]="'state'"
+                    [(ngModel)]="receivingService.updatedReceipt.State" name="state"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.state?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.ZIPCODE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.zipCode?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isZipCode" [id]="'zipCode'"
+                    [(ngModel)]="receivingService.updatedReceipt.Zip" name="zipCode"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.zipCode?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.COUNTRY' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.country?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isCountry" [id]="'country'"
+                    [(ngModel)]="receivingService.updatedReceipt.Country" name="country"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.country?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.PHONE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.phone?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isPhone" [id]="'phone'"
+                    [(ngModel)]="receivingService.updatedReceipt.Phone" name="phone"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.phone?.Required"></rmtextbox>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade show" id="others" role="tabpanel" aria-labelledby="others-tab">
+              <div class="form-row">
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.PLACEOFLOADING' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.placeofLoading?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isPlaceOfLoading" [id]="'placeOfLoading'"
+                    [(ngModel)]="receivingService.updatedReceipt.PlaceofLoading" name="placeOfLoading"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.placeofLoading?.Required">
+                  </rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.PLACEOFDELIVERY' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.placeofDelivery?.Required">
+                  </rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isPlaceOfDelivery" [id]="'placeOfDelivery'"
+                    [(ngModel)]="receivingService.updatedReceipt.PlaceofDelivery" name="placeOfDelivery"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.placeofDelivery?.Required">
+                  </rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.RECEIPTGROUP' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.receiptGroup?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isReceiptGroup" [id]="'receiptGroup'"
+                    [(ngModel)]="receivingService.updatedReceipt.ReceiptGroup" name="receiptGroup"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.receiptGroup?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.CLIENTID' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.storerKey?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isClientId" [id]="'clientId'"
+                    [(ngModel)]="receivingService.updatedReceipt.Clientid" name="clientId"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.storerKey?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.RECEIPTDATE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.receiptDate?.Required"></rmlabel>
+                  <rmdatepicker [disabled]="isReceiptDate" [id]="'receiptDate'"
+                    [DateValue]="receivingService.updatedReceipt.ReceiptDate" name="receiptDate"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.receiptDate?.Required">
+                  </rmdatepicker>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.STATUS' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.status?.Required"></rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isStatus" [id]="'Status'"
+                    [(ngModel)]="receivingService.updatedReceipt.Status" name="Status"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.status?.Required"></rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.CLIENTSYSTEMCODE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.clientSystemCode?.Required">
+                  </rmlabel>
+                  <rmtextbox [placeholder]="''" [disabled]="isCSC" [id]="'clientSystemCode'"
+                    [(ngModel)]="receivingService.updatedReceipt.Client_System_Cd" name="clientSystemCode"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.clientSystemCode?.Required">
+                  </rmtextbox>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-2">
+                  <rmlabel [label]="'RECEIVING.SHIPDATE' | translate"
+                    [isAsterisk]="masterPageService.hideControls.controlProperties?.shipDate?.Required"></rmlabel>
+                  <rmdatepicker [disabled]="isShiptDate" [id]="'shipDate'"
+                    [DateValue]="receivingService.updatedReceipt.ShipDate" name="shipDate"
+                    [requiredIf]="masterPageService.hideControls.controlProperties?.shipDate?.Required"></rmdatepicker>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="mt-3 p-0" [expanded]="isParentSection">
+        <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px" class="bg-light"
+          (click)="expandParentPanel()">
+          <mat-panel-title>{{'RECEIVING.PARENT' | translate | uppercase}}<span *ngIf="parentId">: {{parentId}}</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <form>
+          <div ngModelGroup="automationGroup" #automationCtrls="ngModelGroup">
+            <div class="form-row">
+              <div class="col mb-2">
+                <rmlabel [label]="'RECEIVING.DEVICEID' | translate"
+                  [isAsterisk]="masterPageService.hideControls.controlProperties?.deviceId?.Required"></rmlabel>
+                <rmtextbox name="deviceId" [id]="'deviceId'" [prependBtnId]="'generateUId'" [(ngModel)]="deviceId"
+                  [divClass]="'input-group'" [requiredIf]="true" #deviceid=ngModel #inputDeviceId [placeholder]="''"
+                  (onChangeVal)="changeDeviceInput(inputDeviceId)" [disabled]="isDeviceIdDisabled"
+                  (onControllerChange)="onControllerChange(inputDeviceId)" [prependiIconStyle]="'fas fa-plus'"
+                  [hidePrependIcon]="isGenerateUIdBtn" [prependiconBtnDisabled]="isGenerateUIdDisabled"
+                  (prependIconEevntEmit)="generateUID()" [hideSearchIcon]="isSearchUIdBtn"
+                  (enter)="getTimedOutPortInfo()" (searchEventEmit)="getTimedOutPortInfo()"
+                  [searchIconBtnDisabled]="isSearchDeviceIdDisabled">
+                </rmtextbox>
+              </div>
+              <div class="col mb-2">
+                <rmlabel [label]="'RECEIVING.AUTOMATIONPORTID' | translate"
+                  [isAsterisk]="masterPageService.hideControls.controlProperties?.automationPortId?.Required"></rmlabel>
+                <rmtextbox name="automationPortId" [id]="'automationPortId'" [(ngModel)]="automationPortId"
+                  [divClass]="'input-group'" [requiredIf]="true" #automationportid=ngModel #inputPortId
+                  [placeholder]="''" (onChangeVal)="changePortIdInput()" [disabled]="isPortIdDisabled"></rmtextbox>
+              </div>
+              <div class="ml-1 align-self-center mt-3 text-right">
+
+                <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.NEXT'| translate"
+                  [iconstyle]="'fa fa-angle-double-right'" [disabled]="!automationCtrls.valid || isNextDisabled"
+                  (onclick)="startDetection()">
+                </rmbutton>
+                <button type="button" class="btn btn-round-black mr-1"
+                  [disabled]="!automationCtrls.valid || isNextDisabled" id="deviceIdPrint"
+                  [ngClass]="(!automationCtrls.valid || isNextDisabled) ? 'none' : (diveiceIdPrint?'btn btn-round-black':'btn btn-round-black-off')"
+                  (click)="deviceIdPrint()">
+                  <i class="fas fa-print"></i>
+                  {{(diveiceIdPrint ? 'COMMON.ON' : 'COMMON.OFF') | translate}}
+                </button>
+                <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [buttonname]="'COMMON.COMPLETE' | translate"
+                  [iconstyle]="'far fa-check-circle'" [disabled]="isCompleteDisabled"
+                  (onclick)="completePortIdValidation()"></rmbutton>
+              </div>
+            </div>
+            <div class="d-flex justify-content-between">
+              <div>
+                <rmbutton [class]="'btn btn-round-black'" [buttonname]="'COMMON.CLEAR' | translate"
+                  [iconstyle]="'far fa-times-circle'" (onclick)="clearAutomationForm()"></rmbutton>
+              </div>
+              <div>
+                <rmddbtn [ddBtnClass]="'dropup'" [isEnableDynamicBtn]="isParentEnableDynamicBtn" #parentDdBtn
+                  [ddBtnOptionsList]="parentSecDdBtnOptions" [isDdBtnDisabled]="isParentDdBtnDisabed"
+                  (selectedBtn)="parentDdBtnResponse($event)" (ddBtnClick)="parentDynamic($event)">
+                </rmddbtn>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-expansion-panel>
+      <mat-expansion-panel class="mt-3 " [expanded]="true">
+        <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px" class="bg-light">
+          <mat-panel-title> {{'RECEIVING.RECEIPTLINE' | translate | uppercase}} </mat-panel-title>
+        </mat-expansion-panel-header>
+        <form #rf="ngForm">
+          <div class="rm-card">
+            <mat-horizontal-stepper linear class="automation" [linear]="true" #stepper>
+              <mat-step [completed]="isDeviceProcesStepDone">
+                <ng-template matStepLabel>{{'RECEIVING.RECEIPTLINE' |translate }}</ng-template>
+                <div ngModelGroup="deviceGroup" #deviceCtrls="ngModelGroup">
+                  <!-- [ngClass]="(masterPageService.hideControls.controlProperties?.sku?.Order) ? "`order-${masterPageService.hideControls.controlProperties?.sku?.Order}`":"''"" -->
+                  <div class="form-row px-2 py-1">
+                    <div
+                      class="col-lg-3 col-md-6 mb-2 order-{{masterPageService.hideControls.controlProperties?.serialNumber?.Order}}">
+                      <rmlabel [label]="'RECEIVING.SERIALNUMBER' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required">
+                      </rmlabel>
+                      <rmtextbox [(ngModel)]="serialNumber" [divClass]="'input-group'"
+                        [hidePrintIcon]="masterPageService.hideControls.controlProperties?.serialNumberPrint?.Show"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"
+                        [iconstyle]="'fas fa-print'" #serialnumber=ngModel #inputSerial [placeholder]="''"
+                        [id]="'serialNumber'" name="serialnumber" (onChangeVal)="changeInput(inputSerial)"
+                        [disabled]="isSerNumDisable" [iconBtnDisabled]="isSNPrintDisabled"
+                        (onControllerChange)="onControllerChange(inputSerial)" (enter)="validateSerialNumber()"
+                        (iconEventEmit)="serialNumberPrint()" [uiData]="uiData" [isSerialNumber]="true"
+                        [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+                    </div>
+                    <div
+                      class="col-lg-3 col-md-6 mb-2 order-{{masterPageService.hideControls.controlProperties?.carrier?.Order}}">
+                      <rmlabel [label]="'RECEIVING.CARRIER' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.carrier?.Required">
+                      </rmlabel>
+                      <rmdropdown [id]="'carrier'" name="carrier" [(ngModel)]="carrier" [value]="carrierId"
+                        (onChangeVal)="changeCarrier($event)" [dpOptions]="carrierOptions"
+                        [disabled]="isCarrierDisabled"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.carrier?.Required">
+                      </rmdropdown>
+                    </div>
+                    <div
+                      class="col-lg-3 col-md-6 mb-2 order-{{masterPageService.hideControls.controlProperties?.oem?.Order}}">
+                      <rmlabel [label]="'OEM'"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.oem?.Required">
+                      </rmlabel>
+                      <rmdropdown [id]="'oem'" name="oem" [(ngModel)]="oemCode" [value]="oemId"
+                        (onChangeVal)="changeOEMCode($event)" [dpOptions]="OEMCodeOptions" [disabled]="isOemDisabled"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.oem?.Required">
+                      </rmdropdown>
+                    </div>
+                    <div
+                      class="col-lg-3 col-md-6 mb-2 order-{{masterPageService.hideControls.controlProperties?.quantity?.Order}}">
+                      <rmlabel [label]="'RECEIVING.QTY' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.quantity?.Required"></rmlabel>
+                      <input type="number" id="receivedQuantity" [(ngModel)]="receivedQuantity" name="quant[1]"
+                        #quantity=ngModel
+                        [requiredIf]="masterPageService.hideControls.controlProperties.quantity?.Required"
+                        class="form-control input-number input-width" value="1" min="1" max="100" numbersOnly
+                        [disabled]="masterPageService.hideControls.controlProperties?.quantity?.Disabled ? masterPageService.hideControls.controlProperties?.quantity?.Disabled: isreceivedQuantity">
+                    </div>
+                    <div
+                      class="col-lg-3 col-md-6 mb-2 order-{{masterPageService.hideControls.controlProperties?.color?.Order}}">
+                      <rmlabel [label]="'RECEIVING.COLOR' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.color?.Required">
+                      </rmlabel>
+                      <rmdropdown [id]="'color'" name="color" [(ngModel)]="color" [value]="colorId"
+                        (onChangeVal)="changeColor($event)" [dpOptions]="colorOptions" [disabled]="isColorDisableded"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.color?.Required">
+                      </rmdropdown>
+                    </div>
+                    <div
+                      class="col-lg-3 col-md-6 mb-2 order-{{masterPageService.hideControls.controlProperties?.conditonCode?.Order}}">
+                      <rmlabel [label]="'RECEIVING.CONDITION' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.conditonCode?.Required">
+                      </rmlabel>
+                      <rmdropdown [id]="'conditionCode'" name="conditionCode" [(ngModel)]="conditionCode"
+                        [value]="conditionCodeId" (onChangeVal)="changeConditionCode($event)"
+                        [dpOptions]="conditionCodeOptions" [disabled]="isConditionCodeDisabled"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.conditonCode?.Required">
+                      </rmdropdown>
+                    </div>
+                    <div
+                      class="col-lg-3 col-md-6 mb-2 order-{{masterPageService.hideControls.controlProperties?.sku?.Order}}">
+                      <rmlabel [label]="'RECEIVING.SKU' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.sku?.Required"></rmlabel>
+                      <rmtypeahead [(ngModel)]="selectedSKU" [typeaheadOptionField]="'Sku'" [id]="'skuInputid'"
+                        name="skuInput" [typeaheadPattern]="controlConfig?.SKuPattern"
+                        [errorMessage]="appService.getErrorText('2660078')" [skus]="skuList" #skuinput=ngModel
+                        [requiredIf]="masterPageService.hideControls.controlProperties.sku?.Required"
+                        [waitTime]="appConfig?.receiving?.skuwaitTime" [placeholder]="''" [skuDisabled]="skuDisabled"
+                        [selectedSKUModel]="selectedSKUModel" [SKU]="SKU"
+                        (typeaheadResponse)="typeaheadResponse($event)" (inputEvent)="getEligibleSKUs($event)"
+                        (keyup.enter)="getDetermineSKUs($event)">
+                      </rmtypeahead>
+                    </div>
+                    <div
+                      class="col-lg-3 col-md-6 mb-2 order-{{masterPageService.hideControls.controlProperties?.notes?.Order}}">
+                      <rmlabel [label]="'RECEIVING.NOTES' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.notes?.Required"></rmlabel>
+                      <rmtextarea [placeholder]="''" name="notes" [rows]="1" [(ngModel)]="receiptNotes"
+                        [id]="'recNotes'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.notes?.Required"></rmtextarea>
+                    </div>
+                  </div>
+                  <div class="form-row px-2 pb-2">
+                    <div class="col">
+                      <fieldset class="p-0" ngModelGroup="attributes" #attributesCtrl="ngModelGroup">
+                        <div class="form-row">
+                          <div class="col-lg-3 col-md-6 mb-2"
+                            *ngIf="(!masterPageService.hideControls.controlProperties?.rcvAttr1?.Hidden)">
+                            <rmlabel [label]="controlConfig?.attribute1?.Label | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.rcvAttr1?.Required">
+                            </rmlabel>
+                            <input type="search" [name]="controlConfig?.attribute1?.Id" class="form-control"
+                              [ngClass]="" #dp1="bsDatepicker" [placeholder]="controlConfig?.attribute1?.Placeholder"
+                              (ngModelChange)="mfgDateChange($event)" [(ngModel)]="attribute1"
+                              (change)="mfgValueChange($event.value,dp1)" #snAtt1=ngModel bsDatepicker
+                              [bsConfig]="bsConfig" id="attribute1" (input)="mfgInputChange($event,dp1)"
+                              [minDate]="minDate" [maxDate]="maxDate" [outsideClick]="true"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.rcvAttr1?.Required">
+                          </div>
+                          <div class="col-lg-3 col-md-6 mb-2"
+                            *ngIf="(!masterPageService.hideControls.controlProperties?.rcvAttr2?.Hidden)">
+                            <rmlabel [label]="controlConfig?.attribute2?.Label| translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.rcvAttr2?.Required">
+                            </rmlabel>
+                            <rmtextbox [placeholder]="controlConfig?.attribute2?.Placeholder" [id]="'attribute2'"
+                              [(ngModel)]="attribute2" [name]="controlConfig?.attribute2?.Id" #snAtt2=ngModel
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.rcvAttr2?.Required"
+                              (onChangeVal)="changeInput()"></rmtextbox>
+                          </div>
+                          <div class="col-lg-3 col-md-6 mb-2"
+                            *ngIf="(!masterPageService.hideControls.controlProperties?.rcvAttr3?.Hidden)">
+                            <rmlabel [label]="controlConfig?.attribute3?.Label | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.rcvAttr3?.Required">
+                            </rmlabel>
+                            <rmtextbox [placeholder]="controlConfig?.attribute3?.Placeholder" [id]="'attribute3'"
+                              [(ngModel)]="attribute3" [name]="controlConfig?.attribute3?.Id" #snAtt3=ngModel
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.rcvAttr3?.Required"
+                              (onChangeVal)="changeInput()"></rmtextbox>
+                          </div>
+                          <div class="col-lg-3 col-md-6 mb-2"
+                            *ngIf="(!masterPageService.hideControls.controlProperties?.rcvAttr5?.Hidden)">
+                            <rmlabel [label]="controlConfig?.attribute5?.Label | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.rcvAttr5?.Required">
+                            </rmlabel>
+                            <rmdatepicker [id]="'attribute5'" [(ngModel)]="attribute5"
+                              [name]="controlConfig?.attribute5?.Id" #snAtt6=ngModel
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.rcvAttr5?.Required"
+                              (onChangeVal)="changeInput()">
+                            </rmdatepicker>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                  <div class="col text-right pr-0">
+                    <rmddbtn [ddBtnClass]="'dropup mr-1'" [isEnableDynamicBtn]="isDeviceEnableDynamicBtn" #deviceDdBtn
+                      [ddBtnOptionsList]="deviceSecDdBtnOptions" [isDdBtnDisabled]="isDeviceDdBtnDisabled"
+                      (selectedBtn)="deviceDdBtnResponse()" (ddBtnClick)="deviceDynamic($event)">
+                    </rmddbtn>
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.NEXT'| translate"
+                      (click)="gotoSurvey()" [iconstyle]="'fa fa-angle-double-right'" [disabled]="!deviceCtrls.valid">
+                    </rmbutton>
+                  </div>
+                </div>
+
+              </mat-step>
+              <mat-step [completed]="isSruveyStepDone">
+                <ng-template matStepLabel>{{'COMMON.SURVEY' |translate }}</ng-template>
+                <ng-container *ngIf="surveyResponse?.SurveyTrans?.length > 0; else noServey">
+                  <app-dynamic-survey [surveyResponse]="surveyService.surveyResponse"
+                    (emitSurveyResponse)="getRefreshedSurvey($event)" (emitCompletedSurvey)="doneSurvey($event)"
+                    (emitResSurvey)="reSurvey()">
+                  </app-dynamic-survey>
+                </ng-container>
+                <ng-template #noServey>
+                  <div class="align-self-center">
+                    <strong>No Survey is available</strong>
+                  </div>
+                </ng-template>
+                <!-- addSerialNumber() -->
+                <div class="col text-right pr-0">
+                  <!-- <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.NEXT'| translate"
+                     [iconstyle]="'fa fa-angle-double-right'"
+                    [disabled]="!rf.valid || isAddDisabled">
+                  </rmbutton> -->
+                </div>
+              </mat-step>
+              <mat-step>
+                <ng-template matStepLabel>{{'RECEIVING.LOTTABLES' |translate }}</ng-template>
+                <div>
+                  <div class="form-row p-2">
+                    <div class="col mr-3">
+                      <rmlabel [label]="'LotAdt1'"></rmlabel>
+
+                      <input type="search" class="form-control" [ngClass]="" #dp1="bsDatepicker" id="LotAdt1"
+                        name="LotAdt1" #LotAdt1=ngModel [(ngModel)]="receiptDetail.LotAdt1" bsDatepicker
+                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue' }"
+                        [outsideClick]="true">
+                    </div>
+                    <div class="col mr-3">
+                      <rmlabel [label]=" 'RECEIVING.LOTADT2' | translate"></rmlabel>
+                      <input type="search" class="form-control" [ngClass]="" #dp1="bsDatepicker"
+                        [(ngModel)]="receiptDetail.LotAdt2" bsDatepicker
+                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue' }" id="LotAdt2"
+                        name="LotAdt2" #LotAdt2=ngModel [outsideClick]="true">
+                    </div>
+                    <div class="col mr-3">
+                      <rmlabel [label]="'RECEIVING.LOTADT3' | translate"></rmlabel>
+                      <input type="search" class="form-control" [ngClass]="" #dp1="bsDatepicker"
+                        [(ngModel)]="receiptDetail.LotAdt3" bsDatepicker
+                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue' }" id="LotAdt3"
+                        name="LotAdt3" #LotAdt3=ngModel [outsideClick]="true">
+                    </div>
+                    <div class="col mr-3">
+                      <rmlabel [label]="'RECEIVING.LOTADT4' | translate"></rmlabel>
+
+                      <input type="search" class="form-control" [ngClass]="" #dp1="bsDatepicker"
+                        [(ngModel)]="receiptDetail.LotAdt4" bsDatepicker
+                        [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-dark-blue' }" id="LotAdt4"
+                        name="LotAdt4" #LotAdt4=ngModel [outsideClick]="true">
+                    </div>
+                    <div class="col">
+                      <rmlabel [label]="'RECEIVING.LOTATR1' | translate"></rmlabel>
+                      <rmtextbox [placeholder]="''" [id]="'LotAtr1'" name="LotAtr1" #LotAtr1=ngModel
+                        [(ngModel)]="receiptDetail.LotAtr1" [attr.required]="true"></rmtextbox>
+                    </div>
+                  </div>
+                  <div class="form-row p-2">
+                    <div class="col mr-3">
+                      <rmlabel [label]="'RECEIVING.LOTATR2' | translate"></rmlabel>
+                      <rmtextbox [placeholder]="''" [id]="'LotAtr2'" name="LotAtr2" #LotAtr2=ngModel
+                        [(ngModel)]="receiptDetail.LotAtr2"></rmtextbox>
+                    </div>
+                    <div class="col mr-3">
+                      <rmlabel [label]="'RECEIVING.LOTATR3' | translate"></rmlabel>
+                      <rmtextbox [placeholder]="''" [id]="'LotAtr3'" name="LotAtr3" #LotAtr3=ngModel
+                        [(ngModel)]="receiptDetail.LotAtr3"></rmtextbox>
+                    </div>
+                    <div class="col mr-3">
+                      <rmlabel [label]="'RECEIVING.LOTATR4' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.lotAtr4?.Required"></rmlabel>
+                      <rmtextbox [placeholder]="''" [id]="'lotAttr4'" name="lotAttr4" #lotAttr4=ngModel
+                        [(ngModel)]="receiptDetail.LotAtr4"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.lotAtr4?.Required"></rmtextbox>
+                    </div>
+                    <div class="col mr-3">
+                      <rmlabel [label]="'RECEIVING.LOTATR5' | translate"></rmlabel>
+                      <rmtextbox [placeholder]="''" [id]="'LotAtr5'" name="LotAtr5" #LotAtr5=ngModel
+                        [(ngModel)]="receiptDetail.LotAtr5"></rmtextbox>
+                    </div>
+                    <div class="col">
+                      <rmlabel [label]="'RECEIVING.LOTATR6' | translate"></rmlabel>
+                      <rmtextbox [placeholder]="''" [id]="'LotAtr6'" name="LotAtr6" #LotAtr6=ngModel
+                        [(ngModel)]="receiptDetail.LotAtr6"></rmtextbox>
+                    </div>
+                  </div>
+                  <div class="form-row p-2">
+                    <div class="col mr-3">
+                      <rmlabel [label]="'RECEIVING.LOTATR7' | translate"></rmlabel>
+                      <rmtextbox [placeholder]="''" [id]="'LotAtr7'" name="LotAtr7" #LotAtr7=ngModel
+                        [(ngModel)]="receiptDetail.LotAtr7"></rmtextbox>
+                    </div>
+                    <div class="col">
+                      <rmlabel [label]="'RECEIVING.LOTATR8' | translate"></rmlabel>
+                      <rmtextbox [placeholder]="''" [id]="'LotAtr8'" name="LotAtr8" #LotAtr8=ngModel
+                        [(ngModel)]="receiptDetail.LotAtr8"></rmtextbox>
+                    </div>
+                    <div class="col offset-5 px-0">
+                    </div>
+                  </div>
+                  <!-- <div class="col text-right pr-0">
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.NEXT'| translate"
+                      (click)="addSerialNumber()" [iconstyle]="'fas fa-plus'" [disabled]="!rf.valid || isAddDisabled">
+                    </rmbutton>
+                  </div> -->
+                </div>
+              </mat-step>
+            </mat-horizontal-stepper>
+          </div>
+          <div class="d-flex pt-2 justify-content-between">
+            <div class="col-lg-4 col-md-6 px-md-0">
+              <container-suggestion *ngIf="controlConfig?.containerInputId"
+                [isAsterisk]="masterPageService.hideControls.controlProperties?.containerInputId?.Required"
+                [csLabel]="controlConfig?.containerInputId | translate"
+                [showPrint]="masterPageService.hideControls.controlProperties?.containerPrint?.Show"
+                [class]="'form-control'" [id]="'containerInputId'" (focusContainer)="getSuggestContainer($event)"
+                (validateContainerValue)="validateContainer($event)" (emitContainerPrint)="lpnContainerPrint()"
+                [iconBtnDisabled]="islpnContainerPrintDisabled"
+                (getSuggestContainerResponse)="getSuggestContainerResponse($event)"
+                (emitvalidateContainer)="validateContainerResponse($event)"
+                (emitCheckContainer)="checkContainer($event)" (errorEmit)="errorEmit($event)" [uiData]="uiData">
+              </container-suggestion>
+            </div>
+            <div class="align-self-center">
+              <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.ADD'| translate"
+                (click)="addAutoSerialNumber()" [iconstyle]="'fas fa-plus'" [disabled]="!rf.valid || isAddDisabled">
+              </rmbutton>
+              <rmbutton *ngIf="false" [class]="'btn btn-round-black mr-1'"
+                [buttonname]="'RECEIVING.UNRECEIVE' | translate" [iconstyle]="'fas fa-undo'"
+                [disabled]="!(receivingService.ReceiptTrans?.Elements.length > 0)"
+                (click)="openModal(utilitymodal,'serialnumberrecover', 'dialog-width-md')">
+              </rmbutton>
+              <rmbutton [class]="'btn btn-round-black'" [buttonname]="'COMMON.CLEAR' | translate"
+                [iconstyle]="'far fa-times-circle'" (onclick)="Clear()"></rmbutton>
+            </div>
+          </div>
+        </form>
+      </mat-expansion-panel>
+    </div>
+  </div>
+  <div class="mt-1" *ngIf="receivingService.ReceiptTrans?.Elements.length > 0">
+    <div class="form-row p-2">
+      <div class="col">
+        <rmgrid [(gridproperties)]="receivingService.ReceiptTrans"></rmgrid>
+      </div>
+    </div>
+  </div>
+  <!--Receipt Detail Popup-->
+  <ng-template #utilitymodal>
+    <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container"> 
+      {{modeltitle | translate}}
+      <button mat-icon-button (click)="dialogRef.close()">
+        <xpo-icon iconName="clear"></xpo-icon>
+      </button>
+    </h1>
+    <xpo-dialog-content>
+    <div class="modal-body">
+      <div class="form-group position-relative">
+        <div class="row mx-auto">
+          <div class="container-fluid p-0">
+            <rmgrid *ngIf="utilityTitle =='receiptdetails'" [(gridproperties)]="receivingService.ReceiptDetails"
+              (emitEditDetails)="editReceiptDetails($event)"></rmgrid>
+              <serialnumber-recover [tittle]="modeltitle" *ngIf="utilityTitle =='serialnumberrecover'"
+                [uiData]="uiData">
+            </serialnumber-recover>
+          </div>
+        </div>
+      </div>
+    </div>
+    </xpo-dialog-content>
+  </ng-template>
+</div>
+<!-- Receipt Edit  End                  -->
+<!--Receipt Delete Confirmation-->
+<ng-template #DeleteReceiptConfirmation>
+  <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container"> {{modeltitle |
+    translate}}
+    <button mat-icon-button (click)="dialogRef.close()">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h1>
+  <xpo-dialog-content>
+  <div class="modal-body m-body">
+    <span>
+      <i class="fas fa-question-circle ques-icon"></i>{{'RECEIVING.DELETECONFIRMRECEIPT' | translate}}
+    </span>
+    </div>
+  </xpo-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button type="button"  (click)="dialogRef.close()">Close</button>
+        <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="receiptClear()">
+        </rmbutton>
+  </mat-dialog-actions>
+</ng-template>
+
+<!--Receipt Delete Confirmation end *showItBootstrap="['xs']"-->
+<div *ngIf="false" class="pt-2" [ngClass]="{'error' :onErroralert, 'info' : onInfoalert}">
+
+  <div [ngClass]="!appErrService.alertFlag ? 'main-container-noalert' : 'main-container-onalert'"
+    class="main-container">
+    <div class="container">
+      <form [formGroup]="receivingform">
+        <!-- class="hideDesktop" -->
+        <section *showItBootstrap="['xs']">
+          <section>
+            <div class="row">
+              <ng-container *ngIf="!editSerialNumber">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12 mb-2">
+                  <!-- <rmlabel [for]="'serialNumber'" [label]="'Serial Number'" class="mb-0"></rmlabel> -->
+                  <div class="form-group">
+                    <rmtextbox [(ngModel)]="serialNumber" #inputSerial [class]="'form-control'"
+                      [disabled]="isSerNumDisable" [placeholder]="'RECEIVING.SERIALNUMBER' | translate"
+                      [id]="'serialNumber'" (onChangeVal)="changeInput(inputSerial)"
+                      (onControllerChange)="onControllerChange(inputSerial)" formControlName="SerialNum"
+                      (enter)="searchInputKey()" tabindex="1" [uiData]="uiData" [isSerialNumber]="true"
+                      [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div class="row" *ngIf="showauthorizationkey">
+              <div class=" col-lg-12 col-md-12 col-sm-12 col-12 mb-2" *ngIf="!editauthorizationkey">
+                <!-- <rmlabel [label]="'Authorization Key'"></rmlabel> -->
+                <div class="form-group">
+                  <rmtextbox [(ngModel)]="authorizationkey" #inputAuthorization [class]="'form-control'"
+                    [disabled]="isAuthorizationDisable" [placeholder]="'RECEIVING.AUTHORIZATIONKEY' | translate"
+                    [id]="'inputAuthorization'" (onChangeVal)="changeInput(inputAuthorization)"
+                    formControlName="authorization" (enter)="createReceipt($event)"
+                    (onControllerChange)="onControllerChange(inputAuthorization)"></rmtextbox>
+                </div>
+              </div>
+            </div>
+            <div class="row" *ngIf="showSku">
+              <div class="col-lg-12 col-md-12 col-sm-12  col-12 mb-3" *ngIf="!selectedSKUModel">
+                <rmtypeahead [(ngModel)]="selectedSKU" [typeaheadOptionField]="'Sku'" [skuDisabled]="skuDisabled"
+                  [typeaheadPattern]="controlConfig.SKuPattern" [errorMessage]="appService.getErrorText('2660078')"
+                  [class]="'form-control'" [id]="'skuInputid'" [skus]="skuList"
+                  [placeholder]="'RECEIVING.SKU' | translate" (inputEvent)="getEligibleSKUs($event)"
+                  [selectedSKUModel]="selectedSKUModel" [SKU]="SKU" formControlName="sku"
+                  (typeaheadResponse)="typeaheadResponse($event)"></rmtypeahead>
+              </div>
+            </div>
+            <div class="row" *ngIf="showSuggestedContainer">
+              <div class="cs-div-width">
+                <container-suggestion [csLabel]="' '" [id]="'containerInputId'"
+                  [isContainerDisabled]="isContainerDisabled" [isClearContainerDisabled]="isClearContainerDisabled"
+                  [placeholder]="controlConfig?.containerInputId | translate"
+                  (focusContainer)="getSuggestContainer($event)" (validateContainerValue)="validateContainer($event)"
+                  (getSuggestContainerResponse)="getSuggestContainerResponse($event)"
+                  (emitvalidateContainer)="validateContainerResponse($event)"
+                  (emitCheckContainer)="checkContainer($event)" (errorEmit)="errorEmit($event)" [uiData]="uiData">
+                </container-suggestion>
+              </div>
+              <div class="toggle-div-width">
+                <rmtoggle [label]="'RECEIVING.REPRINT'|translate" [togglelblClass]="'mt-1'" [id]="'ESNReprint'"
+                  [disabled]="ESNReprintDisabled" formControlName="ESNReprint" [(ngModel)]="ESNReprint"
+                  [toggleval]="ESNReprint" (onChangeVal)="changeESNReprint($event)"></rmtoggle>
+              </div>
+            </div>
+          </section>
+          <section>
+            <div class="mb-3 clearfix">
+              <rmbutton *ngIf="showAdd" [class]="'btn btn-round-black mr-1 float-right'" [id]="'addSerialNumber'"
+                [disabled]="isAddDisabled" [buttonname]="'COMMON.ADD'| translate" (onclick)="addSerialNumber()"
+                [iconstyle]="'fas fa-plus'"></rmbutton>
+              <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled"
+                [buttonname]="'COMMON.CLEAR' | translate" (onclick)="Clear()" [iconstyle]="'fas fa-times-circle'">
+              </rmbutton>
+            </div>
+          </section>
+          <section *ngIf="editSerialNumber" class="section-hilight mt-2">
+            <div class="row">
+              <ng-container *ngIf="editSerialNumber">
+                <div class="move-right">
+                  <rmlabel [lblStyle]="'pt-2'" [for]="'serialNumber'" [label]="'RECEIVING.SERIALNUMBER' | translate"
+                    class="mr-2"></rmlabel>
+                </div>
+                <div class="move-left">
+                  <rmmobilebadge [badgenumber]="serialNumber" [iconStyle]="'far fa-check-circle'"></rmmobilebadge>
+                </div>
+              </ng-container>
+            </div>
+            <div class="row mt-3" *ngIf="editauthorizationkey">
+              <div class="move-right">
+                <rmlabel [lblStyle]="'pt-2'" [label]="'RECEIVING.AUTHORIZATIONKEY' | translate" class="mr-2"></rmlabel>
+              </div>
+              <div class="move-left">
+                <rmmobilebadge [badgenumber]="authorizationkey" [iconStyle]="'far fa-check-circle'"></rmmobilebadge>
+              </div>
+            </div>
+            <div class="row mt-3" *ngIf="selectedSKUModel">
+              <div class="move-right">
+                <rmlabel [lblStyle]="'pt-2'" [label]="'RECEIVING.SKU' | translate" class="mr-2"></rmlabel>
+              </div>
+              <div class="move-left">
+                <rmmobilebadge [badgenumber]="selectedSKU" [iconStyle]="'far fa-check-circle'"></rmmobilebadge>
+              </div>
+            </div>
+            <div class="row mt-3" *ngIf="ESNReprint">
+              <div class="move-right">
+                <rmlabel [lblStyle]="'pt-2'" [label]="'RECEIVING.ESNREPRINT' | translate" class="mr-2"></rmlabel>
+              </div>
+              <div class="move-left">
+                <rmmobilebadge [badgenumber]="ESNReprint ? 'ON':'OFF'" [iconStyle]="'far fa-check-circle'">
+                </rmmobilebadge>
+              </div>
+            </div>
+          </section>
+
+        </section>
+      </form>
+
+    </div>
+  </div>
+  <button hidden id="stopProcessQueue"></button>

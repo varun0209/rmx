@@ -1,0 +1,44 @@
+﻿{
+  "comUrl":"http://ftw-dev-rmx.sc.xpo.com:8010/",
+  "utlUrl":"http://ftw-dev-rmx.sc.xpo.com:8015/",
+  "secUrl":"http://ftw-dev-rmx.sc.xpo.com:8020/",
+  "recUrl":"http://ftw-dev-rmx.sc.xpo.com:8025/",
+  "tstUrl":"http://ftw-dev-rmx.sc.xpo.com:8030/",
+  "wtUrl":"http://ftw-dev-rmx.sc.xpo.com:8035/",
+  "rmcUrl":"http://ftw-dev-rmx.sc.xpo.com:8887/",
+  "conUrl":"http://ftw-dev-rmx.sc.xpo.com:8017/",
+  "mntUrl":"http://ftw-dev-rmx.sc.xpo.com:8013/",
+  "asUrl":"http://tsgvm03371:8070/",
+  "env":"DEV",
+  "errorMsg":"7320011: Site configuration is missing in RMX",
+  "invalidUser":"Different user already loggedin.",
+  "sharedSecurity":{
+     "DataType":"WAREHOUSE",
+     "Application":"RMX"
+  },
+  "clients":[
+     {
+        "clientName":"VERIZON",
+        "siteIds":[
+           "DFW004",
+           "DFW005"
+        ]
+     },
+     {
+        "clientName":"WHIRLPOOL",
+        "siteIds":[
+           "MDW001",
+           "SEA002",
+           "DFW001",
+           "SJC001",
+           "MDT001",
+           "LAX001",
+           "EWR003",
+           "ATL002",
+           "MEM005",
+           "SLC001",
+           "MCO001"
+        ]
+     }
+  ]
+}

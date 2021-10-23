@@ -1,0 +1,294 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'audit-container-noalert' : 'audit-container-onalert'"
+  class="container-fluid padding-bottom">
+  <fieldset class="rm-card mt-2">
+    <tabset #staticTabs>
+      <!--Audit Check Setup-->
+      <tab heading="{{'AUDITSETUP.CHECKSETUP' | translate}}" id="auditCheckSetup">
+        <div class="tab-pane">
+          <div class="container-fluid">
+            <form>
+              <fieldset ngModelGroup="auditCheckSetup" #auditCheckControls="ngModelGroup">
+                <div class="row mt-3 mb-4">
+                  <div class="col-md-3 col-sm-12 pl-2">
+                    <rmlabel [label]="'AUDITSETUP.CHECKCODE' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.checkCode?.Required"></rmlabel>
+                    <rmtextbox [(ngModel)]="auditCheck.CheckCode" #checkcodeInput [divClass]="'input-group'"
+                      [hideSearchIcon]='true' [id]="'checkCode'" [placeholder]="''"
+                      (onChangeVal)="changeAuditCheckInput()" [textBoxPattern]="textBoxPattern"
+                      (searchEventEmit)="searchAuditCheck()" [isAllowEmptyValue]="true"
+                      (enter)="searchAuditCheck()"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.checkCode?.Required"
+                      [name]="'checkCode'" [maxlength]="appConfig.audit.checkCodeTextboxLength"></rmtextbox>
+                  </div>
+                  <div class="col-md-3 col-sm-12 auditdesc-mobilebpd">
+                    <rmlabel [label]="'AUDITSETUP.DESCRIPTION' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.auditCheckDescription?.Required">
+                    </rmlabel>
+                    <div class="mb-2">
+                      <rmtextarea [rows]="1" [id]="'description'" [name]="'description'"
+                        (onChangeVal)="changeAuditCheckDescription()" [(ngModel)]="auditCheck.CheckDesc"
+                        [placeholder]="''"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.auditCheckDescription?.Required">
+                      </rmtextarea>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-sm-12">
+                    <div class="form-inline">
+                      <div>
+                        <rmtoggle [label]="'AUDITSETUP.ACTIVE' | translate"
+                          [togglelblClassLabel]="'pr-5 pl-1 pt-2 pb-2'" [togglelblClass]="''" class="my-1 ml-0"
+                          [id]="'checkPointPrint'" (onChangeVal)="onAuditCheckToggleChange($event)"
+                          name="'checkPointPrint'" [toggleval]="auditCheck.Active == 'Y'? true:false"></rmtoggle>
+                      </div>
+                      <div>
+                        <rmtoggle [label]="'AUDITSETUP.PASS' | translate" [togglelblClassLabel]="'pt-2 pb-2 pr-3'"
+                          [togglelblClass]="''" class="my-1 ml-0" [id]="'isPassToggle'"
+                          (onChangeVal)="onAuditCheckisPassToggleChange($event)" name="'isPassToggle'"
+                          [toggleval]="auditCheck.IsPass_YN == 'Y'? true:false"></rmtoggle>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="col-md-3 mb-2 col-sm-12 pl-1 pr-1">
+                    <div class="float-right">
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Save'"
+                        [disabled]="!auditCheckControls.valid" [buttonname]="'COMMON.SAVE'| translate"
+                        (onclick)="saveAuditCheck()" [iconstyle]="'far fa-save'"></rmbutton>
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'auditCheckClear'"
+                        [disabled]="isAuditCheckClearDisabled" [buttonname]="'COMMON.CLEAR'| translate"
+                        (onclick)="clearAuditCheck()" [iconstyle]="'far fa-times-circle'"></rmbutton>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 pr-0 pl-0">
+                    <div class="card-body pt-0 pb-0">
+                      <div class="row">
+                        <div class="col-12 pl-1 pr-1" *ngIf="auditList">
+                          <rmgrid [(gridproperties)]="auditList" (emitEditDetails)="editAuditDetailRow($event)"
+                            [isCancelIconShow]="false"></rmgrid>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </fieldset>
+            </form>
+
+
+          </div>
+        </div>
+      </tab>
+      <!--Audit Check Setup End-->
+      <!-- Audit Points Setup -->
+      <tab heading="{{'AUDITSETUP.AUDITPOINTS' | translate}}" id="auditPointSetup" active="true">
+        <div class="tab-pane">
+          <div class="container-fluid px-0">
+            <form>
+              <fieldset ngModelGroup="auditPointsSetup" #auditPointsControls="ngModelGroup">
+                <div class="row">
+                  <div class="col-md-12 mb-2 col-sm-12 pr-1 mt-1 mr-1 ">
+                    <div class="float-right">
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Save'" [disabled]="isSaveDisabled"
+                        (onclick)="saveAuditCheckPoint()" [buttonname]="'COMMON.SAVE'| translate"
+                        [iconstyle]="'far fa-save'"></rmbutton>
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'auditPointClear'"
+                        [disabled]="isAuditPointClearDisabled" (onclick)="clearAuditPoints()"
+                        [buttonname]="'COMMON.CLEAR'| translate" [iconstyle]="'far fa-times-circle'"></rmbutton>
+                      <rmbutton [class]="'btn btn-round-black'" [id]="'auditPointReset'"
+                        [disabled]="isResetAuditPointDisabled" (onclick)="resetAuditPoints()"
+                        [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'"></rmbutton>
+                    </div>
+                  </div>
+                </div>
+                <div class="row ">
+                  <div class="col-md-3 col-sm-12 pl-2 ">
+                    <div class="form-group">
+                      <rmlabel [label]="'AUDITSETUP.AUDITCODE' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.auditCode?.Required"></rmlabel>
+                      <rmlock [lockMode]="lockMode" [isShowRmLock]="isShowRmLock"
+                        [isInputValueExist]="auditPoint.AuditCode? true: false" (onModeChange)="toggleControl($event)">
+                      </rmlock>
+                      <rmtextbox [(ngModel)]="auditPoint.AuditCode" name="auditPoint" #auditpoint [id]="'auditPoint'"
+                        [placeholder]="''" [isAllowEmptyValue]="true" [divClass]="'input-group'" [hideSearchIcon]='true'
+                        (onChangeVal)="changeAuditPointsInput()" [searchIconBtnDisabled]="isDisabledSearchIcon"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.auditCode?.Required"
+                        (searchEventEmit)="searchAuditPoints()" (enter)="searchAuditPoints()"
+                        [textBoxPattern]="textBoxPattern" [disabled]="isAuditPointCodeDisabled"
+                        [maxlength]="appConfig.audit.auditPointTextboxLength">
+                      </rmtextbox>
+                    </div>
+                  </div>
+                  <div class="col-md-3 col-sm-12 auditdesc-mobilebpd">
+                    <div class="form-group">
+                      <rmlabel [label]="'AUDITSETUP.DESCRIPTION' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.auditPointDescription?.Required">
+                      </rmlabel>
+                      <div class="mb-2">
+                        <rmtextarea [rows]="1" [id]="'Description'" [name]="'Description'"
+                          (onChangeVal)="changeAuditPointDescription()" [(ngModel)]="auditPoint.AuditDescription"
+                          [placeholder]="''"
+                          [requiredIf]="masterPageService.hideControls.controlProperties?.auditPointDescription?.Required"
+                          [disabled]="isAuditPointDescDisabled">
+                        </rmtextarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-sm-12 mt-1">
+                    <div class="form-inline">
+                      <div class="checkstoggle-mb-ipad">
+                        <rmtoggle [label]="'AUDITSETUP.ACTIVE' | translate" [togglelblClassLabel]="'pr-5 pb-2'"
+                          [togglelblClass]="''" [id]="'auditPointActive'" name="auditPointActive"
+                          [(ngModel)]="auditPoint.Active_YN" (onChangeVal)="onAuditActiveChange($event)"
+                          [toggleval]="auditPoint.Active_YN == 'Y'? true:false" [disabled]="isAuditPointtoggleActive">
+                        </rmtoggle>
+                      </div>
+                      <div class="checkstoggle-mb-ipad">
+                        <rmtoggle [label]="'AUDITSETUP.ALLOWDUPRESULTS' | translate" [togglelblClassLabel]="'pr-4 pb-2'"
+                          [togglelblClass]="''" [id]="'allowDupResults'" name="allowDupResults"
+                          [(ngModel)]="auditPoint.AllowDupResults_YN"
+                          [toggleval]="auditPoint.AllowDupResults_YN == 'Y'? true:false"
+                          (onChangeVal)="onAuditAllowDupResultsChange($event)"
+                          [disabled]="isAuditPointtoggleAllowDupResults"></rmtoggle>
+                      </div>
+                      <div class="checkstoggle-mb-ipad">
+                        <rmtoggle [label]="'AUDITSETUP.REFSERIAL' | translate" [togglelblClassLabel]="'pr-5 pb-2'"
+                          [togglelblClass]="''" [id]="'auditREFSerial'" name="auditREFSerial"
+                          [(ngModel)]="auditPoint.ReferSerialNo_YN"
+                          [toggleval]="auditPoint.ReferSerialNo_YN == 'Y'? true:false"
+                          (onChangeVal)="onAuditReferSerialNoChange($event)" [disabled]="isAuditPointtoggleRefserail">
+                        </rmtoggle>
+                      </div>
+                      <div class="checkstoggle-mb-ipad">
+                        <rmtoggle [label]="'AUDITSETUP.ALLOWUPDRESULTS' | translate" [togglelblClassLabel]="'pr-5 pb-2'"
+                          [togglelblClass]="''" [id]="'allowUpdResults'" name="allowDupResultsPrint"
+                          [(ngModel)]="auditPoint.AllowUpdResults_YN"
+                          [toggleval]="auditPoint.AllowUpdResults_YN == 'Y'? true:false"
+                          (onChangeVal)="onAuditAllowUpdResultsChange($event)"
+                          [disabled]="isAuditPointtoggleAllowUupResults"></rmtoggle>
+                      </div>
+
+                    </div>
+                  </div>
+
+
+                </div>
+                <div class="row margin-unset">
+                  <div class="col-12 p-2 mt-0 ml-2 mr-2">
+                    <fieldset class="audit-fieldset m-0">
+                      <legend class="audit-legend">{{'AUDITSETUP.CHECKS' | translate}}</legend>
+                      <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                          <div class="float-right margin-add">
+                            <rmbutton [class]="'btn btn-round-black add-btn-padding '" [id]="'Add'"
+                              [disabled]="!(auditPointsControls.valid) || validateRegularExpressionFlag"
+                              (onclick)="addAuditPointCheck()" [buttonname]="'COMMON.ADD' | translate"
+                              [iconstyle]="'fas fa-plus'"></rmbutton>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-md-2 col-sm-12">
+                          <div class="form-group">
+                            <rmlabel [label]="'AUDITSETUP.CHECKS' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.auditCheck?.Required">
+                            </rmlabel>
+                            <rmdropdown [name]="'activechecks'" [id]="'activechecks'" #checksdropdown
+                              [class]="'form-control'" [(ngModel)]="auditPointChecks.Check_Id"
+                              (onChangeVal)="onCheckChange($event)" [disabled]="isChecksDisabled"
+                              [dpOptions]="auditActiveCheckList" [value]="auditPointChecks.Check_Id"
+                              [requiredIf]="masterPageService.hideControls.controlProperties?.auditCheck?.Required">
+                            </rmdropdown>
+                          </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                          <div class="form-group">
+                            <rmlabel [label]="'AUDITSETUP.DETAILTYPE' | translate"
+                              [isAsterisk]="masterPageService.hideControls.controlProperties?.detailType?.Required">
+                            </rmlabel>
+                            <rmdropdown [name]="'detailType'" [id]="'detailType'" #detailtypedropdown
+                              [class]="'form-control'" [(ngModel)]="auditPointChecks.DetailType"
+                              (onChangeVal)="changeAuditPointDetailtype($event)" [disabled]="isAuditDetailTypeDisabled"
+                              [dpOptions]="auditDetailTypeList" [value]="auditPointChecks.DetailType"
+                              [requiredIf]="true"></rmdropdown>
+                          </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12">
+                          <div class="form-group">
+                            <rmlabel [label]="'AUDITSETUP.DETAILREQUIRED' | translate"></rmlabel>
+                            <rmtextarea [rows]="1" [widthInput]="'setWidth-Textarea float-left'"
+                              [name]="'auditPointDetailRequired'" [id]="'auditPointDetailRequired'" #detailsRequired
+                              [(ngModel)]="auditPointChecks.DetailRequired"
+                              [disabled]="isAuditDetailRequiredDisabled" (onChangeVal)="checkValidateBtn($event)"
+                              [placeholder]="''">
+                            </rmtextarea>
+                            <rmbutton [class]="'btn btn-outline-secondary float-right'" [id]="'validate'"
+                              [disabled]="isValidateDisabled" [buttonname]="''" [iconstyle]="'fas fa-check'"
+                              (onclick)="validateRegularExpression()"></rmbutton>
+
+
+                          </div>
+                        </div>
+                        <div class="col-auto">
+                          <!--  [numberPattern]="'/^(100|[1-9][0-9]?)$/g'" -->
+                          <rmlabel [label]="'AUDITSETUP.POSITION' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.auditPosition?.Required">
+                          </rmlabel>
+                          <input type="number" [id]="'position'" [name]="'position'"
+                            [(ngModel)]="auditPointChecks.Position" (input)="auditPointPostionChange()"
+                            [name]="'position'" [class]="'form-control setpositionewidth'"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.auditPosition?.Required"
+                            min="1" max="100">
+
+                        </div>
+
+                        <div class="col-md-3 col-sm-12  mt-1">
+                          <div class="form-inline">
+                            <div class="checkstoggle-pd">
+                              <rmtoggle [label]="'AUDITSETUP.DEFAULT' | translate" [togglelblClassLabel]="'pr-5 pb-2'"
+                                [togglelblClass]="''" [id]="'defaultAuditPoint'" name="defaultAuditPoint"
+                                [(ngModel)]="auditPointChecks.Default_YN"
+                                [toggleval]="auditPointChecks.Default_YN == 'Y'? true:false"
+                                (onChangeVal)="changeDefaultAuditPoint($event)"></rmtoggle>
+                            </div>
+                            <div class="checkstoggle-pd">
+                              <rmtoggle [label]="'AUDITSETUP.MULTICHECKELIGIBLE' | translate"
+                                [togglelblClassLabel]="'pr-2 pb-2'" [togglelblClass]="''" [id]="'multiChkElgbl_YN'"
+                                name="multiChkElgbl_YN" [(ngModel)]="auditPointChecks.MultiChkElgbl_YN"
+                                [toggleval]="auditPointChecks.MultiChkElgbl_YN == 'Y'? true:false"
+                                (onChangeVal)="changeAuditPointMultiChkEligible($event)"></rmtoggle>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </fieldset>
+                  </div>
+
+
+                </div>
+                <div class="row">
+                  <div class="col-12 pl-0 pr-0">
+                    <div class="card-body pb-0">
+                      <div class="row ">
+                        <div class="col-12 p-1" *ngIf="auditPointList">
+                          <rmgrid [(gridproperties)]="auditPointList"
+                            (emitEditDetails)="editAuditPointsDetailRow($event)"
+                            (emitChildEditDetails)="emitChildAuditPointsEditDetails($event)" [isCancelIconShow]="false">
+                          </rmgrid>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </tab>
+      <!-- Audit Points Setup End -->
+    </tabset>
+  </fieldset>
+
+</div>

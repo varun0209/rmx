@@ -1,0 +1,130 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+
+      <div [ngClass]="lableReprintList ? 'border p-2 mb-3': ''">
+
+          <div class="d-flex justify-content-between">
+              <div class="p-1">
+                  <h1 *ngIf="lableReprintList"> {{ 'LABELREPRINT.LISTOFDOC' | translate }} </h1>
+              </div>
+              <div>
+                  <rmbutton [class]="'btn btn-round-black'" [id]="'refreshList'"
+                            [buttonname]="'LABELREPRINT.REFRESHLIST' | translate" [iconstyle]="'fas fa-refresh'"
+                            (click)="getAdhocDocumnet(); reset();"></rmbutton>
+              </div>
+          </div>
+
+          <div *ngIf="lableReprintList" class="mt-2">
+              <rmgrid [(gridproperties)]="lableReprintList" (emitEditDetails)="editLableReprintDetailRow($event)"></rmgrid>
+          </div>
+
+      </div>
+
+      <div class="mb-2" *ngIf="isShowProperty">
+
+          <div class="row mb-2">
+              <div class="col-md-4">
+                  <fieldset class="lableReprint-fieldset m-0">
+                      <legend class="lableReprint-legend">{{'LABELREPRINT.PARAMETERS' | translate}}</legend>
+                      <form>
+                          <div ngModelGroup="lableReprintForm" #lableReprintControls="ngModelGroup" class="row scrollbar">
+                              <div class="mb-2 col-md-12" *ngFor="let prop of parametersReprintList; let i = index;">
+                                  <rmlabel [label]="prop.ParamterName" [isAsterisk]="true"></rmlabel>
+                                  <rmtextbox *ngIf="prop.ControlType == 'TEXTBOX'" [id]="prop.ParamterName" [class]="'form-control'"
+                                             [name]="prop.ParamterName" class="w-100" [placeholder]="''" [requiredIf]="true"
+                                             [(ngModel)]="prop.DefaultValue" (enter)="printDocument(!lableReprintControls.valid || !labelReprintCtrls.valid);" (onChangeVal)="changeInput(prop.DefaultValue, i); enableReset();">
+                                  </rmtextbox>
+                                  <rmdropdown [id]="prop.ParamterName" [class]="'form-control'" [name]="prop.ParamterName" class="w-100"
+                                              #deviceDropdown *ngIf="prop.ControlType == 'DROPDOWN'" [requiredIf]="true"
+                                              [(ngModel)]="prop.DefaultValue" [dpOptions]="prop.LookupQeryValues" [value]="prop.DefaultValue"
+                                              (onChangeVal)="changeInput(deviceDropdown.value, i); enableReset(); printDocument(!lableReprintControls.valid || !labelReprintCtrls.valid);"></rmdropdown>
+                              </div>
+                          </div>
+                      </form>
+                  </fieldset>
+              </div>
+
+              <div class="col-md-8">
+                  <fieldset class="lableReprint-fieldset">
+                      <legend class="lableReprint-legend">{{'LABELREPRINT.DOCINFO' | translate}}</legend>
+                      <form #reprintForm="ngForm">
+                          <div ngModelGroup="lableReprintConfig" #labelReprintCtrls="ngModelGroup">
+                              <div class="row mb-2">
+
+                                  <div class="col-md-6 mb-2">
+                                      <rmlabel [label]="'LABELREPRINT.DOCNAME' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.docName?.Required"></rmlabel>
+                                      <rmtextbox [(ngModel)]="lableReprintConfig.Label" name="docName" [class]="'form-control'"
+                                                 [disabled]="true" [requiredIf]="masterPageService.hideControls.controlProperties?.docName?.Required" [id]="'docName'" [isAllowEmptyValue]="true"
+                                                 [placeholder]="''" [divClass]="'input-group'"  (onChangeVal)="enableReset();">
+                                      </rmtextbox>
+                                  </div>
+
+                                  <div class="col-md-6 mb-2">
+                                      <rmlabel [label]="'LABELREPRINT.DOCKFORMAT' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.docFormat?.Required">
+                                      </rmlabel>
+                                      <rmtextbox [(ngModel)]="lableReprintConfig.DockFormat" name="dockFormat" [id]="'dockFormat'"
+                                                 [class]="'form-control'" [disabled]="true" [requiredIf]="masterPageService.hideControls.controlProperties?.docFormat?.Required" [isAllowEmptyValue]="true"
+                                                 [placeholder]="''" [divClass]="'input-group'"  (onChangeVal)="enableReset();">
+                                      </rmtextbox>
+                                  </div>
+
+                                  <div class="col-md-6 mb-2">
+                                      <rmlabel [label]="'LABELREPRINT.PRINTERTYPE' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.printerType?.Required">
+                                      </rmlabel>
+                                      <rmtextbox [(ngModel)]="lableReprintConfig.PrinterType" name="printerType" [id]="'printerType'"
+                                                 [class]="'form-control'" [disabled]="true" [requiredIf]="masterPageService.hideControls.controlProperties?.printerType?.Required" [isAllowEmptyValue]="true"
+                                                 [placeholder]="''" [divClass]="'input-group'"  (onChangeVal)="enableReset();">
+                                      </rmtextbox>
+                                  </div>
+
+                                  <div class="col-md-6 mb-2">
+                                      <rmlabel [label]="'LABELREPRINT.PRINTERNAME' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.printerName?.Required">
+                                      </rmlabel>
+                                      <rmdropdown [id]="'printerName'" name="'printerName'" [class]="'form-control'"
+                                                  (onChangeVal)="onPrinterNameChange($event); enableReset();" [(ngModel)]="lableReprintConfig.PrinterName"
+                                                  [dpOptions]="printNameOptions" [value]="lableReprintConfig.PrinterName" [requiredIf]="masterPageService.hideControls.controlProperties?.printerName?.Required">
+                                      </rmdropdown>
+                                  </div>
+                                  <div class="col-md-12 mb-2">
+                                    <rmlabel [label]="'LABELREPRINT.NOTES' | translate">
+                                    </rmlabel>
+                                    <rmtextarea [(ngModel)]="lableReprintConfig.Notes" [rows]="1" (onChangeVal)="enableReset();"
+                                      [placeholder]="''" [id]="'notes'" name="notes"></rmtextarea>
+                                </div>
+                              </div>
+
+                          </div>
+                      </form>
+                  </fieldset>
+              </div>
+
+          </div>
+
+
+          <div class="d-flex justify-content-between mb-2">
+              <div>
+                  <rmbutton [class]="'btn btn-round-black mr-1'" [disabled]="isResetDisabled" [id]="'reset'"
+                            [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'" (click)="reset()"></rmbutton>
+              </div>
+              <div>
+                  <rmbutton *ngIf="masterPageService.hideControls.controlProperties.showPreviewImage?.show" [class]="'btn btn-round-black mr-1'" [id]="'preview'" [buttonname]="'COMMON.PREVIEW' | translate"
+              [disabled]="isPreviewDisabled" [iconstyle]="'fas fa-preview'" (click)="getReportImage()">
+                </rmbutton>
+                  <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'print'" [buttonname]="'COMMON.PRINT' | translate"
+                            [disabled]="(!lableReprintControls.valid || !labelReprintCtrls.valid)" [iconstyle]="'fas fa-print'" (click)="printDocument(!lableReprintControls.valid || !labelReprintCtrls.valid);"></rmbutton>
+              </div>
+          </div>
+
+      </div>
+
+  </div>
+
+
+</div>
+
+
+<ng-template #base64Img>
+  <div *ngIf="imageUrl">
+      <img [src]="transform()" alt="print" />
+  </div>
+</ng-template>

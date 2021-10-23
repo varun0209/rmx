@@ -1,0 +1,3 @@
+﻿<textarea #inputtext class="form-control" [id]="id" [name]="name" [rows]="rows" [maxlength]="maxlength" [ngClass]='widthInput'
+  [placeholder]="placeholder" [disabled]="disabled" (input)="inputChange()" [(ngModel)]="value" (keydown.enter)="onEnter($event)" 
+   (paste)="inputChange()"></textarea>

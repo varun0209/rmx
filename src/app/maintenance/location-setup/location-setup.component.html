@@ -1,0 +1,218 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+      <form #configurationForm="ngForm">
+          <div ngModelGroup="locationSetupConfig" #locationCtrls="ngModelGroup">
+
+                <div class="mb-3 d-flex justify-content-end">
+
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Clear'"
+                        [buttonname]="'COMMON.CLEAR'| translate" [iconstyle]="'far fa-times-circle'"
+                        [disabled]="isClearBtnDisabled" (click)="clearLocationInfo()">
+                    </rmbutton>
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'" *ngIf="locationCtrls"
+                        [disabled]="!(locationCtrls.valid)" (onclick)="addOrUpdateLocationInfo()"
+                        [buttonname]="locationBtnName"
+                        [iconstyle]="locationBtnName == commonEnum.add ?'fas fa-plus':'far fa-save'">
+                    </rmbutton>
+
+                </div>
+
+
+                <div class="row">
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.LOC' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.loc?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.LOC" [name]="'location'" [class]="'form-control'"
+                            [disabled]="isLocDisabled" (enter)="getLocation()"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.loc?.Required"
+                            [id]="'location'"  [isAllowEmptyValue]="true" (onChangeVal)="changeInput()"
+                            [placeholder]="''" [divClass]="'input-group'" [hideSearchIcon]="true"
+                            [searchIconBtnDisabled]="isLocSearchBtnDisabled"
+                            (searchEventEmit)="getLocation(); changeInput();">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.PARENT' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.parentLoc?.Required"></rmlabel>
+
+                        <app-dyn-typeahead [id]="'parent'" name="parent"  [configData]="configData" [label]="'Text'" [value]="'Id'" [placeholder]="''"
+                        [bufferSize]="appConfig.location.bufferSize" [selectedTypeahead]="locationSetupConfig.PARENT" [bufferDataToDisplay]="appConfig.location.bufferDataToDisplay" 
+                        (emitTypeAheadValue)="typeaheadResponse($event)" [editTypeAhead]="editTypeAhead" [clearTypeAhead]="clearTypeAhead"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.parentLoc?.Required"
+                        ></app-dyn-typeahead>
+
+                    </div>
+
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.DEPT' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.dept?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.DEPT"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.dept?.Required"
+                            [name]="'dept'" [class]="'form-control'" [id]="'dept'" (onChangeVal)="changeInput()"
+                            [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.LANE' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.lane?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.LANE" [name]="'lane'" [class]="'form-control'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.lane?.Required"
+                            [id]="'lane'" (onChangeVal)="changeInput()" [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.BAY' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.bay?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.BAY" [name]="'bay'" [class]="'form-control'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.bay?.Required"
+                            [id]="'bay'" (onChangeVal)="changeInput()" [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.LOC_LEVEL' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.locLevel?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.LOC_LEVEL" [name]="'locLevel'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.locLevel?.Required"
+                            [class]="'form-control'" [id]="'locLevel'" (onChangeVal)="changeInput()" [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.POSITION' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.position?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.POSITION" [name]="'position'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.position?.Required"
+                            [class]="'form-control'" [id]="'position'" (onChangeVal)="changeInput()" [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.LOCATIONTYPE' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.locationType?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.LOCATIONTYPE" [name]="'locationType'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.locationType?.Required"
+                            [class]="'form-control'" [id]="'locationType'" (onChangeVal)="changeInput()"
+                            [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.LOCZONE' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.locZone?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.LOCZONE" [name]="'locZone'" [class]="'form-control'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.locZone?.Required"
+                            [id]="'locZone'" (onChangeVal)="changeInput()" [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.WORK_CENTER_CD' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.workCenterCD?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.WORK_CENTER_CD" [name]="'workCenterCD'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.workCenterCD?.Required"
+                            [class]="'form-control'" [id]="'workCenterCD'" (onChangeVal)="changeInput()"
+                            [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.FQA_LOC' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.FQALoc?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.FQA_LOC" [name]="'FQALoc'" [class]="'form-control'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.FQALoc?.Required"
+                            [id]="'FQALoc'" (onChangeVal)="changeInput()" [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.FQA_SITE' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.FQASite?.Required"></rmlabel>
+                        <rmtextbox [(ngModel)]="locationSetupConfig.FQA_SITE" [name]="'FQASite'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.FQASite?.Required"
+                            [class]="'form-control'" [id]="'FQASite'" (onChangeVal)="changeInput()" [placeholder]="''">
+                        </rmtextbox>
+
+                    </div>
+                    <div class="col mb-3 form-group">
+  
+                        <rmlabel [label]="'LOCATIONSETUP.SECTIONKEY' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.sectionKey?.Required"></rmlabel>
+                        <rmdropdown [name]="'SectionKey'" [id]="'SectionKey'" [class]="'form-control'" #sectionKey
+                        [(ngModel)]="locationSetupConfig.SECTIONKEY" (onChangeVal)="onSectionKeySelect(sectionKey.value); changeInput();"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.sectionKey?.Required"
+                        [dpOptions]="sectionKeyOptions" [value]="locationSetupConfig.SECTIONKEY"></rmdropdown>
+  
+                    </div>
+                    <div class="col mb-3 form-group">
+
+                      <rmlabel [label]="'LOCATIONSETUP.INV_ACCOUNT' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.INVAccount?.Required"></rmlabel>
+                      <rmdropdown [name]="'INVAccount'" [id]="'INVAccount'" [class]="'form-control'"  #INVAccount
+                      [(ngModel)]="locationSetupConfig.INV_ACCOUNT" (onChangeVal)="onINVAcoountSelect(INVAccount.value); changeInput();"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.INVAccount?.Required"
+                      [dpOptions]="INVAccountOptions" [value]="locationSetupConfig.INV_ACCOUNT" ></rmdropdown>
+
+                    </div>
+
+                    <div class="col mb-3 form-group">
+
+                        <rmlabel [label]="'LOCATIONSETUP.MOVE_TRACKING_REASON' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.moveTrackingReason?.Required">
+                        </rmlabel>
+                        <rmmultiselect [name]="'moveTrackingReason'" class="w-100" [id]="'moveTrackingReason'" 
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.moveTrackingReason?.Required"
+                            [placeHolder]="''" [data]="moveTrackingReasonOptions" [dropdownSettings]="dropdownSettings"
+                            [selectedItems]="moveTrackingReason" (onSelectedItem)="onSelectMoveTracReason($event)"
+                            (onDeSelectItem)="onDeSelectMoveTracReason()">
+                        </rmmultiselect>
+
+                    </div>
+
+
+                </div>
+
+                <div class="row">
+                    <div class="col mb-3 form-group">
+                        <rmtoggle class="mr-3" name="active" [label]="'COMMON.ACTIVE'| translate"
+                            [togglelblClass]="'mt-0'" [id]="'active'"
+                            [toggleval]="locationSetupConfig.ACTIVE == 'Y'? true:false"
+                            (onChangeVal)="onActiveChange($event)">
+                        </rmtoggle>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-3 form-group" *ngIf="locationList">
+                        <rmgrid [(gridproperties)]="locationList" [isCancelIconShow]="false"
+                            (emitEditDetails)="editLocationRow($event)"></rmgrid>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

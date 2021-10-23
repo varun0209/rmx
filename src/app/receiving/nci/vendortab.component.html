@@ -1,0 +1,90 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="form-row mt-2">
+        <div class="col">
+          <div class="form-group">
+            <rmlabel
+              [label]="'NCIR.VENDORNAME' | translate"
+              [isAsterisk]="
+                masterPageService.hideControls.controlProperties?.vendor
+                  ?.Required
+              "
+            ></rmlabel>
+            <rmdropdown
+              name="Vendor"
+              [id]="'Vendor'"
+              [class]="'form-control'"
+              [disabled]="isVendorDisabled"
+              [(ngModel)]="NciInfo.VendorName"
+              [value]="NciInfo.VendorId"
+              (onChangeVal)="changeVendor($event)"
+              [dpOptions]="vendorList"
+              [requiredIf]="
+                masterPageService.hideControls.controlProperties?.vendor
+                  ?.Required
+              "
+            ></rmdropdown>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <rmlabel
+              [label]="'NCIR.CARRIER' | translate"
+              [isAsterisk]="
+                masterPageService.hideControls.controlProperties?.carrier
+                  ?.Required
+              "
+            ></rmlabel>
+            <ng-multiselect-dropdown
+              name="Carrier"
+              [placeholder]="''"
+              [settings]="carrierSettings"
+              [data]="carrierOptions"
+              [(ngModel)]="carrierSelectedItem"
+              (onSelect)="changeCarrierType($event)"
+              [disabled]="carrierDisabled"
+              (onDeSelect)="carrierDeselect()"
+              [requiredIf]="
+                masterPageService.hideControls.controlProperties?.carrier
+                  ?.Required
+              "
+            >
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <rmlabel
+              [label]="'NCIR.CARRIERREFERENCE' | translate"
+              [isAsterisk]="
+                masterPageService.hideControls.controlProperties
+                  ?.carrierReference?.Required
+              "
+            >
+            </rmlabel>
+            <rmtextbox
+              [(ngModel)]="NciInfo.CarrierReference"
+              name="CarrierReference"
+              [class]="'form-control'"
+              #carrierRefInput
+              [disabled]="isCarrierRefDisabled"
+              [id]="'CarrierReference'"
+              [placeholder]="''"
+              [hideSearchIcon]="true"
+              [searchIconBtnDisabled]="isCarrierRefDisabled"
+              [divClass]="'input-group'"
+              (enter)="getCarrierByRef()"
+              (searchEventEmit)="getCarrierByRef()"
+              [requiredIf]="
+                masterPageService.hideControls.controlProperties
+                  ?.carrierReference?.Required
+              "
+            >
+            </rmtextbox>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

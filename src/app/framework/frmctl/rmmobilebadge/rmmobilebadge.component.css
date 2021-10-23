@@ -1,0 +1,36 @@
+.m-badge{
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgb(218, 220, 224);
+    border-radius: 16px;
+    box-sizing: border-box;
+    color: rgb(95, 99, 104);
+    display: inline-block;      
+    line-height: 23px;
+    margin-bottom: 0;
+    max-width: 505px;
+    overflow: hidden;
+    padding: 0 16px;
+    pointer-events: all;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-shadow: 2px 2px 1px rgb(8, 104, 172);
+    font-weight: bold;
+    vertical-align: middle;
+    }
+.icon-position{
+    border-radius: 50%;    
+    margin: 0 8px 0 -12px;
+    object-fit: cover;
+    width: 24px;    
+}
+
+.fa-check-circle{
+    color:rgb(8, 104, 172);
+    font-weight: bold;/*  */
+}
+
+.grow:hover{
+        -webkit-transform: scale(1.1);
+        -ms-transform: scale(1.1);
+        transform: scale(1.1);
+}

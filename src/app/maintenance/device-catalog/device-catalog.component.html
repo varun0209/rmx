@@ -1,0 +1,175 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="container-fluid padding-bottom">
+  <div class="row">
+    <div class="col-md-12 mb-2 col-sm-12">
+      <div class="float-right">
+        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'search'" [buttonname]="'COMMON.SEARCH' | translate"
+          [iconstyle]="'fas fa-search'" (onclick)="getDeviceCatalogRecords()"></rmbutton>
+        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'" [buttonname]="'COMMON.RESET' | translate"
+          [iconstyle]="'fas fa-redo'" (onclick)="clearForm(); clearGrid()">
+        </rmbutton>
+        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'" [buttonname]="btnName"
+          [iconstyle]="btnName == commonEnum.add ? 'fas fa-plus':'far fa-save'"
+          [disabled]="!(deviceCatalogForm.valid && isResultantSKUSelected && isActualSKUSelected)"
+          (onclick)="saveandUpdateDeviceCatalog()">
+        </rmbutton>
+      </div>
+    </div>
+  </div>
+  <form #deviceCatalogForm="ngForm">
+    <div class="form-row">
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.ITEMID' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.itemId?.Required"></rmlabel>
+        <rmtextbox [name]="'itemID'" [disabled]="isItemIdDisabled" [id]="'itemID'"
+          [maxlength]="appConfig?.deviceCatalog?.itemIDTextLength"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.itemId?.Required"
+          [textBoxPattern]="itemIDPattern" [placeholder]="''" [divClass]="'input-group'"
+          [(ngModel)]="deviceCatalog.ITEM_ID" (onChangeVal)="changeInput()">
+        </rmtextbox>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.CARRIERCODE' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.carrierCode?.Required"></rmlabel>
+        <rmdropdown [name]="'carrierCode'" [id]="'carrierCode'" #carrierCodeDropDown [class]="'form-control'"
+          [dpOptions]="carrierCodeList" [disabled]="iscarrierCodeDisabled" [(ngModel)]="deviceCatalog.CARRIER_CODE"
+          [value]="deviceCatalog.CARRIER_CODE" (onChangeVal)="changecarrierCode($event)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.carrierCode?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.OEM' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.oem?.Required"></rmlabel>
+        <rmdropdown [name]="'oem'" [id]="'oem'" [class]="'form-control'" [dpOptions]="oemList"
+          [disabled]="isoemCodeDisabled" [(ngModel)]="deviceCatalog.OEM_CD" [value]="deviceCatalog.OEM_CD"
+          (onChangeVal)="changeOEMCode($event)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.oem?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.MODEL' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.model?.Required">
+        </rmlabel>
+        <rmtextbox [name]="'model'" [disabled]="isModelDisabled" [textBoxPattern]="deviceCatalogModelPattern"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.model?.Required" [id]="'model'"
+          [placeholder]="''" [divClass]="'input-group'" [maxlength]="appConfig?.deviceCatalog?.modelTextLength"
+          [(ngModel)]="deviceCatalog.MODEL" (onChangeVal)="changeInput()">
+        </rmtextbox>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.ITEMDESCRIPTION' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.itemDescription?.Required">
+        </rmlabel>
+        <rmtextbox [name]="'itemDescription'" [disabled]="isModelDisabled" [maxlength]="appConfig?.deviceCatalog?.itemDescriptionPattern"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.itemDescription?.Required"
+          [id]="'itemDescription'" [placeholder]="''" [divClass]="'input-group'" [textCase]="textCase.nocase"
+          [textBoxPattern]="deviceCatalogDescPattern" [(ngModel)]="deviceCatalog.ITEM_DESCRIPTION"
+          (onChangeVal)="changeInput()">
+        </rmtextbox>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.ITEMTYPE' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.itemType?.Required"></rmlabel>
+        <rmdropdown [name]="'itemtype'" [id]="'itemtype'" [class]="'form-control'"
+          [dpOptions]="itemTypeList" [disabled]="isoemCodeDisabled" [(ngModel)]="deviceCatalog.ITEM_TYPE"
+          [value]="deviceCatalog.ITEM_TYPE" (onChangeVal)="changeItemType($event)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.itemType?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.ACTUALSKU' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.actualSKU?.Required"></rmlabel>
+        <rmngtypeahead [id]="'actualSKU'" [name]="'actualSKU'" [configData]="configData" [label]="'Sku'" [value]="'Sku'"
+          [placeholder]="''" [bufferSize]="appConfig?.deviceCatalog?.bufferSize"
+          [skuLength]="appConfig?.deviceCatalog?.skuLength" [(ngModel)]="deviceCatalog.ACTUAL_SKU"
+          [bufferDataToDisplay]="appConfig?.deviceCatalog?.bufferDataToDisplay"
+          [typeaheadPattern]="controlConfig.SKuPattern" [errorMessage]="appService.getErrorText('2660078')"
+          (emitTypeAheadValue)="typeaheadActualSKUResponse($event)" [editTypeAhead]="deviceCatalog.ACTUAL_SKU"
+          [clearTypeAhead]="clearActualSKUTypeAhead"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.actualSKU?.Required"></rmngtypeahead>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.RESULTANTSKU' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.resultantSKU?.Required"></rmlabel>
+        <rmngtypeahead [id]="'resultantSKU'" [name]="'resultantSKU'" [configData]="configData" [label]="'Sku'"
+          [value]="'Sku'" [placeholder]="''" [bufferSize]="appConfig?.deviceCatalog?.bufferSize"
+          [skuLength]="appConfig?.deviceCatalog?.skuLength" [(ngModel)]="deviceCatalog.RESULTANT_SKU"
+          [bufferDataToDisplay]="appConfig?.deviceCatalog?.bufferDataToDisplay"
+          [typeaheadPattern]="controlConfig.SKuPattern" [errorMessage]="appService.getErrorText('2660078')"
+          (emitTypeAheadValue)="typeaheadResultantSKUResponse($event)" [editTypeAhead]="deviceCatalog.RESULTANT_SKU"
+          [clearTypeAhead]="clearResultantSKUTypeAhead"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.resultantSKU?.Required"></rmngtypeahead>
+
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.BASEMODEL' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.baseModel?.Required">
+        </rmlabel>
+        <rmtextbox [name]="'baseModel'" [disabled]="isModelDisabled" [textBoxPattern]="catalogBMPattern"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.baseModel?.Required" [id]="'baseModel'"
+          [placeholder]="''" [divClass]="'input-group'" [maxlength]="appConfig?.deviceCatalog?.baseModelTextLength"
+          [textCase]="textCase.nocase" [(ngModel)]="deviceCatalog.SUSR1" (onChangeVal)="changeInput()">
+        </rmtextbox>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.MODELOPTIONS' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.modelOptions?.Required"></rmlabel>
+        <ng-multiselect-dropdown tabindex="0" [data]="modelOptions" [settings]="msddSettings"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.modelOptions?.Required"
+          [(ngModel)]="selectedModelOptions" name="modelOptions" id="modelOptions"
+          (onSelect)="changeModelOptions($event)" [disabled]="isModelOptionsDisabled"
+          (onDeSelect)="modelOptionsDeSelect($event)">
+        </ng-multiselect-dropdown>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.SIZE' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.size?.Required">
+        </rmlabel>
+        <rmtextbox [name]="'catSize'" [disabled]="isSizeDisabled" [textBoxPattern]="catalogSizePattern" 
+          [requiredIf]="masterPageService.hideControls.controlProperties?.size?.Required" [id]="'catSize'"
+          [placeholder]="''" [divClass]="'input-group'" [maxlength]="appConfig?.deviceCatalog?.sizeTextLength"
+          [(ngModel)]="deviceCatalog.SUSR3"  [textCase]="textCase.nocase" (onChangeVal)="changeInput()">
+        </rmtextbox>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.COLOR' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.color?.Required">
+        </rmlabel>
+        <rmtextbox [name]="'color'" [disabled]="isColorDisabled" [textBoxPattern]="catalogColorPattern"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.color?.Required" [id]="'color'"
+          [placeholder]="''" [divClass]="'input-group'" [maxlength]="appConfig?.deviceCatalog?.colorTextLength"
+          [(ngModel)]="deviceCatalog.SUSR4" [textCase]="textCase.nocase" (onChangeVal)="changeInput()">
+        </rmtextbox>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'DEVICECATALOG.CATALOGTYPE' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.catalogType?.Required"></rmlabel>
+        <rmdropdown [name]="'catalogType'" [id]="'catalogType'" [class]="'form-control'"
+          [dpOptions]="catalogTypeList" [disabled]="isCatalogTypeDisabled" [(ngModel)]="deviceCatalog.SUSR5"
+          [value]="deviceCatalog.SUSR5" (onChangeVal)="changeCatalogType($event)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.catalogType?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-3">
+        <div class="d-flex">
+          <rmtoggle [label]="'DEVICECATALOG.ACTIVE' | translate" [togglelblClassLabel]="'pr-5 pb-2'"
+            [togglelblClass]="''" [id]="'acticve'" name="'acticve'" [(ngModel)]="deviceCatalog.ACTIVE"
+            (onChangeVal)="onActiveChange($event)" [toggleval]="deviceCatalog.ACTIVE == 'Y'? true:false">
+          </rmtoggle>
+        </div>
+      </div>
+    </div>
+
+  </form>
+  <div class="row" *ngIf="dataCatalogList">
+    <div class="col-12 pl-0 pr-0">
+      <div class="card-body pb-0">
+        <div class="row">
+          <div class="col-12 p-1">
+            <rmgrid [(gridproperties)]="dataCatalogList" (emitEditDetails)="editDeviceCatalogList($event)"
+              [isCancelIconShow]="false"></rmgrid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

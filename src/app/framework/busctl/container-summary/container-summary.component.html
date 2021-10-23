@@ -1,0 +1,92 @@
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <rmlabel *ngIf="controlConfig?.inboundContainer" [label]="controlConfig.inboundContainer | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.inboundContainer?.Required"></rmlabel>
+      <rmtextbox [(ngModel)]="inbContainerId" #inbContainer [id]="'inboundcontainer'" [placeholder]="''" (enter)="validateInboundContainer(inbContainer)"
+        (onChangeVal)="changeInput($event)" [disabled]="inbContainerDisabled"></rmtextbox>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="clear-btn" *ngIf="!isHideResetButton">
+      <div [ngClass]="quantity > 0 ? 'mb-4':'mb-3'" class="btn-margin-top">
+        <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="id" [disabled]="isClearDisabled" [buttonname]="'COMMON.RESET' | translate"
+          (onclick)="Clear()" [iconstyle]="'fas fa-redo'"></rmbutton>
+      </div>
+    </div>
+    <div class="ml-2 custom-process-btn" *ngIf="isDynamicButton">
+      <div [ngClass]="quantity > 0 ? 'mb-4':'mb-3'" class="btn-margin-top">
+        <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="dynamicButtonId" [disabled]="isDynamicButtonDisabled" [buttonname]="dynamicButtonName | translate"
+          (onclick)="dynamicButtonClick.emit()" [iconstyle]="dynamicButtonIcon"></rmbutton>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row mb-3 remove-fieldset-mt" *ngIf="containerSummaryPropertiesList.length>0 && !isHideContSummarySection">
+  <div class="col-md-12">
+    <fieldset class="containerinfo-fieldset m-0">
+      <legend class="containerinfo-legend">{{controlConfig.containerSummary}}</legend>
+      <div class="row">
+        <div class="col-12 search-box-mt">
+          <div class="row mb-1">
+            <div class="col-12 d-flex justify-content-end">
+              <rmtextbox #searchContainerInput [divClass]="'input-group'" [hideSearchIcon]='true' [id]="'searchInbContainerId'" [placeholder]="'Search by '+controlConfig.containerInputId"
+                (searchEventEmit)="searchContainerID()" [(ngModel)]="searchInbContainerId" [isAllowEmptyValue]="true" [name]="'searchContainerId'"></rmtextbox>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+      <div class="row px-3">
+        <div class="col-md-3 col-lg-3 container-id-content">
+          <div class="list-group readOnlyDiv" id="style-5">
+            <ul class="list-group box-list">
+              <li class="list-group-item" [ngClass]="Item.containerId === activeContainerId?'active':'none'" (click)="getSelectedContainerId(Item)"
+                *ngFor="let Item of containerSummaryPropertiesList">{{Item.containerId}}</li>
+            </ul>
+
+          </div>
+        </div>
+        <div class="col p-0 stretch-card containercard" >
+          <div class="col-12 pl-0 remove-mb-padding pr-0">
+            <div class="card  readOnlyProperties" id="style-5">
+              <div class="container2 px-0">
+                <div *ngFor="let prop of containerSummaryProperties" [ngClass]="autoQueuetempList? 'automationQueue row no-gutters' : 'noautomationQueue row no-gutters'">
+                  <div class="col px-1">
+                    <span>{{prop}}</span>
+                  </div>
+                  <div class="col-5 px-1">
+                    <span class="badge badge-secondary">{{containerActualProp[prop]}}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>
+
+<!-- Teplate popup  -->
+<ng-template #popTemplate>
+  <div class="modal-header bgheader">
+    <h4 class="modal-title pull-left">{{title | translate}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="hideModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group position-relative">
+      <ul class="list-group scrollbar" *ngIf="serialNumbers" id="style-4">
+        <rmgrid [(gridproperties)]="serialNumbers" [isScroll]="true"></rmgrid>
+      </ul>
+      <serial-number-move [isOutBoundContainerRequired]='true' [serialNumbers]="serialNumbers" [flag]="flag" [tittle]="modelTittle" [isModalOpen]="isModalOpen" (emitModalClose)="hideModal()"></serial-number-move>
+    </div>
+  </div>
+  <div class="modal-footer bgfooter">
+  </div>
+</ng-template>

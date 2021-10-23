@@ -1,0 +1,216 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="container-fluid padding-bottom">
+  <div class="container-fluid">
+    <fieldset class="rm-card mt-2">
+      <tabset #staticTabs>
+        <tab heading="{{'COMMON.MAIN' | translate}}" id="traceHold">
+          <div class="tab-pane">
+            <div class="container-fluid">
+              <form>
+                <fieldset #attributeForm="ngModelGroup" ngModelGroup="attributeForm">
+                  <div class="row">
+                    <div class="mb-2 col-sm-12 pr-1 mt-1 mr-1 ">
+                      <div class="float-right">
+                        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'search'"
+                          [disabled]="isAttributeSearchBtnDisabled" [buttonname]="'COMMON.SEARCH' | translate"
+                          [iconstyle]="'fas fa-search'" (click)="getAttributeList()">
+                        </rmbutton>
+                        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'"
+                          [disabled]="isAttributeResetBtnDisabled" (onclick)="resetAttribute()"
+                          [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+                        </rmbutton>
+                        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'"
+                          [disabled]="!attributeForm.valid || isEnableAddOrSave" *ngIf="attributeForm"
+                          (onclick)="addOrUpdateAttribute()" [buttonname]="attributeBtnName"
+                          [iconstyle]="attributeBtnName==commonButton.add ?'fas fa-plus':'far fa-save'">
+                        </rmbutton>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-lg-4 col-md-5 col-12">
+                      <rmlabel [label]="'ATTRIBUTESETUP.ATTRIBUTETYPE' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.attributeType?.Required">
+                      </rmlabel>
+                      <rmdropdown name="attributeType" [class]="'form-control'"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.attributeType?.Required" [dpOptions]="configValues" [(ngModel)]="attribute.ATTRIBUTETYPE"
+                        (onChangeVal)="changeAttributeType($event.value)" [disabled]="isAttributeTypeDisabled"
+                        [id]="'attributeType'" [value]="attribute.ATTRIBUTETYPE"
+                        >
+                      </rmdropdown>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-lg-4 col-md-5 col-12">
+                      <rmlabel [label]="'ATTRIBUTESETUP.ATTRIBUTEID' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.attributeID?.Required">
+                      </rmlabel>
+                      <rmtextbox [(ngModel)]="attribute.ATTRIBUTEID" name="attributeID" [class]="'form-control'"
+                        #attributeIDInput
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.attributeID?.Required"
+                        (onChangeVal)="changeAttributeIDInput()" [disabled]="isAttributeIDDisabled"
+                        [id]="'attributeID'" [isAllowEmptyValue]="false"
+                        (isInputValueEmpty)="isAttributeIDInputValueEmpty()" [placeholder]="''">
+                      </rmtextbox>
+                    </div>
+                    <div class="form-group col-md-auto col-12 mt-auto">
+                      <rmbutton [class]="'btn btn-round-black'" [id]="'generateTransCode'"
+                        [buttonname]="'ATTRIBUTESETUP.GENATTRIBUTEID' | translate"
+                        [disabled]="isGenerateAttributeIDBtnDisabled" [iconstyle]="'fas fa-sync mx-1'"
+                        (click)="generateAttributeID()">
+                      </rmbutton>
+                    </div>
+
+                    <div class="form-group col-md-4 col-12">
+                      <rmlabel [label]="'ATTRIBUTESETUP.ATTRIBUTENAME' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.attributeName?.Required">
+                      </rmlabel>
+                      <rmtextbox [(ngModel)]="attribute.ATTRIBUTE_NAME" name="attributeName" [class]="'form-control'"
+                        #attributeNameInput [maxlength]="appConfig.attribute.attributeNameTextboxLength"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.attributeName?.Required"
+                        (onChangeVal)="changeAttributeNameInput()" [disabled]="isAttributeNameDisabled"
+                        [id]="'attributeName'" [isAllowEmptyValue]="false"
+                        [placeholder]="''"></rmtextbox>
+                    </div>
+                    <div class="form-group col-lg-auto col-md-2 col-12">
+                      <rmtoggle [label]="'COMMON.ACTIVE' | translate" [togglelblClassLabel]="'pr-5 pb-2'"
+                        [togglelblClass]="''" [id]="'attributeActive'" name="attributeActive"
+                        [(ngModel)]="attribute.ACTIVE" (onChangeVal)="onAttributeActiveChange($event)"
+                        [toggleval]="attribute.ACTIVE == 'Y'? true:false" [disabled]="isattributeToggleActive">
+                      </rmtoggle>
+                    </div>
+                    <div class="form-group col-12">
+                      <rmlabel [label]="'COMMON.DESCRIPTION' | translate"
+                        [isAsterisk]="masterPageService.hideControls.controlProperties?.description?.Required">
+                      </rmlabel>
+                      <rmtextarea [rows]="2" [id]="'description'" [placeholder]="''"
+                        [requiredIf]="masterPageService.hideControls.controlProperties?.description?.Required"
+                        [name]="'description'" [disabled]="isDescriptionDisabled" [(ngModel)]="attribute.DESCRIPTION"
+                        (onChangeVal)="changeDescriptionInput()">
+                      </rmtextarea>
+                    </div>
+
+                  </div>
+                </fieldset>
+                <div class="card card-body">
+                  <fieldset ngModelGroup="ruleSetup" #ruleCtrls="ngModelGroup">
+                    <rmlabel [label]="'TRANSACTIONCONFIG.RULESETUP' | translate"></rmlabel>
+                    <div class="form-row mt-2">
+                      <div class="form-group col-sm-3">
+                        <rmlabel [label]="'TRANSACTIONCONFIG.APPENDWITH' | translate"></rmlabel>
+                        <rmdropdown [name]="'logicaloperator'" [id]="'logicaloperator'" [class]="'form-control'"
+                          [disabled]="isLogicalOperatorDisabled"
+                          (onChangeVal)="onLogicalOperatorChange($event.value)"
+                          [dpOptions]="logicaloperatorOptions" [value]="selectedLogicalOperator"
+                          [requiredIf]="isLogicalOperatorRequired ? isLogicalOperatorRequired : null">
+                        </rmdropdown>
+                      </div>
+
+                      <div class="form-group col-sm-3">
+                        <rmlabel [label]="'TRANSACTIONCONFIG.OBJECT' | translate"></rmlabel>
+                        <rmdropdown [name]="'objectDropdown'" [id]="'objectDropdown'" [class]="'form-control'"
+                          [disabled]="isObjectDisabled" (onChangeVal)="onObjectDropdownChange($event.value)"
+                          [(ngModel)]="objectSelected" [dpOptions]="objectOptions" [value]="objectSelected"
+                          [requiredIf]="true"></rmdropdown>
+                      </div>
+                      <div class="form-group col-sm-3">
+                        <rmlabel [label]="'TRANSACTIONCONFIG.PROPERTY' | translate"></rmlabel>
+                        <rmdropdown [name]="'propertyDropdown'" [id]="'propertyDropdown'" [class]="'form-control'"
+                          [disabled]="isPropertydisabled" (onChangeVal)="onPropertyDropdownChange($event.value)"
+                          [(ngModel)]="propertySelected" [dpOptions]="propertyOptions" [value]="propertySelected"
+                          [requiredIf]="true"></rmdropdown>
+                      </div>
+                      <div class="form-group col-sm-3">
+                        <rmlabel [label]="'TRANSACTIONCONFIG.OPERATOR' | translate"></rmlabel>
+                        <rmdropdown [name]="'operatorDropdown'" [id]="'operatorDropdown'" [class]="'form-control'"
+                          [disabled]="isOperatorDisabled" (onChangeVal)="onOperatorChange($event.value)"
+                          [(ngModel)]="selectedOperator" [dpOptions]="operatorOptions" [value]="selectedOperator"
+                          [requiredIf]="true">
+                        </rmdropdown>
+                      </div>
+
+                    </div>
+                    <div class="form-row mt-3">
+                      <div class="col">
+                        <rmtextarea [id]="'ruleValue'" name="ruleValue" [rows]="'rows'"
+                          [placeholder]="'TRANSACTIONCONFIG.RULEVALUE' | translate" [disabled]="isRuleValueDisabled"
+                          [requiredIf]="true" [(ngModel)]="ruleValue" (onChangeVal)="ruleInput($event)">
+                        </rmtextarea>
+                      </div>
+                      <div class="col-auto mt-auto">
+                        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'" [disabled]="isRuleAddDisabled"
+                          [buttonname]="''" (onclick)="addRule(ruleCtrls.valid)" [iconstyle]="'fas fa-plus'">
+                        </rmbutton>
+                      </div>
+                    </div>
+                    <div class="form-row mt-3">
+                      <div class="form-group col-sm-12 ">
+                        <table class="table table-striped table-bordered text-center">
+                          <thead>
+                            <tr>
+                              <th class="border-0 w-50">Formula</th>
+                              <th class="border-0 w-25">Append with</th>
+                              <th class="border-0"></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let formula of newFormula; let i = index"
+                              [ngClass]="{'worning' : highLightindex == i}">
+
+                              <td class="border-0">
+                                {{ formula.formula }}
+                              </td>
+                              <td class="border-0">
+                                <span> {{ formula.appendWith }} </span>
+                              </td>
+
+                              <td class="border-0">
+                                <span class="pointer margin-right-p" (click)="deleteFieldValue(i)">
+                                  <i class="fa fa-trash-alt"></i>
+                                </span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td class="border-0">
+                                {{ newFormulaObject.formula }}
+                              </td>
+                              <td class="border-0">
+                                {{ newFormulaObject.appendWith }}
+                              </td>
+                              <td class="border-0">
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div class="form-group col-sm-12">
+                        <rmbutton [class]="'btn btn-round-black float-left'" [id]="'clear'" [disabled]="isResetDisabled"
+                          [buttonname]="'COMMON.CLEAR' | translate" (onclick)="resetRuleSetup()"
+                          [iconstyle]="'fas fa-redo'"></rmbutton>
+
+                        <rmbutton [class]="'btn btn-round-black float-right'" [id]="'validate'"
+                          [disabled]="isValidateDisabled" [buttonname]="'COMMON.VALIDATE' | translate"
+                          [iconstyle]="'fas fa-check'" (click)="validateRule()"></rmbutton>
+                      </div>
+                    </div>
+
+                  </fieldset>
+
+                </div>
+
+                <div class="card-body pb-0" *ngIf="attributeList">
+                  <div class="row">
+                    <div class="col-12 p-0">
+                      <rmgrid [(gridproperties)]="attributeList" (emitEditDetails)="editAttribute($event)" [isCancelIconShow]="false">
+                      </rmgrid>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </tab>
+      </tabset>
+    </fieldset>
+
+  </div>
+</div>

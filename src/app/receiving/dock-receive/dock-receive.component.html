@@ -1,0 +1,561 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <div class="rmx-panel-mainform">
+      <div class="rmx-panel-mainform-actionbar">
+        <div class="row no-gutters">
+          <div class="col">
+            <div class="float-right">
+              <!-- || processDockList -->
+              <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'start'"
+                [disabled]="isAddDisabled || isValidatorRequired" [buttonname]="'COMMON.'+buttonName|translate"
+                (onclick)="generateDockReceipt()" [iconstyle]="'fas fa-plus'"></rmbutton>
+              <rmbutton [class]="'btn btn-round-black'" [id]="'Clear'" [disabled]="isClearDisabled"
+                [buttonname]="'COMMON.CLEAR'| translate" (onclick)="Clear()" [iconstyle]="'fas fa-times-circle'">
+              </rmbutton>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <fieldset class="rm-card mt-2">
+        <tabset #staticTabs>
+          <tab heading="{{'COMMON.MAIN'| translate}}" id="tab-dockAck">
+            <div class="tab-pane">
+              <div class="container-fluid">
+                <div class="row align-items-start">
+                  <div class="col-12">
+                    <form [formGroup]="dockreceivingform" class="form-view-data">
+                      <div class="rmx-vertical-section-spacer-10"> </div>
+                      <div class="row ">
+                        <div
+                          [ngClass]="masterPageService.hideControls.controlProperties?.carrierCode?.Required ?'additional-details-true' :'additional-details-false-web'"
+                          class="col-md-3 mb-2">
+                          <rmlabel [label]="'DOCKRECEIVING.CARRIERCODE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.carrierCode?.Required">
+                          </rmlabel>
+                          <rmdropdown [name]="'carrier'" [id]="'carrier'" #carrierdropdown [class]="'form-control'"
+                            [disabled]="isCarrierDisabled" [showSearchIcon]="true"
+                            [searchIconBtnDisabled]="isSearchCarrierDisabled" [(ngModel)]="dockInfo.CarrierCode"
+                            formControlName="carrier" [value]="dockInfo.CarrierCode"
+                            (onChangeVal)="changeCarrier($event)"
+                            (searchEventEmit)="getDockInfo(dockInfo.CarrierCode,'CARRIER_CODE')"
+                            [dpOptions]="carrierOptions"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.carrierCode?.Required">
+                          </rmdropdown>
+                          <span class="float-right" *ngIf="carrierName">
+                            <rmbadge [badgenumber]="carrierName"></rmbadge>
+                          </span>
+                        </div>
+                        <div
+                          [ngClass]="masterPageService.hideControls.controlProperties?.shipmentType?.Required ?'additional-details-true' :'additional-details-false-web'"
+                          class="col-md-3 mb-2">
+                          <rmlabel [label]="'DOCKRECEIVING.SHIPMENTTYPE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.shipmentType?.Required">
+                          </rmlabel>
+                          <rmdropdown [name]="'shipmentType'" [id]="'shipmentTypeDropdown'" #dockdropdown
+                            [class]="'form-control'" [(ngModel)]="dockInfo.ShipmentType"
+                            (onChangeVal)="changeShipmentType($event,'SHIPMENTTYPE')" [value]="dockInfo.ShipmentType"
+                            formControlName="shipmentTypeId" [disabled]="isShipmentTypeDisabled"
+                            [dpOptions]="shipmentTypeOptions"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.shipmentType?.Required">
+                          </rmdropdown>
+                        </div>
+                        <div
+                          [ngClass]="masterPageService.hideControls.controlProperties?.shipmentReference?.Required ?'additional-details-true' :'additional-details-false-web'"
+                          class="col-md-3 mb-2">
+                          <rmlabel [label]="'DOCKRECEIVING.SHIPMENTREFERENCE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.shipmentReference?.Required">
+                          </rmlabel>
+                          <rmtextbox [(ngModel)]="dockInfo.ShipmentRef" #ShipmentRef [placeholder]="''"
+                            [disabled]="isShippmentDisabled" [divClass]="'input-group'"
+                            [hideSearchIcon]='!(masterPageService.hideControls.controlProperties?.shipmentReferenceSearch?.Hidden)'
+                            (specialCharecterEmit)="specialCharacterEmit($event)"
+                            (onChangeVal)="changeShipmentRef(masterPageService.hideControls.controlProperties?.shipmentReference?.Required,'SHIPMENTREFERENCE',dockInfo.ShipmentRef)"
+                            (searchEventEmit)="getDockInfo($event,'SHIPMENT_REFERENCE')"
+                            (enter)="validateDock(masterPageService.hideControls.controlProperties?.shipmentReference?.Required,'shipmentRef')"
+                            (isInputValueEmpty)="changeShipmentRef(masterPageService.hideControls.controlProperties?.shipmentReference?.Required,'SHIPMENTREFERENCE',dockInfo.ShipmentRef)"
+                            [id]="'shipmentRef'" formControlName="shipmentRef"
+                            [searchIconBtnDisabled]="shippementSearchIconBtnDisabled" [name]="'shipmentRef'"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.shipmentReference?.Required">
+                          </rmtextbox>
+
+                        </div>
+                        <div
+                          [ngClass]="masterPageService.hideControls.controlProperties?.trailer?.Required  ?'additional-details-true' :'additional-details-false-web'"
+                          class="col-md-3 mb-2">
+                          <rmlabel [label]="'DOCKRECEIVING.TRAILER#' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.trailer?.Required">
+                          </rmlabel>
+                          <rmtextbox #trailerRef [placeholder]="''" (onChangeVal)="changeInput(trailerRef)"
+                            [divClass]="'input-group'"
+                            [hideSearchIcon]='!(masterPageService.hideControls.controlProperties?.trailerNumberSearch?.Hidden)'
+                            (specialCharecterEmit)="specialCharacterEmit($event)" [(ngModel)]="dockInfo.TrailerNumber"
+                            (searchEventEmit)="getDockInfo($event,'TRAILER_NUMBER')" [id]="'trailer'"
+                            [disabled]="isDocTrailerDisabled" [name]="'trailer'" formControlName="trailerNumber"
+                            [searchIconBtnDisabled]="trailerNumSearchIconBtnDisabled"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.trailer?.Required">
+                          </rmtextbox>
+                        </div>
+                        <div
+                          [ngClass]="masterPageService.hideControls.controlProperties?.dockType?.Required  ?'additional-details-true' :'additional-details-false-web'"
+                          class="col-md-3 mb-2">
+                          <rmlabel [label]="'DOCKRECEIVING.DOCKTYPE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.dockType?.Required">
+                          </rmlabel>
+                          <rmmultiselect [placeHolder]="''" [data]="dockTypeOptions"
+                            [dropdownSettings]="dropdownSettings" [name]="'dockTypeDropdown'" [id]="'dockTypeDropdown'"
+                            [disabled]="isDockTypeDisabled" formControlName="dockType"
+                            [selectedItems]="selectedDockType" (onSelectedItem)="changeDockType($event);"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.dockType?.Required"
+                            [(ngModel)]="dockInfo.DockType" (onDeSelectItem)="deSelectDockType()">
+                          </rmmultiselect>
+                        </div>
+                        <div
+                          [ngClass]="masterPageService.hideControls.controlProperties?.dockValue?.Required  ?'additional-details-true' :'additional-details-false-web'"
+                          class="col-md-3 mb-2">
+                          <rmlabel [label]="'DOCKRECEIVING.DOCKVALUE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.dockValue?.Required">
+                          </rmlabel>
+                          <rmtextbox #dockValueRef [placeholder]="''" (onChangeVal)="changeInput(dockValueRef)"
+                            (specialCharecterEmit)="specialCharacterEmit($event)" [(ngModel)]="dockInfo.DockValue"
+                            [disabled]="isDockValueDisabled" [id]="'dockValueRef'" formControlName="dockValue"
+                            [name]="'dockValueRef'"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.dockValue?.Required">
+                          </rmtextbox>
+                        </div>
+                        <div
+                          [ngClass]="masterPageService.hideControls.controlProperties?.unloadStart?.Required ?'additional-details-true' :'additional-details-false-web'"
+                          class="col-md-3 mb-2">
+                          <rmlabel [label]="'DOCKRECEIVING.UNLOADSTART' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.unloadStart?.Required">
+                          </rmlabel>
+                          <div class="date">
+                            <div class="input-group input-append date" id="datePicker">
+                              <input type="text" name="unLoadStartdate" class="form-control" [ngClass]=""
+                                #dp1="bsDatepicker" #startDateRef [value]="unloadStartValue"
+                                formControlName="unloadStart" (bsValueChange)="unLoadStartDateChange($event)"
+                                (change)="unLoadStartEditDate($event)"
+                                (input)="editunLoadStartDate($event.value,dp1,startDateRef);"
+                                [attr.disabled]="unLoadStartDisabled ? unLoadStartDisabled : null" bsDatepicker
+                                [bsConfig]="{dateInputFormat: 'YYYY-MM-DD  hh:mm:ss a', containerClass: 'theme-dark-blue'}"
+                                [minDate]="minDate" [outsideClick]="true"
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.unloadStart?.Required">
+                              <div class="input-group-append">
+                                <fieldset class="btn btn-sm input-group-text" [disabled]="unLoadStartDisabled"
+                                  (click)="dp1.show()">
+                                  <a>
+                                    <i class="fas fa-calendar-alt"></i>
+                                  </a>
+                                </fieldset>
+                                <rmbutton
+                                  *ngIf="!(masterPageService.hideControls.controlProperties?.unloadStartSearch?.Hidden)"
+                                  [class]="'btn btn-outline-secondary'" [disabled]="unLoadStartSearchDisabled"
+                                  (onclick)="getDockInfo(unloadStartValue,'UNLOAD_START')" [iconstyle]="'fa fa-search'">
+                                </rmbutton>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          [ngClass]="masterPageService.hideControls.controlProperties?.unloadEnd?.Required ?'additional-details-true' :'additional-details-false-web'"
+                          class="col-md-3 mb-2">
+                          <rmlabel [label]="'DOCKRECEIVING.UNLOADEND' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.unloadEnd?.Required">
+                          </rmlabel>
+                          <div class="date">
+                            <div class="input-group input-append date" id="datePicker2">
+                              <input type="text" name="unLoadEnddate" class="form-control" [ngClass]=""
+                                #dp2="bsDatepicker" [value]="unloadEndValue" formControlName="unloadEnd" #endDateRef
+                                (bsValueChange)="unLoadEndDateChange($event)" (change)="unLoadEndEditDate($event)"
+                                bsDatepicker (input)="editunLoadEndtDate($event.value,dp2,endDateRef)"
+                                [attr.disabled]="unLoadEndDisabled ? unLoadEndDisabled : null"
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.unloadEnd?.Required"
+                                [minDate]="unloadEndMinDate" [outsideClick]="true"
+                                [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD  h:mm:ss a', containerClass: 'theme-dark-blue' }">
+                              <div class="input-group-append">
+                                <fieldset class="btn btn-sm input-group-text" [disabled]="unLoadEndDisabled"
+                                  (click)="dp2.show()">
+                                  <a>
+                                    <i class="fas fa-calendar-alt"></i>
+                                  </a>
+                                </fieldset>
+                                <rmbutton
+                                  *ngIf="!(masterPageService.hideControls.controlProperties?.unloadEndSearch?.Hidden)"
+                                  [class]="'btn btn-outline-secondary'" [disabled]="unLoadEndSearchDisabled"
+                                  (onclick)="getDockInfo(unloadEndValue,'UNLOAD_END')" [iconstyle]="'fa fa-search'">
+                                </rmbutton>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          [ngClass]="masterPageService.hideControls.controlProperties?.load?.Required ?'additional-details-true' :'additional-details-false-web'"
+                          class="col-md-3 mb-2">
+                          <rmlabel [label]="'DOCKRECEIVING.LOAD' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.load?.Required">
+                          </rmlabel>
+                          <rmdropdown [name]="'trailerLoadType'" [id]="'trailerLoadType'" #trailerLoadTyperef
+                            [class]="'form-control'" (onChangeVal)="changeStatusType($event)"
+                            [value]="dockInfo.TrailerLoad" formControlName="trailerLoadType"
+                            [(ngModel)]="dockInfo.TrailerLoad" [disabled]="isDockLoadDisabled"
+                            [dpOptions]="trailerLoadTypeOptions"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.load?.Required">
+                          </rmdropdown>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <mat-expansion-panel class="mat-expansion-custom">
+                            <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px" class="bg-light">
+                              <mat-panel-title> {{'Additional Details' | translate}} </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="row mt-md-3">
+                              <div
+                                [ngClass]="masterPageService.hideControls.controlProperties?.carrierCode?.Required ?'additional-details-true-mobile' :'additional-details-false-mobile'"
+                                class="col">
+                                <rmlabel [label]="'DOCKRECEIVING.CARRIERCODE' | translate"
+                                  [isAsterisk]="masterPageService.hideControls.controlProperties?.carrierCode?.Required">
+                                </rmlabel>
+                                <rmdropdown [name]="'carrier'" [id]="'carrier'" #carrierdropdown
+                                  [class]="'form-control'" [disabled]="isCarrierDisabled" [showSearchIcon]="true"
+                                  [searchIconBtnDisabled]="isSearchCarrierDisabled" [(ngModel)]="dockInfo.CarrierCode"
+                                  formControlName="carrier" [value]="dockInfo.CarrierCode"
+                                  (onChangeVal)="changeCarrier($event)"
+                                  (searchEventEmit)="getDockInfo(dockInfo.CarrierCode,'CARRIER_CODE')"
+                                  [dpOptions]="carrierOptions"
+                                  [requiredIf]="masterPageService.hideControls.controlProperties?.carrierCode?.Required">
+                                </rmdropdown>
+                                <span class="float-right" *ngIf="carrierName">
+                                  <rmbadge [badgenumber]="carrierName"></rmbadge>
+                                </span>
+                              </div>
+                              <div
+                                [ngClass]="masterPageService.hideControls.controlProperties?.shipmentType?.Required ?'additional-details-true-mobile' :'additional-details-false-mobile'"
+                                class="col">
+                                <rmlabel [label]="'DOCKRECEIVING.SHIPMENTTYPE' | translate"
+                                  [isAsterisk]="masterPageService.hideControls.controlProperties?.shipmentType?.Required">
+                                </rmlabel>
+                                <rmdropdown [name]="'shipmentType'" [id]="'shipmentTypeDropdown'" #dockdropdown
+                                  [class]="'form-control'" [(ngModel)]="dockInfo.ShipmentType"
+                                  (onChangeVal)="changeShipmentType($event,'SHIPMENTTYPE')"
+                                  [value]="dockInfo.ShipmentType" formControlName="shipmentTypeId"
+                                  [disabled]="isShipmentTypeDisabled" [dpOptions]="shipmentTypeOptions"
+                                  [requiredIf]="masterPageService.hideControls.controlProperties?.shipmentType?.Required">
+                                </rmdropdown>
+                              </div>
+                              <div
+                                [ngClass]="masterPageService.hideControls.controlProperties?.shipmentReference?.Required ?'additional-details-true-mobile' :'additional-details-false-mobile'"
+                                class="col pr-md-0">
+                                <rmlabel [label]="'DOCKRECEIVING.SHIPMENTREFERENCE' | translate"
+                                  [isAsterisk]="masterPageService.hideControls.controlProperties?.shipmentReference?.Required">
+                                </rmlabel>
+                                <rmtextbox [(ngModel)]="dockInfo.ShipmentRef" #ShipmentRef [placeholder]="''"
+                                  [disabled]="isShippmentDisabled" [divClass]="'input-group'"
+                                  [hideSearchIcon]='!(masterPageService.hideControls.controlProperties?.shipmentReferenceSearch?.Hidden)'
+                                  (specialCharecterEmit)="specialCharacterEmit($event)"
+                                  (onChangeVal)="changeShipmentRef(masterPageService.hideControls.controlProperties?.shipmentReference?.Required,'SHIPMENTREFERENCE',dockInfo.ShipmentRef)"
+                                  (searchEventEmit)="getDockInfo($event,'SHIPMENT_REFERENCE')"
+                                  (enter)="validateDock(masterPageService.hideControls.controlProperties?.shipmentReference?.Required,'shipmentRef')"
+                                  (isInputValueEmpty)="changeShipmentRef(masterPageService.hideControls.controlProperties?.shipmentReference?.Required,'SHIPMENTREFERENCE',dockInfo.ShipmentRef)"
+                                  [id]="'shipmentRef'" formControlName="shipmentRef"
+                                  [searchIconBtnDisabled]="shippementSearchIconBtnDisabled" [name]="'shipmentRef'"
+                                  [requiredIf]="masterPageService.hideControls.controlProperties?.shipmentReference?.Required">
+                                </rmtextbox>
+
+                              </div>
+                              <div
+                                [ngClass]="masterPageService.hideControls.controlProperties?.trailer?.Required ?'additional-details-true-mobile' :'additional-details-false-mobile'"
+                                class="col pr-md-0">
+                                <rmlabel [label]="'DOCKRECEIVING.TRAILER#' | translate"
+                                  [isAsterisk]="masterPageService.hideControls.controlProperties?.trailer?.Required">
+                                </rmlabel>
+                                <rmtextbox #trailerRef [placeholder]="''" (onChangeVal)="changeInput(trailerRef)"
+                                  [divClass]="'input-group'"
+                                  [hideSearchIcon]='!(masterPageService.hideControls.controlProperties?.trailerNumberSearch?.Hidden)'
+                                  (specialCharecterEmit)="specialCharacterEmit($event)"
+                                  [(ngModel)]="dockInfo.TrailerNumber"
+                                  (searchEventEmit)="getDockInfo($event,'TRAILER_NUMBER')" [id]="'trailer'"
+                                  [disabled]="isDocTrailerDisabled" [name]="'trailer'" formControlName="trailerNumber"
+                                  [searchIconBtnDisabled]="trailerNumSearchIconBtnDisabled"
+                                  [requiredIf]="masterPageService.hideControls.controlProperties?.trailer?.Required">
+                                </rmtextbox>
+                              </div>
+                              <div
+                                [ngClass]="masterPageService.hideControls.controlProperties?.dockType?.Required ?'additional-details-true-mobile' :'additional-details-false-mobile'"
+                                class="col">
+                                <rmlabel [label]="'DOCKRECEIVING.DOCKTYPE' | translate"
+                                  [isAsterisk]="masterPageService.hideControls.controlProperties?.dockType?.Required">
+                                </rmlabel>
+                                <rmmultiselect [placeHolder]="''" [data]="dockTypeOptions"
+                                  [dropdownSettings]="dropdownSettings" [name]="'dockTypeDropdown'"
+                                  [id]="'dockTypeDropdown'" [disabled]="isDockTypeDisabled" formControlName="dockType"
+                                  [selectedItems]="selectedDockType" (onSelectedItem)="changeDockType($event);"
+                                  [requiredIf]="masterPageService.hideControls.controlProperties?.dockType?.Required"
+                                  [(ngModel)]="dockInfo.DockType" (onDeSelectItem)="deSelectDockType()">
+                                </rmmultiselect>
+                              </div>
+                              <div
+                                [ngClass]="masterPageService.hideControls.controlProperties?.dockValue?.Required ?'additional-details-true-mobile' :'additional-details-false-mobile'"
+                                class="col">
+                                <rmlabel [label]="'DOCKRECEIVING.DOCKVALUE' | translate"
+                                  [isAsterisk]="masterPageService.hideControls.controlProperties?.dockValue?.Required">
+                                </rmlabel>
+                                <rmtextbox #dockValueRef [placeholder]="''" (onChangeVal)="changeInput(dockValueRef)"
+                                  (specialCharecterEmit)="specialCharacterEmit($event)" [(ngModel)]="dockInfo.DockValue"
+                                  [disabled]="isDockValueDisabled" [id]="'dockValueRef'" formControlName="dockValue"
+                                  [name]="'dockValueRef'"
+                                  [requiredIf]="masterPageService.hideControls.controlProperties?.dockValue?.Required">
+                                </rmtextbox>
+                              </div>
+                              <div
+                                [ngClass]="masterPageService.hideControls.controlProperties?.unloadStart?.Required ?'additional-details-true-mobile' :'additional-details-false-mobile'"
+                                class="col">
+                                <rmlabel [label]="'DOCKRECEIVING.UNLOADSTART' | translate"
+                                  [isAsterisk]="masterPageService.hideControls.controlProperties?.unloadStart?.Required">
+                                </rmlabel>
+                                <div class="date">
+                                  <div class="input-group input-append date" id="datePicker3">
+                                    <input type="text" name="unLoadStartdate" class="form-control" [ngClass]=""
+                                      #dp3="bsDatepicker" #startDateRef [value]="unloadStartValue"
+                                      formControlName="unloadStart" (bsValueChange)="unLoadStartDateChange($event)"
+                                      (change)="unLoadStartEditDate($event)"
+                                      (input)="editunLoadStartDate($event.value,dp3,startDateRef);"
+                                      [attr.disabled]="unLoadStartDisabled ? unLoadStartDisabled : null" bsDatepicker
+                                      [bsConfig]="{dateInputFormat: 'YYYY-MM-DD  hh:mm:ss a', containerClass: 'theme-dark-blue'}"
+                                      [minDate]="minDate" [outsideClick]="true"
+                                      [requiredIf]="masterPageService.hideControls.controlProperties?.unloadStart?.Required">
+                                    <div class="input-group-append">
+                                      <fieldset class="btn btn-sm input-group-text" [disabled]="unLoadStartDisabled"
+                                        (click)="dp3.show()">
+                                        <a>
+                                          <i class="fas fa-calendar-alt"></i>
+                                        </a>
+                                      </fieldset>
+                                      <rmbutton
+                                        *ngIf="!(masterPageService.hideControls.controlProperties?.unloadStartSearch?.Hidden)"
+                                        [class]="'btn btn-outline-secondary'" [disabled]="unLoadStartSearchDisabled"
+                                        (onclick)="getDockInfo(unloadStartValue,'UNLOAD_START')"
+                                        [iconstyle]="'fa fa-search'">
+                                      </rmbutton>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                [ngClass]="masterPageService.hideControls.controlProperties?.unloadEnd?.Required ?'additional-details-true-mobile' :'additional-details-false-mobile'"
+                                class="col">
+                                <rmlabel [label]="'DOCKRECEIVING.UNLOADEND' | translate"
+                                  [isAsterisk]="masterPageService.hideControls.controlProperties?.unloadEnd?.Required">
+                                </rmlabel>
+                                <div class="date">
+                                  <div class="input-group input-append date" id="datePicker4">
+                                    <input type="text" name="unLoadEnddate" class="form-control" [ngClass]=""
+                                      #dp4="bsDatepicker" [value]="unloadEndValue" formControlName="unloadEnd"
+                                      #endDateRef (bsValueChange)="unLoadEndDateChange($event)"
+                                      (change)="unLoadEndEditDate($event)" bsDatepicker
+                                      (input)="editunLoadEndtDate($event.value,dp4,endDateRef)"
+                                      [attr.disabled]="unLoadEndDisabled ? unLoadEndDisabled : null"
+                                      [requiredIf]="masterPageService.hideControls.controlProperties?.unloadEnd?.Required"
+                                      [minDate]="unloadEndMinDate" [outsideClick]="true"
+                                      [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD  h:mm:ss a', containerClass: 'theme-dark-blue' }">
+                                    <div class="input-group-append">
+                                      <fieldset class="btn btn-sm input-group-text" [disabled]="unLoadEndDisabled"
+                                        (click)="dp4.show()">
+                                        <a>
+                                          <i class="fas fa-calendar-alt"></i>
+                                        </a>
+                                      </fieldset>
+                                      <rmbutton
+                                        *ngIf="!(masterPageService.hideControls.controlProperties?.unloadEndSearch?.Hidden)"
+                                        [class]="'btn btn-outline-secondary'" [disabled]="unLoadEndSearchDisabled"
+                                        (onclick)="getDockInfo(unloadEndValue,'UNLOAD_END')"
+                                        [iconstyle]="'fa fa-search'">
+                                      </rmbutton>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div
+                                [ngClass]="masterPageService.hideControls.controlProperties?.load?.Required ?'additional-details-true-mobile' :'additional-details-false-mobile'"
+                                class="col">
+                                <rmlabel [label]="'DOCKRECEIVING.LOAD' | translate"
+                                  [isAsterisk]="masterPageService.hideControls.controlProperties?.load?.Required">
+                                </rmlabel>
+                                <rmdropdown [name]="'trailerLoadType'" [id]="'trailerLoadType'" #trailerLoadTyperef
+                                  [class]="'form-control'" (onChangeVal)="changeStatusType($event)"
+                                  [value]="dockInfo.TrailerLoad" formControlName="trailerLoadType"
+                                  [(ngModel)]="dockInfo.TrailerLoad" [disabled]="isDockLoadDisabled"
+                                  [dpOptions]="trailerLoadTypeOptions"
+                                  [requiredIf]="masterPageService.hideControls.controlProperties?.load?.Required">
+                                </rmdropdown>
+                              </div>
+                            </div>
+                          </mat-expansion-panel>
+                        </div>
+                      </div>
+                    </form>
+                    <!-- </div> -->
+                    <div class="card mt-3 mb-3">
+                      <div class="card-body card-padding">
+                        <form [formGroup]="dockreceivingtrackingform" class="form-view-data">
+                          <div class="row">
+                            <div class="col-12 mb-padding mb-0  pr-0 pr-sm-2">
+                              <div class="float-right">
+                                <button type="button"
+                                  *ngIf="!(masterPageService.hideControls.controlProperties?.trackingNumPrint?.Hidden)"
+                                  class="btn btn-round-black mr-1" [disabled]="trackingPrintDisabled"
+                                  (click)="isPrint()" id="trackingPrintId"
+                                  [ngClass]="trackingPrintDisabled ? 'none' : (trackingPrint?'btn btn-round-black':'btn btn-round-black-off')"
+                                  autocomplete="off">
+                                  <i class="fas fa-print"></i>
+                                  {{(trackingPrint ? 'COMMON.ON' : 'COMMON.OFF') | translate}}
+                                </button>
+                                <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'AddTrackingNum'"
+                                  [disabled]="isTrackingAddDisabled" [buttonname]="'COMMON.ADD' | translate"
+                                  (onclick)="saveDockData(isMultiCartonMode)" [iconstyle]="'fas fa-plus'"></rmbutton>
+                                <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Clear'"
+                                  [disabled]="isClearTrakingDisabled" [buttonname]="'COMMON.CLEAR'| translate"
+                                  (onclick)="clearTrackingNumberSection()" [iconstyle]="'fas fa-times-circle'">
+                                </rmbutton>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row mb-2">
+                            <div class="col-md-3 pr-md-0 pb-md-0 pb-sm-2 mb-md-0 mb-2"
+                              *ngIf="!(masterPageService.hideControls.controlProperties?.docContainerID?.Hidden)">
+                              <rmlabel [label]="'DOCKRECEIVING.CONTAINERID' | translate"
+                                [isAsterisk]="masterPageService.hideControls.controlProperties?.docContainerIDReq?.Required">
+                              </rmlabel>
+                              <rmtextbox #containerIdRef [placeholder]="''" (enter)="validateContainer()"
+                                (closeEventEmit)="closeContainerConfirm(closeContainerConfirmation)"
+                                [(ngModel)]="container.ContainerID" [divClass]="'input-group'" [showCloseIcon]='true'
+                                [id]="'ContainerId'" [disabled]="isContainerIdDisabled"
+                                [closeIconBtnDisabled]="isConatinerCloseDisabled" [name]="'containerId'"
+                                formControlName="containerId"
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.docContainerIDReq?.Required">
+                              </rmtextbox>
+                              <span>
+                                <span class="mr-2" *ngIf="container.CategoryName">
+                                  <rmbadge [badgenumber]="container.CategoryName"></rmbadge>
+                                </span>
+                                <!-- *ngIf="container.ContainerCycle" -->
+                                <span class="float-right mr-5">
+                                  <rmbadge [badgenumber]="container.Quantity"></rmbadge>
+                                </span>
+                              </span>
+                            </div>
+                            <div class="col-md-5 pr-md-0 pb-md-0 pb-sm-2 mb-md-0 mb-2">
+                              <rmlabel [label]="'DOCKRECEIVING.TRACKING#' | translate"
+                                [isAsterisk]="masterPageService.hideControls.controlProperties?.tracking?.Required">
+                              </rmlabel>
+                              <rmtextbox #trackingNumRef [placeholder]="''" (onChangeVal)="changeInput(trackingNumRef)"
+                                (specialCharecterEmit)="specialCharacterEmit($event)" [divClass]="'input-group'"
+                                [(ngModel)]="dockInfoDetails.TrackingNumber" (enter)="isValidTrackingNumber($event)"
+                                (searchEventEmit)="getDockInfo($event,'TRACKING_NUMBER')" [id]="'trackingNumberId'"
+                                [name]="'trackingNumberId'"
+                                [hideSearchIcon]='!(masterPageService.hideControls.controlProperties?.trackingNumberSearch?.Hidden)'
+                                [disabled]="isTrackingNumDisabled" [searchIconBtnDisabled]="trackingSearchDisabled"
+                                formControlName="trackingNumber"
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.tracking?.Required"
+                                [prependBtnId]="'genTrknId'" [prependiIconStyle]="'fas fa-plus'"
+                                [hidePrependIcon]="isShowGenerateTrackingNumber"
+                                [prependiconBtnDisabled]="isGenerateTrackingNumberDisabled"
+                                (prependIconEevntEmit)="validateGetTrackingNumber()"></rmtextbox>
+                              <span>
+                                <span *ngIf="dockInfoDetails.FullTrackingNumber">
+                                  <rmbadge [badgenumber]="dockInfoDetails.FullTrackingNumber"></rmbadge>
+                                </span>
+                              </span>
+                            </div>
+                            <div class="col-md-2">
+                              <rmlabel [label]="'DOCKRECEIVING.CARTONCOUNT' | translate"
+                                [isAsterisk]="masterPageService.hideControls.controlProperties?.cartonCount?.Required">
+                              </rmlabel>
+                              <input type="number" id="cartonCount" name="cartonCount"
+                                [(ngModel)]="dockInfoDetails.CartonCount"
+                                (keyup.enter)="saveDockData(isMultiCartonMode)"
+                                [attr.disabled]="isCartonCountDisabled ? isCartonCountDisabled : null"
+                                class="form-control" [numberPattern]="cartonCountPattern" numbersOnly
+                                formControlName="cartonCount" #cartonCountRef min="1" maxlength="3"
+                                [requiredIf]="masterPageService.hideControls.controlProperties?.cartonCount?.Required">
+                            </div>
+                            <div class="col-md-2"
+                              *ngIf="masterPageService.hideControls.controlProperties?.showCartonMode">
+                              <rmtoggle [label]="'Multi Carton Mode'" [togglelblClassLabel]="'pr-5 pb-2'"
+                                [togglelblClass]="''" [(ngModel)]="isMultiCartonMode" [id]="'multiCartonMode'"
+                                formControlName="multiCartonMode" [toggleval]="isMultiCartonMode"
+                                (onChangeVal)="onCartonModeChange($event)" [disabled]="">
+                              </rmtoggle>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </tab>
+        </tabset>
+        <div class="container-fluid px-md-0" *ngIf="processDockList">
+          <div class="row align-items-start">
+            <div class="col-12">
+              <div class="card-body py-md-0">
+                <div class="row">
+                  <div class="col">
+                    <rmgrid [(gridproperties)]="processDockList" (emitEditDetails)="editDockDetailRow($event)"
+                      (emitDeleteDetails)="deleteDockDetailRow($event, deleteModal)"></rmgrid>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+</div>
+
+<!--close Container Confirmation-->
+<ng-template #closeContainerConfirmation>
+  <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    {{'COMMON.CLOSECONTAINERCONFIRM' | translate}}
+    <button mat-icon-button (click)="dialogRef.close()">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h4>
+  <xpo-dialog-content>
+  <div class="modal-body m-body">
+    <span>
+      <i class="fas fa-question-circle ques-icon"></i> {{'COMMON.CLOSECONTAINERALERT' | translate}}
+    </span>
+  </div>
+  </xpo-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button type="button" (click)="dialogRef.close()">Close</button>
+    <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="closeContainer()"></rmbutton>
+  </mat-dialog-actions>
+</ng-template>
+
+<ng-template #deleteModal>
+  <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container"> {{modeltitle |
+    translate}}
+    <button mat-icon-button (click)="dialogRef.close()">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h1>
+  <xpo-dialog-content>
+  <div class="modal-body m-body">
+    <span>
+      <i class="fas fa-question-circle ques-icon"> </i> {{'COMMON.DELETECONFIRMRECORD' | translate }}
+    </span>
+  </div>
+  </xpo-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button type="button"  (click)="dialogRef.close()">Close</button>
+    <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="deleteDockDetails()">
+    </rmbutton>
+  </mat-dialog-actions>
+</ng-template>

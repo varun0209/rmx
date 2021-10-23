@@ -1,0 +1,54 @@
+﻿<!-- <div [ngClass]="divClass" [attr.title]="textLabel">
+    <div class="input-group-prepend" *ngIf="hidePrependIcon">
+            <button class="btn btn-outline-secondary" type="button" [id]="prependBtnId" [disabled]="prependiconBtnDisabled" (click)="onprePendiIconClick()" ><i [ngClass]="prependiIconStyle"></i></button>
+        </div>
+    <input #inputtext type="search" class="form-control searchIcon" [ngClass]="class" [maxlength]="maxlength" [(ngModel)]="value"
+        (input)="inputChange()" [attr.aria-label]="textLabel" [id]="id" [name]="name" spellcheck="false"
+        (keydown.enter)="onEnter($event)" [value]="onSetValue(inputtext.value.trim())" (paste)="inputChange(true)" autocomplete="off"
+        [readonly]="disabled" [placeholder]="placeholder" (blur)="onControlChangeEvent()" >
+    <div class="input-group-append" *ngIf="hidePrintIcon">
+        <button class="btn btn-outline-secondary" type="button" [disabled]="iconBtnDisabled" (click)="onClick()" ><i [ngClass]="iconstyle"></i></button>
+    </div>
+    <div class="input-group-append" *ngIf="hideSearchIcon">
+        <button class="btn btn-outline-secondary" type="button" [disabled]="searchIconBtnDisabled" (click)="onSearchClick()"><i
+           class="fa fa-search"></i></button>
+    </div>
+    <div class="input-group-append" *ngIf="showCloseIcon">
+        <button class="btn btn-outline-secondary" type="button" [tooltip]="closeTooltip" [disabled]="closeIconBtnDisabled" (click)="onCloseClick()"><i
+            class="fa fa-archive"></i></button>
+    </div>
+    <div class="input-group-append" *ngIf="printCloseIcon">
+        <button class="btn btn-outline-secondary" type="button" [disabled]="printIconBtnDisabled" (click)="onPrintClick()"><i
+            class="fas fa-print"></i></button>
+    </div>
+    <div class="input-group-append" *ngIf="emptyContainerIcon">
+        <button class="btn btn-outline-secondary" type="button" [tooltip]="emptyContTooltip" [disabled]="emptyContainerBtnDisabled" (click)="onContaineremptyClick()"><i
+            class="fas fa-box-open"></i></button>
+    </div>
+
+</div> -->
+
+<mat-form-field class="" floatLabel="always">
+    <input  #inputtext type="search" matInput [id]="id" [name]="name" [placeholder]="placeholder" [maxlength]="maxlength" [(ngModel)]="value"
+      (input)="inputChange()" spellcheck="false" (keydown.enter)="onEnter($event)"
+      [value]="onSetValue(inputtext.value.trim())" (paste)="inputChange(true)" autocomplete="off" [disabled]="disabled"
+      (blur)="onControlChangeEvent()">
+      <xpo-icon matPrefix color="warn" [ngClass]="{'disable': prependiconBtnDisabled}" *ngIf="hidePrependIcon" [id]="prependBtnId"
+      [iconName]="prependiIconStyle" (click)="onprePendiIconClick()"></xpo-icon>
+  
+      <xpo-icon matSuffix color="warn" [ngClass]="{'disable': iconBtnDisabled}" *ngIf="hidePrintIcon"
+      [iconName]="iconstyle" (click)="onClick()"></xpo-icon>
+  
+     <xpo-icon matSuffix color="warn" [ngClass]="{'disable': searchIconBtnDisabled}" *ngIf="hideSearchIcon"
+      iconName="search"  (click)="onSearchClick()"></xpo-icon>
+  
+  
+    <xpo-icon matSuffix color="warn" [ngClass]="{'disable': closeIconBtnDisabled}" *ngIf="showCloseIcon" [tooltip]="closeTooltip"
+      iconName = "archive" (click)="onCloseClick()"></xpo-icon>
+  
+      <xpo-icon matSuffix color="warn" [ngClass]="{'disable': printIconBtnDisabled}" *ngIf="printCloseIcon"
+      iconName = "print"  (click)="onPrintClick()"></xpo-icon>
+  
+      <xpo-icon matSuffix color="warn" [ngClass]="{'disable': emptyContainerBtnDisabled}" *ngIf="emptyContainerIcon" [tooltip]="emptyContTooltip"
+      iconName = "cube" (click)="onContaineremptyClick()"></xpo-icon>
+  </mat-form-field>

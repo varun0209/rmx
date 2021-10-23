@@ -1,0 +1,111 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="container-fluid padding-bottom">
+    <form #disposEngineConfigForm="ngForm">
+        <div class="row">
+      <div class="col-md-12 mb-2 col-sm-12">
+            <div class="float-right">
+              <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'search'" [disabled]="isSearchBtnDisabled"
+                [buttonname]="'COMMON.SEARCH' | translate" [iconstyle]="'fas fa-search'"
+                (click)="getDisposEngineConfigList()"></rmbutton>
+              <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'" [disabled]="isResetBtnDisabled"
+            (onclick)="clearDisposEngineConfig()" [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+              </rmbutton>
+              <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'"
+                [disabled]="!disposEngineConfigForm.valid || isValidateAddBtnFlag " *ngIf="disposEngineConfigForm"
+                (onclick)="addOrUpdateDisposEngineConfig()" [buttonname]="btnName"
+                [iconstyle]="btnName==commonButton.add ?'fas fa-plus':'far fa-save'">
+              </rmbutton>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-3">
+            <rmlabel [label]="'DISPOSITIONENGINECONFIG.PROGRAMNAME' | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.programName?.Required"></rmlabel>
+            <rmdropdown [name]="'programName'" [id]="'programName'" #programNameDropDown [class]="'form-control'"
+          [dpOptions]="programNamesList" [disabled]="isProgramNameDisabled" [(ngModel)]="dispositionEngineConfig.ATTR1"
+          [value]="dispositionEngineConfig.ATTR1" (onChangeVal)="changeProgramName($event)"
+              [requiredIf]="masterPageService.hideControls.controlProperties?.programName?.Required">
+            </rmdropdown>
+          </div>
+          <div class="form-group col-lg-3">
+            <rmlabel [label]="'DISPOSITIONENGINECONFIG.PROGRAMINDICATOR' | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.programIndicator?.Required"></rmlabel>
+            <rmdropdown [name]="'ProgramIndicator'" [id]="'programIndicator'" #ProgramIndicatorDropDown
+              [class]="'form-control'" [dpOptions]="programIndicatorsList" [disabled]="isProgramIndicatorDisabled"
+              [(ngModel)]="dispositionEngineConfig.ATTR2" [value]="dispositionEngineConfig.ATTR2"
+          (onChangeVal)="changeProgramIndicator($event)"
+              [requiredIf]="masterPageService.hideControls.controlProperties?.programIndicator?.Required">
+            </rmdropdown>
+          </div>
+          <div class="form-group col-lg-3">
+            <rmlabel [label]="'DISPOSITIONENGINECONFIG.CONDITIONCODE' | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.conditionCode?.Required"></rmlabel>
+            <rmdropdown [name]="'conditionCode'" [id]="'conditionCode'" #conditionCodeDropDown [class]="'form-control'"
+              [dpOptions]="conditionCodesList" [disabled]="isConditionCodeDisabled"
+              [(ngModel)]="dispositionEngineConfig.ATTR3" [value]="dispositionEngineConfig.ATTR3"
+          (onChangeVal)="changeConditionCode($event)"
+              [requiredIf]="masterPageService.hideControls.controlProperties?.conditionCode?.Required">
+            </rmdropdown>
+          </div>
+          <div class="form-group col-lg-3">
+            <rmlabel [label]="'DISPOSITIONENGINECONFIG.RANK' | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.rank?.Required">
+            </rmlabel>
+            <input type="number" [id]="'rank'" [name]="'rank'" [(ngModel)]="dispositionEngineConfig.RANK"
+              class="form-control" [numberPattern]="rankNumberPattern" numbersOnly
+              [attr.disabled]="isRankDisabled ? isRankDisabled : null" #rankRef min="1" max="999"
+              [value]="dispositionEngineConfig.RANK" (input)="onRankChangeVal($event.value)"
+              [requiredIf]="masterPageService.hideControls.controlProperties?.rank?.Required" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-lg-3">
+            <rmlabel [label]="'DISPOSITIONENGINECONFIG.DISPOSITION' | translate"
+              [isAsterisk]="masterPageService.hideControls.controlProperties?.disposition?.Required"></rmlabel>
+            <rmdropdown [name]="'disposition'" [id]="'disposition'" #dispositionDropDown [class]="'form-control'"
+              [dpOptions]="dispositionsList" [disabled]="isDispositionsDisabled"
+              [(ngModel)]="dispositionEngineConfig.DISPOSITION" [value]="dispositionEngineConfig.DISPOSITION"
+          (onChangeVal)="changeDisposition($event)"
+              [requiredIf]="masterPageService.hideControls.controlProperties?.disposition?.Required">
+            </rmdropdown>
+          </div>
+          <div class="form-group col-lg-3 ml-2">
+            <div class="d-flex">
+              <rmtoggle [label]="'DISPOSITIONENGINECONFIG.EXITONLYCALCULATION' | translate"
+                [togglelblClassLabel]="'pr-5 pb-2'" [togglelblClass]="''" [id]="'exitOnlyCalActive'"
+                name="exitOnlyCalculationActive" [(ngModel)]="dispositionEngineConfig.EXITONLYCALCULATION"
+                (onChangeVal)="onExitOnlyCalActiveChange($event)"
+                [toggleval]="dispositionEngineConfig.EXITONLYCALCULATION == 'Y'? true:false"
+                [disabled]="isExitOnlyCalToggleActive">
+              </rmtoggle>
+              <rmtoggle [label]="'COMMON.ACTIVE' | translate" [togglelblClassLabel]="'pr-5 pb-2'" [togglelblClass]="''"
+                [id]="'active'" name="disposEngineConfigActive" [(ngModel)]="dispositionEngineConfig.ACTIVE"
+                (onChangeVal)="onActiveChange($event)" [toggleval]="dispositionEngineConfig.ACTIVE == 'Y'? true:false"
+                [disabled]="isActiveToggle">
+              </rmtoggle>
+            </div>
+
+          </div>
+        </div>
+
+
+  </form>
+        <div class="row">
+    <div class="col-12">
+      <app-rule-setup [ruleSetupObject]="ruleSetupObject" [editruleSetup]="editruleSetup"
+        (emitEnableAddOrSave)="emitEnableAddOrSave($event)"></app-rule-setup>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12 pl-0 pr-0">
+        <div class="card-body pb-0">
+          <div class="row" *ngIf="disPosEngineConfigList">
+            <div class="col-12 p-1">
+              <rmgrid [(gridproperties)]="disPosEngineConfigList" (emitEditDetails)="editDisposEngineConfig($event)"
+                [isCancelIconShow]="false"></rmgrid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

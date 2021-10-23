@@ -1,0 +1,454 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="container-fluid padding-bottom">
+  <fieldset class="rm-card mt-2">
+    <tabset #staticTabs>
+      <tab heading="Route" id="route" (selectTab)="onRouteSelectTab()">
+        <div class="tab-pane">
+          <div class="container-fluid">
+            <form #routeForm="ngForm">
+              <fieldset>
+                <div class="row">
+                  <div class="col-md-12 mb-2 col-sm-12 pr-1 mt-1 mr-1 ">
+                    <div class="float-right">
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'routeReset'"
+                        [disabled]="isRouteResetBtnDisabled" (onclick)="resetRoute()"
+                        [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+                      </rmbutton>
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'routeAdd'"
+                        [disabled]="!routeForm.valid || isValidateAddBtnFlag" (onclick)="addOrUpdateRoute()"
+                        [buttonname]="routeBtnName"
+                        [iconstyle]="routeBtnName==commonButton.add ?'fas fa-plus':'far fa-save'">
+                      </rmbutton>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form-group col-md-6 col-lg-5 col-sm-12 pb-2">
+                    <rmlabel [label]="'ROUTESETUP.ROUTEID' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.routeId?.Required">
+                    </rmlabel>
+                    <typeahead [(ngModel)]="selectedRoute.ROUTEID" [typeaheadOptionField]="'TEXT'" [id]="'routeId'"
+                      name="routeID" [typeaheadOptions]="eligibleRoutes" #routeID=ngModel
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.routeId?.Required"
+                      [typeaheadDisabled]="isRouteIdDisabled" [waitTime]="appConfig.route.routeIDWaitTime"
+                      [placeholder]="''" (inputEvent)="onRouteIDChangeVal($event)"
+                      [typeaheadOption]="selectedRoute.ROUTEID" (keyup.enter)="getRouteList($event)"
+                      (typeaheadResponse)="typeaheadResponse($event)">
+                    </typeahead>
+
+                  </div>
+                  <div class="form-group col-auto px-lg-0 mt-md-4 pb-2">
+                    <rmbutton [class]="'btn btn-round-black'" [id]="'generateRouteID'"
+                      [buttonname]="'ROUTESETUP.GENROUTEID' | translate" [disabled]="isGenerateRouteIdBtnDisabled"
+                      [iconstyle]="'fas fa-sync mx-1'" (click)="generateRouteID()">
+                    </rmbutton>
+                  </div>
+                  <div class="form-group col-md-6 col-lg-2 col-sm-12 pb-2">
+                    <rmlabel [label]="'ROUTESETUP.ROUTETYPE' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.routeType?.Required">
+                    </rmlabel>
+                    <rmdropdown [name]="'routeType'" [id]="'routeType'" #routeTypeDropDown [class]="'form-control'"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.routeType?.Required"
+                      [dpOptions]="routeTypeList" [disabled]="isRouteTypeDisabled" [(ngModel)]="selectedRoute.RouteType"
+                      [value]="selectedRoute.RouteType" (onChangeVal)="changeRouteType($event.value)">
+                    </rmdropdown>
+                  </div>
+                  <div class="form-group col-md-6 col-lg-3 col-sm-12 pb-2">
+                    <rmlabel [label]="'COMMON.DESCRIPTION' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.description?.Required"></rmlabel>
+                    <rmtextarea [(ngModel)]="selectedRoute.DESCRIPTION" [name]="'description'"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.description?.Required"
+                      [disabled]="isRouteDescriptionDisabled" [id]="'description'" (onChangeVal)="onDescriptionChange()"
+                      [placeholder]="''" [rows]="1" [maxlength]="appConfig.route.descriptionLength"
+                      [allowMaxlengthTextarea]="false">
+                    </rmtextarea>
+                  </div>
+                  <div class="form-group col-auto px-lg-0" *ngIf="false">
+                    <rmtoggle [label]="'COMMON.ACTIVE' | translate" [togglelblClassLabel]="'pr-5 pb-2'"
+                      [togglelblClass]="''" [id]="'routeActive'" name="routeActive" [(ngModel)]="selectedRoute.ACTIVE"
+                      (onChangeVal)="onRouteActiveChange($event)" [toggleval]="selectedRoute.ACTIVE == 'Y'? true:false"
+                      [disabled]="isRoutetoggleActive">
+                    </rmtoggle>
+                  </div>
+
+                </div>
+
+                <br>
+                <div class="list row no-gutters" *ngIf="routeAllOperationCodes && routeAllOperationCodes.length">
+                  <div class="left col-5 col-lg-3 col-md-6">
+                    <div class="row no-gutters">
+                      <div class="col-md-10 col-8 border rounded" [ngClass]="{'div-disabled' :isInActiveRouteSelected}">
+                        <ul class="list-group scrollbar" id="style-4">
+                          <li class="list-group-item border-0 cursorPointer" (click)="getMainItem(i)"
+                            *ngFor="let item of routeAllOperationCodes;index as i"
+                            [ngClass]=" isRouteMainSelected && i == selectedRouteMainIndex ? 'bg-color': ''">
+                            <div class="row ">
+                              <div class="col-auto col-md-4">
+                                {{item.ID}}
+                              </div>
+                              <div class="col-5 col-md-8" *showItBootstrap="['lg','xl','md','sm']">
+                                {{item.TEXT}}
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-4 col-md-2 m-auto px-md-2 px-lg-auto text-center">
+                        <rmbutton [class]="'btn btn-round-black align-middle'" [id]="'id'"
+                          [disabled]="isMoveRightDisabled" [buttonname]="''" (onclick)="moveRight()"
+                          [iconstyle]="'fa fa-arrow-right fa-lg'">
+                        </rmbutton>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="right col-7 col-lg-3 col-md-6 pr-3">
+                    <div class="row no-gutters">
+                      <div class="col-11 col-md-10 border rounded"
+                        [ngClass]="{'borderGrey' : !(selectedRoute.OperationCodes && selectedRoute.OperationCodes.length) , 'div-disabled' :isInActiveRouteSelected }">
+                        <ul class="list-group scrollbar" id="style-4">
+                          <li class="list-group-item border-0 cursorPointer" (click)="getTempItem(i)"
+                            *ngFor="let item of selectedRoute.OperationCodes; index as i"
+                            [ngClass]=" isRouteTempSelected && i == selectedRouteTempIndex ? 'bg-color': ''">
+                            <div class="row">
+                              <div class="col-1 ">
+                                {{i+1}}
+                              </div>
+                              <div class="col-auto col-md-3">
+                                {{item.ID}}
+                              </div>
+                              <div class="col-4 col-md-6" *showItBootstrap="['lg','xl','md','sm']">
+                                {{item.TEXT}}
+                              </div>
+                              <div class="col-2 col-md-1 px-1">
+                                <span class="pointer margin-right-p" (click)="deleteItem(item,i)" *ngIf="item">
+                                  <i class="fa fa-fw fa-trash-alt"></i>
+                                </span>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+
+                      </div>
+                      <div class="col-1 col-md-2 m-auto px-1 px-md-3">
+                        <span class="pb-3 d-block">
+                          <i class="fa fa-arrow-up fa-lg" aria-hidden="true" (click)="moveUp()"></i>
+                        </span>
+                        <span class="d-block">
+                          <i class="fa fa-arrow-down fa-lg" aria-hidden="true" (click)="moveDown()"></i>
+                        </span>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="routeFlow col-12 col-lg-6 col-md-12 "
+                    *ngIf="selectedRoute.OperationCodes && selectedRoute.OperationCodes.length">
+                    <div #routeFlow class="wizard-inner d-flex align-content-center flex-wrap">
+                      <ul>
+                        <li class="active" *ngFor="let item of selectedRoute.OperationCodes; index as i">
+                          <div class="items-align-center">
+                            <div class="items-id-size">{{item.ID}}</div>
+                            <div class="items-text-size">{{item.TEXT}}</div>
+                          </div>
+
+                        </li>
+                      </ul>
+                      <div class="positionAbsolute cursorPointer">
+                        <span class="pr-2">
+                          <i class="fas fa-chevron-circle-left fa-2x iconColor" aria-hidden="true"
+                            (click)="scrollLeft()"></i>
+                        </span>
+                        <span>
+                          <i class="fas fa-chevron-circle-right fa-2x iconColor" aria-hidden="true"
+                            (click)="scrollRight()"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </tab>
+      <tab heading="Attribute Route" id="attributeRoute" (selectTab)="onAttributeRouteSelectTab()">
+        <div class="tab-pane">
+          <div class="container-fluid">
+            <form #attributeRouteForm="ngForm">
+              <fieldset>
+                <div class="row">
+                  <div class="col-md-12 mb-2 col-sm-12 pr-1 mt-1 mr-1 ">
+                    <div class="float-right">
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'search'"
+                        [disabled]="isAttributeRouteSearchBtnDisabled" [buttonname]="'COMMON.SEARCH' | translate"
+                        [iconstyle]="'fas fa-search'" (click)="getAttributeRouteList()"></rmbutton>
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'"
+                        [disabled]="isAttributeRouteResetBtnDisabled" (onclick)="resetAttributeRoute()"
+                        [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+                      </rmbutton>
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'"
+                        [disabled]="!attributeRouteForm.valid || isValidateAttributeRouteAddBtnFlag"
+                        *ngIf="attributeRouteForm" (onclick)="reOrder(reOrderTemplate)"
+                        [buttonname]="attributeRouteBtnName"
+                        [iconstyle]="attributeRouteBtnName==commonButton.add ?'fas fa-plus':'far fa-save'">
+                      </rmbutton>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group col-md-5 col-12 pb-2">
+                    <rmlabel [label]="'ATTRIBUTEROUTESETUP.OPERATION' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.operation?.Required">
+                    </rmlabel>
+
+                    <rmmulticoldropdown [id]="'operationID'" [name]="'operationID'" #operationIDDropDown
+                      [value]="attributeRoute.OPERATIONID" [disabled]="isOperationIDDisabled"
+                      (onChangeVal)="changeOperationID($event)" [dpOptions]="attributeRouteOperationIDList"
+                      [(ngModel)]="attributeRoute.OPERATIONID"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.operation?.Required">
+                    </rmmulticoldropdown>
+                  </div>
+                  <div class="form-group col-md-5 col-12 pb-2">
+                    <rmlabel [label]="'ATTRIBUTEROUTESETUP.RESULTROUTE' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.resultRoute?.Required">
+                    </rmlabel>
+                    <ng-multiselect-dropdown tabindex="0" [settings]="resultRouteDropdownSettings"
+                      [data]="resultRoutesList"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.resultRoute?.Required"
+                      [(ngModel)]="selectedResultRoute" name="resultRoute" id="resultRoute"
+                      (onSelect)="changeResultRoute($event)" [disabled]="isResultRouteDisabled"
+                      (onDeSelect)="resultRouteDeselect()">
+                    </ng-multiselect-dropdown>
+                  </div>
+                  <div class="form-group col-md-1 pl-lg-3 col-6">
+                    <rmtoggle [label]="'COMMON.ACTIVE' | translate" [togglelblClassLabel]="'pr-5 pb-2'"
+                      [togglelblClass]="''" [id]="'attributeRouteActive'" name="attributeRouteActive"
+                      [(ngModel)]="attributeRoute.ACTIVE" (onChangeVal)="onAttributeRouteActiveChange($event)"
+                      [toggleval]="attributeRoute.ACTIVE == 'Y'? true:false" [disabled]="isAttributeRouteToggleActive">
+                    </rmtoggle>
+                  </div>
+                  <div class="form-group col-md-1 col-6">
+                    <rmtoggle [label]="'ATTRIBUTEROUTESETUP.REVIEWED' | translate" [togglelblClassLabel]="'pr-5 pb-2'"
+                      [togglelblClass]="''" [id]="'reviewed'" name="reviewed" [(ngModel)]="attributeRoute.REVIEWED"
+                      (onChangeVal)="onReviewedChange($event)" [toggleval]="attributeRoute.REVIEWED == 'Y'? true:false"
+                      [disabled]="isAttributeRouteReviewdDisable">
+                    </rmtoggle>
+                  </div>
+                </div>
+                <app-rule-setup [ruleSetupObject]="ruleSetupObject" [editruleSetup]="editruleSetup"
+                  (emitEnableAddOrSave)="emitEnableAddOrSave($event)"></app-rule-setup>
+
+                <div class="row">
+                  <div class="col-12 pl-0 pr-0">
+                    <div class="card-body pb-0">
+                      <div class="row" *ngIf="attributeRouteList">
+                        <div class="col-12 p-1">
+                          <rmgrid [(gridproperties)]="attributeRouteList" (emitEditDetails)="editAttributeRoute($event)"
+                            [isCancelIconShow]="false"></rmgrid>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </fieldset>
+</div>
+
+
+<ng-template #reOrderTemplate>
+  <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    {{'ATTRIBUTEROUTESETUP.ASSIGNPRIORITY' | translate}} (<span>{{'ATTRIBUTEROUTESETUP.OPERATION' | translate}}:
+      {{operationText}}-{{attributeRoute.OPERATIONID}})</span>
+    <button mat-icon-button (click)="dialogRef.close()">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h4>
+
+  <xpo-dialog-content>
+    <div class="modal-body mx-3 m-body rearrange-modal-body">
+
+      <div class="row pt-2">
+        <div class="col-12">
+          <mat-horizontal-stepper linear>
+            <mat-step>
+              <ng-template matStepLabel>{{'ATTRIBUTEROUTESETUP.ASSIGNPRIORITY' | translate}}</ng-template>
+              <div class="row">
+                <div class="col py-2">
+                  {{'ATTRIBUTEROUTESETUP.PRIORITYINFO' | translate}}
+                </div>
+                <div class="col-3 pr-0 mb-2">
+                  <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'reset'"
+                    [disabled]="isAttributeRouteRefreshBtnDisabled" (onclick)="resetReOrderList()"
+                    [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+                  </rmbutton>
+                </div>
+              </div>
+              <div class="row grid-arrange-section">
+                <div class="col table-list table-scrollbar p-0" id="style-4">
+                  <table mat-table #table [dataSource]="reOrderList" class="mat-elevation-z8 border-0" cdkDropList
+                    [cdkDropListData]="reOrderList" (cdkDropListDropped)="dropTable($event); table.renderRows()">
+
+                    <!-- POSITION Column -->
+                    <ng-container matColumnDef="POSITION">
+                      <th mat-header-cell *matHeaderCellDef width="50"><img src="assets/images/descending.png" /> </th>
+                      <td mat-cell *matCellDef="let element" width="50">
+                        <!-- <mat-icon cdkDragHandle>reorder</mat-icon> -->
+                        <img src="assets/images/drag.png" />
+                      </td>
+                    </ng-container>
+                    <!-- PRIORITY Column -->
+                    <ng-container matColumnDef="PRIORITY">
+                      <th mat-header-cell *matHeaderCellDef width="120">
+                        <strong>{{'ATTRIBUTEROUTESETUP.NEWPRIORITY' | translate}}</strong>
+                      </th>
+                      <td mat-cell *matCellDef="let element" width="120"> {{element.PRIORITY}} </td>
+                    </ng-container>
+
+                    <!-- RESULT_ROUTE Column -->
+                    <ng-container matColumnDef="RESULT_ROUTE">
+                      <th mat-header-cell *matHeaderCellDef width="120"> <strong>
+                          {{'ATTRIBUTEROUTESETUP.RESULTROUTE' | translate}} </strong>
+                      </th>
+                      <td mat-cell *matCellDef="let element" width="120"> {{element.RESULT_ROUTE}} </td>
+                    </ng-container>
+
+                    <!-- RANK Column -->
+                    <ng-container matColumnDef="RANK">
+                      <th mat-header-cell *matHeaderCellDef width="140"> <strong>
+                          {{'ATTRIBUTEROUTESETUP.EXISTINGPRIORITY' | translate}}
+                        </strong> </th>
+                      <td mat-cell *matCellDef="let element" width="140"> {{element.RANK}} </td>
+                    </ng-container>
+
+                    <!-- REVIEWED Column -->
+                    <ng-container matColumnDef="REVIEWED">
+                      <th mat-header-cell *matHeaderCellDef width="140"> <strong>
+                          {{'ATTRIBUTEROUTESETUP.REVIEWED' | translate}}
+                        </strong> </th>
+                      <td mat-cell *matCellDef="let element" width="140"> {{element.REVIEWED}} </td>
+                    </ng-container>
+
+                    <!-- RULE Column -->
+                    <ng-container matColumnDef="RULE">
+                      <th mat-header-cell *matHeaderCellDef> <strong> {{'ATTRIBUTEROUTESETUP.RULE' | translate}}
+                        </strong> </th>
+                      <td mat-cell *matCellDef="let element"> {{element.RULE}} </td>
+                    </ng-container>
+
+                    <!-- ACTIVE Column -->
+                    <ng-container matColumnDef="ACTIVE">
+                      <th mat-header-cell *matHeaderCellDef width="80"> <strong> {{'COMMON.ACTIVE' | translate}}
+                        </strong> </th>
+                      <td mat-cell *matCellDef="let element" width="80"> {{element.ACTIVE}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                    <tr mat-row *matRowDef="let row;index as i; columns: displayedColumns;"
+                      appMatTableAutoScroll="div.table-scrollbar" cdkDrag [cdkDragData]="row"
+                      [ngClass]="{'highLight-row': row === attributeRoute, 'highLight-row-selected' : i === selectedAttribueRouteIndex }"
+                      id="tableScroll{{i}}" (click)="onRowSelect(i)"></tr>
+                  </table>
+                </div>
+                <div class="col-1 col-md-2 m-auto px-1 px-md-3 buttons-arrange">
+                  <div class="pb-2">
+                    <rmbutton [class]="'btn btn-round-black'" [disabled]="isAttributeRouteMoveUpDisabled"
+                      [iconstyle]="'fa fa-arrow-up fa-lg'" (onclick)="moveUpAttribute();table.renderRows()"></rmbutton>
+                  </div>
+                  <div>
+                    <rmbutton [class]="'btn btn-round-black'" [disabled]="isAttributeRouteMoveDownDisabled"
+                      [iconstyle]="'fa fa-arrow-down fa-lg'" (onclick)="moveDownAttribute();table.renderRows()">
+                    </rmbutton>
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-between my-2 pt-2">
+                <p class="pt-1"><strong>NOTE:</strong><span class="highLight-row borderNote">&nbsp;&nbsp;&nbsp;</span>
+                  Newly Updated Rule </p>
+                <button mat-flat-button color="promary" matStepperNext [disabled]="isStepperNextDisabled"
+                  (click)="confirmList()">{{'COMMON.PREVIEW' | translate}} <i
+                    class="fa fa-arrow-right ml-2"></i></button>
+              </div>
+            </mat-step>
+            <mat-step>
+              <ng-template matStepLabel>{{'ATTRIBUTEROUTESETUP.CONFIRMASSIGNEDPRIORITY' | translate}}</ng-template>
+              <div class="row">
+                <div class="col-12" class="table-list table-scrollbar w-100 " id="style-4">
+                  <table mat-table [dataSource]="confirmRankList" class="mat-elevation-z8 border-0">
+
+                    <!-- PRIORITY Column -->
+                    <ng-container matColumnDef="PRIORITY">
+                      <th mat-header-cell *matHeaderCellDef width="120">
+                        <strong>{{'ATTRIBUTEROUTESETUP.NEWPRIORITY' | translate}}</strong>
+                      </th>
+                      <td mat-cell *matCellDef="let element" width="120"> {{element.PRIORITY}} </td>
+                    </ng-container>
+
+
+
+                    <!-- RESULT_ROUTE Column -->
+                    <ng-container matColumnDef="RESULT_ROUTE">
+                      <th mat-header-cell *matHeaderCellDef width="120"> <strong>
+                          {{'ATTRIBUTEROUTESETUP.RESULTROUTE' | translate}} </strong>
+                      </th>
+                      <td mat-cell *matCellDef="let element" width="120"> {{element.RESULT_ROUTE}} </td>
+                    </ng-container>
+
+                    <!-- RANK Column -->
+                    <ng-container matColumnDef="RANK">
+                      <th mat-header-cell *matHeaderCellDef width="140"> <strong>
+                          {{'ATTRIBUTEROUTESETUP.EXISTINGPRIORITY' | translate}}
+                        </strong> </th>
+                      <td mat-cell *matCellDef="let element" width="140"> {{element.RANK}} </td>
+                    </ng-container>
+
+                    <!-- REVIEWED Column -->
+                    <ng-container matColumnDef="REVIEWED">
+                      <th mat-header-cell *matHeaderCellDef width="140"> <strong>
+                          {{'ATTRIBUTEROUTESETUP.REVIEWED' | translate}}
+                        </strong> </th>
+                      <td mat-cell *matCellDef="let element" width="140"> {{element.REVIEWED}} </td>
+                    </ng-container>
+
+                    <!-- RULE Column -->
+                    <ng-container matColumnDef="RULE">
+                      <th mat-header-cell *matHeaderCellDef> <strong> {{'ATTRIBUTEROUTESETUP.RULE' | translate}}
+                        </strong> </th>
+                      <td mat-cell *matCellDef="let element"> {{element.RULE}} </td>
+                    </ng-container>
+
+                    <!-- ACTIVE Column -->
+                    <ng-container matColumnDef="ACTIVE">
+                      <th mat-header-cell *matHeaderCellDef width="80"> <strong> {{'COMMON.ACTIVE' | translate}}
+                        </strong> </th>
+                      <td mat-cell *matCellDef="let element" width="80"> {{element.ACTIVE}} </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="finalDisplayedColumns ; sticky : true"></tr>
+                    <tr mat-row *matRowDef="let row;index as i; columns: finalDisplayedColumns;"
+                      [ngClass]="row === attributeRoute ? 'highLight-row': '' "></tr>
+                  </table>
+                </div>
+              </div>
+              <div class="row justify-content-between my-2">
+                <button class="mr-2" mat-flat-button color="primary" matStepperPrevious
+                  [disabled]="isStepperPreviosDisabled"><i class="fa fa-arrow-left mr-2"></i> {{'COMMON.BACK' |
+                  translate}}</button>
+                <rmbutton class="float-right" [buttonname]="'COMMON.SAVE' | translate" [class]="'btn btn-round-black'"
+                  [disabled]="confirmRankList.length  ? false: true" [iconstyle]="'far fa-save'"
+                  (onclick)="addOrUpdateAttributeRoute()"></rmbutton>
+
+              </div>
+            </mat-step>
+          </mat-horizontal-stepper>
+        </div>
+      </div>
+    </div>
+  </xpo-dialog-content>
+
+</ng-template>

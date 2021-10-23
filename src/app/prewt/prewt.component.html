@@ -1,0 +1,89 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+      <div class="row ">
+          <div class="col-12">
+    <div class="row">
+      <div class="col-md-6 col-sm-12" *ngIf="!masterPageService.hideControls.controlProperties.inboundContainer?.Hidden">
+        <container-summary [inbContainerDisabled]="masterPageService.disabledContainer" (clear)="resetClear()" (emitContainerSummaryProperties)="containerSummaryProperties($event)"
+         (containerList)="getContainerList($event)"(emitSerialNumber)="getAutoPopulatedSerailNum($event)" [uiData]="uiData" (emitCurrentOperationId)="setCurrentOperationId($event)"></container-summary>
+      </div>
+    </div> 
+    <div class="row" *ngIf="inboundProperties">
+      <div class="d-flex align-content-end flex-wrap" *ngFor="let header of headingsobj">
+        <div class="p-3" [ngClass]="inboundProperties[header]=='' ? 'pt-4':'p-3'">{{header}} :
+          <rmbadge [badgenumber]="inboundProperties[header]"></rmbadge>
+        </div>
+      </div>
+    </div>
+    <div class="row pt-2" *ngIf="!masterPageService.hideControls.controlProperties.serialNumber?.Hidden">
+      <div class="col-md-3 col-sm-12">
+        <div class="form-group">
+          <rmlabel [label]="'COMMON.SERIALNUMBER' | translate" [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumber?.Required"></rmlabel>
+          <rmtextbox [(ngModel)]="serialNumber" #serialNumberInput [disabled]="masterPageService.disabledSerialNumber" [id]="'serialNumber'"
+            [placeholder]="''" (enter)="validateTestSerialNumber( $event,serialNumberInput)" (onChangeVal)="changeInput()"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumber?.Required" [uiData]="uiData" [isSerialNumber]="true"
+            [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+        </div>
+      </div>
+    </div>
+</div>
+      </div>
+    <div class="row mt-3" *ngIf="masterPageService.operCategoryTests.length>0">
+      <div class="col-sm-12 mb-3">
+        <div class="flex-fill">
+          <div class="card">
+            <div class="card-header test-header-bg">{{masterPageService.categoryName}}</div>
+            <div class="card-body p-0">
+              <div class="row ml-0 mr-0">
+                <!-- id="style-4" -->
+                <table class="table  testTable table-responsive scrollbar" id="style-4">
+                  <ng-container *ngFor="let item of masterPageService.operCategoryTests; index as parentIndex">
+                    <tbody>
+                      <tr [ngClass]="{'resultPass': item.Result == 'PASS', 'resultFail': item.Result == 'FAIL'}" class="ml-2">
+                        <td></td>
+                        <td class="tdwhiteSpace py-3">
+                          {{item.OperationId}} &#8213; {{item.Description}}
+                        </td>
+                        <td class="tdwhiteSpace">
+                              <div class="row ml-3" *ngIf="displayProperites">
+                                  <div class="d-flex align-content-end flex-wrap" *ngFor="let header of displayPropheadingobj">
+                                    <div class="ml-3" [ngClass]="displayProperites[header]=='' ? 'pt-2':''">{{header}} :
+                                      <rmbadge [badgenumber]="displayProperites[header]"></rmbadge>
+                                    </div>
+                                  </div>
+                                </div>
+                        </td>
+
+                      </tr>
+                    </tbody>
+                    <tbody id="tableScroll" *ngIf="transactionService.transactions.length > 0 ">
+                      <ng-container>
+                        <tr class="noBorder align-middle p-2 ml-4" *ngFor="let transaction of transactionService.transactions; index as i" [id]="i">
+                         <!--  <td></td> -->
+                          <td class="pl-4 py-0" colspan="4" *ngIf="transaction.TransControls.length > 0 ">
+                            <dynamicpanel [setrowPadding]="'rowpadding'"  [setContainer]="'container-fluid'" 
+                              [setDynamicPanelBorder]="'dynamicpanel-border'" [dynamicFormClass]="'form-inline align-baseline'"
+                              [cards]="transaction" (cardlistChange)=getTransAtrributeValues(transaction,$event,i,item,parentIndex)></dynamicpanel>
+                          </td>
+                          <!-- <td></td> -->
+                        </tr>
+                      </ng-container>
+                    </tbody>
+                  </ng-container>
+                </table>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-2 mb-4 clearfix">
+      <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [disabled]="isSaveDisabled" [buttonname]="'COMMON.SAVE'| translate" (onclick)="saveSerialNum()"
+        [iconstyle]="'far fa-save'"></rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isTestsClearDisabled" [buttonname]="'COMMON.CLEAR'| translate"
+        (onclick)="serialNumberClear()" [iconstyle]="'fas fa-times-circle'"></rmbutton>
+    </div>
+  </div>
+</div>

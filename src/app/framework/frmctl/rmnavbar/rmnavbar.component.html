@@ -1,0 +1,96 @@
+﻿<!-- navigation menu -->
+<nav class="navbar navbar-light navbar-pd" [ngClass]="ngnavcolor">
+    <div id="mySidenav" class="sidenav sidenav-width" *ngIf="isShowNav">
+      <div class="text-center">
+              <ng-container *ngIf="!appService.clientImage">
+          <span class="loggedInname"> {{appService.imageAltText}}</span>
+        </ng-container>
+      </div>
+      <div class="text-center mb-3">
+        <span class="loggedInname">Welcome {{loggedInUser}}!!</span>
+      </div>
+      <div class="scrollbar nav-height" id="style-4">
+        <ul class="menu-items">
+          <li>
+            <a href="javascript:void(0)" class="closebtn" (click)="resetCaretRotation()">
+              <i class="fa fa-times"></i>
+            </a>
+          </li>
+  
+  
+  
+          <li *ngFor="let item of appService.menu">
+            <div class="navhover mainmenunav-border">
+              <a *ngIf="item.HasSubMenu == false" (click)="mainMenu(item)" id="{{item.Title}}" (contextmenu)="onRightClicked(item)" class="pointer">
+                <img src="assets/images/navbaricons/{{item.Title}}.png" class="navImg"  alt="">
+                <span class="pl-2">{{item.Title | translate}}</span>
+              </a>
+           </div>
+  
+            <div *ngIf="item.HasSubMenu == true" class="nested-menu pointer navhover" (click)="caretToggle(item.Title)">
+              <a (click)="item.isExpandable = !item.isExpandable">
+                <img src="assets/images/navbaricons/{{item.Title}}.png" class="navImg"  alt="">
+                 <i class="float-right mt-2" [ngClass]="item.isExpandable?'fas fa-angle-down':'fas fa-angle-right'"></i>  
+                <span class="pl-2">{{item.Title | translate}}</span>
+              </a>
+              <li class="nested border-bottom-0" *ngIf="item.isExpandable">
+                <ul class="submenu list-unstyled">
+                  <li *ngFor="let subitem of item.SubMenu  | customOrderBy : 'Title' : false">
+                    <a (click)="navigatetoPage(subitem.RouterLink,subitem)" id="{{subitem.Title}}" (contextmenu)="onRightClicked(subitem)">
+                      <img [src]="'assets/images/navbaricons/'+subitem.Title+'.png'" (error)="imageErrorHandler(item.Title, $event)"  class="navsubImg"  alt="">
+                      <span class="pl-2">{{subitem.Title | translate}}</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </div>
+          </li>
+          <li>
+            <div class="logout-navhover">
+              <a (click)="openModal(logoutConfirmation)" style="cursor: pointer;" routerLinkActive="active">
+                <img src="assets/images/navbaricons/Logout.png" class="navImg" alt="Logout">
+                  <span class="pl-2">{{'COMMON.LOGOUT'| translate}}</span>
+              </a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="text-center nav-footer">
+          <span>© {{copyrightYear | date:'yyyy'}} GXO Logistics, Inc.</span>
+        </div>
+      </div>
+    </div>
+  
+    <div id="main" (click)="resetCaretRotation()">
+     <span class="toggle-button-menu"><i class="fas fa-bars"></i></span>
+    </div>
+  </nav>
+
+  <!--log out Confirmation-->
+<ng-template #logoutConfirmation>
+    <div class="modal-header bgheader">
+      <h4 class="modal-title pull-left">{{'COMMON.CONFIRMLOGOUT' | translate}}</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="masterPageService.hideModal()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body m-body">
+      <span>
+        <i class="fas fa-question-circle ques-icon"></i> {{'COMMON.LOGOUTALERT' | translate}}
+      </span>
+      <div class="d-flex justify-content-center log-btn-position">
+        <div class="pr-2">
+          <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="userLogout()">
+          </rmbutton>
+        </div>
+        <div>
+          <rmbutton [buttonname]="'COMMON.CANCEL' | translate" [class]="'btn btn-round-black'"
+            (onclick)="masterPageService.hideModal()"></rmbutton>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer bgfooter">
+  
+    </div>
+  </ng-template>

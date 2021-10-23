@@ -1,0 +1,12 @@
+<div class="modal-header bgheader">
+    <h4 class="modal-title pull-left">{{'SAPCRITERIA.NEWRULESETUP' | translate}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="masterPageService.hideDialog()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-rule-setup-editor [ruleSetupObject]="ruleSetupObject" [editruleSetup]="editruleSetup"
+      [excludeLogicalOr]='true' (emitEnableAddOrSave)="emitEnableAddOrSave($event)"></app-rule-setup-editor>
+  </div>
+  <div class="modal-footer bgfooter">
+  </div>

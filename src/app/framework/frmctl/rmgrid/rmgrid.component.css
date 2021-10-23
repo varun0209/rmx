@@ -1,0 +1,140 @@
+﻿#tbl tr th {
+  text-align: center !important
+}
+
+/* .table-bordered {
+  border: 8px /*solid #f4a688
+} */
+
+.colr {
+  /*background-color: #f4a688; */
+  /* font-size: 17px */
+}
+
+#txtctr {
+  text-align: center
+}
+
+
+/* .table tr {
+  height: 50px
+} */
+/* .table td { padding: 15px 10px 15px 15px} */
+
+#chkbox {
+  /*border-color: #FF8800;
+    background-color: #FF8800; */
+  /* padding: 18px; */
+}
+
+input[type="checkbox"] {
+  width: 15px;
+  height: 12px;
+}
+
+.grid-scroll-p {
+  /* height: 400px; */
+  overflow: auto;
+  border: 1px solid #cccccc;
+}
+
+.fixed-layout-p {
+    table-layout: fixed;
+}
+.text-align-center-p {
+  text-align: center;
+}
+
+.margin-right-p {
+  margin-right: 2px;
+}
+.margin-right-toolbar-p {
+  margin-right: 20px;
+  }
+
+.padding-p {
+  padding: 0px 2px;
+}
+
+.top-border tbody tr:first-child td{
+  border-top: 0 !important;
+}
+
+.serach-text{
+  text-transform: uppercase;
+}
+.gridAutoScroll{
+  width:auto;
+
+}
+.rmgrid-searchbox{
+  height: 21px;
+}
+.edit-delete-col-width{
+  width: 86px;
+}
+.just-inserted{
+  background-color:  rgb(51, 204, 0);
+  -webkit-animation: flash ease-in 1s infinite;
+  animation: flash ease-in 1s infinite;
+}
+.check-box-customcss{
+  height: 16px;
+}
+
+@keyframes flash {
+  0%{    background-color:  rgb(51, 204, 0);}
+  30%{    background-color:transparent;}
+  50%{   background-color:  rgb(51, 204, 0);}
+  100%{  background-color:  rgb(51, 204, 0);}
+}
+.highlightIcon{
+  color: rgb(8, 104, 172);
+}
+.highlightRow{
+  border-left: 12px solid rgb(8, 104, 172);
+  background: rgba(8, 104, 172, 0.2);
+}
+.highlightRow .text-align-center-p{
+  padding-left: 5px;
+}
+
+.cursorPointer{
+  cursor: pointer;
+}
+
+.negativeLeftMargin{
+  margin-left: -1rem !important;
+}
+
+.scrollbar {
+  max-height: 400px !important;
+  overflow: auto;
+  padding-right: 0;
+}
+
+.table td, .table th {
+  word-break: break-word;
+}
+
+#style-4::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+#style-4::-webkit-scrollbar-thumb {
+  background-color: #555555;
+  border: 1px solid #555555;
+}
+
+.linkStyle{
+  text-decoration: underline !important;
+  color:rgb(8, 104, 172) !important;
+  cursor: pointer !important;
+}
+
+@media(max-width: 767.98px) and (min-width: 360px) {
+  .table-responsive-sm {
+    display: table;
+  }
+}

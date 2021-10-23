@@ -1,0 +1,150 @@
+@import './text-treatment';
+
+// **   XPO Core UI imports   **
+// **********************************************
+
+// ==== Colors ====
+$xpo-blue--100: #E8F5FE;
+$xpo-blue--300: #0D94F4;
+$xpo-blue--400: #0868AC;
+$xpo-blue--700: #0091EA;
+$xpo-blue--900: #053C63;
+
+$xpo-yellow--100: #FFF8E5;
+$xpo-yellow--300: #FFCF4D;
+$xpo-yellow--400: #FFBA00;
+$xpo-yellow--700: #FFD600;
+$xpo-yellow--900: #4D3800;
+
+$xpo-red--100: #FFEEEE;
+$xpo-red--300: #FF2222;
+$xpo-red--400: #D50000;
+$xpo-red--700: #D32F2F;
+$xpo-red--900: #550000;
+
+$xpo-green--100: #C8FFDF;
+$xpo-green--300: #1CE855;
+$xpo-green--400: #11A63B;
+$xpo-green--700: #00C853;
+$xpo-green--900: #0A6122;
+
+$xpo-grey--50: #FBFBFB;
+$xpo-grey--100: #F3F3F3;
+$xpo-grey--200: #E6E6E6;
+$xpo-grey--300: #D8D8D8;
+$xpo-grey--400: #9B9B9B;
+$xpo-grey--600: #757575;
+$xpo-grey--700: #6F6F6F;
+$xpo-grey--900: #4A4A4A;
+$xpo-grey--1000: #171717;
+
+$xpo-orange--100: #FFDFCA;
+$xpo-orange--300: #FF9957;
+$xpo-orange--400: #FF6400;
+$xpo-orange--900: #8B3700;
+
+$xpo-purple--700: #6200EA;
+
+$xpo-pink--700: #C51162;
+
+$xpo-white: #FFF;
+
+
+// ==== Colors Applied ====
+$xpo-fontColor--primary: $xpo-grey--900;
+$xpo-fontColor--link: $xpo-blue--400;
+// this one should be moved to app
+$xpo-backgroundColor--body: $xpo-grey--100;
+
+// ==== Status Colors ====
+$xpo-color--error: $xpo-red--400;
+$xpo-color--success: $xpo-green--400;
+$xpo-color--warn: $xpo-yellow--400;
+$xpo-color--info: $xpo-grey--900;
+
+// ==== Typography ====
+// Putting sizes in maps to allow dynamic sizing for external
+// Root font-size(s) always in px
+$xpo-fontSize--root: 14px;
+$xpo-fontSize--small: 0.875rem; //12px
+$xpo-fontSize--medium: 1rem; //14px
+$xpo-fontSize--large: 1.143rem; //16px
+
+$xpo-header-fontSize--small: 1.143rem; //16px
+$xpo-header-fontSize--medium: 1.285rem; //18px
+$xpo-header-fontSize--large: 1.428rem; //20px
+
+$xpo-fontFamily--primary: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+$xpo-fontFamily--robotoWideBlack: 'Roboto Wide Black', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+
+$xpo-fontWeight--light: 300;
+$xpo-fontWeight--normal: 400;
+$xpo-fontWeight--medium: 500; // DEPRECATED | do not delete since it is still being used in some projects
+$xpo-fontWeight--bold: 500;
+
+$xpo-lineHeight--base: 24px;  // for medium and large font size
+$xpo-lineHeight--small: 16px; // for small font size
+$xpo-lineHeight--medium: 18px; // for medium font sizes
+$xpo-header-lineHeight--small: 1.143;
+$xpo-header-lineHeight--medium: 1.143;
+$xpo-header-lineHeight--large: 1.286;
+
+$xpo-letterSpacing--base: 0.25px;
+$xpo-header-letterSpacing--small: 0.29px;
+$xpo-header-letterSpacing--medium: 0.33px;
+$xpo-header-letterSpacing--large: 0.38px;
+
+// ==== Layout ====
+$xpo-contentSpacing: 16px;
+
+// Breakpoints
+$xpo-breakpoint--small-xs: 480px;
+$xpo-breakpoint--small: 600px;
+$xpo-breakpoint--medium: 768px;
+$xpo-breakpoint--large: 1025px;
+$xpo-breakpoint--xLarge: 1440px;
+
+// -- NGX-UI Specific --
+$ngx-footer-height: 42px;
+$ngx-tab-header-height: 40px;
+$ngx-table-row-height: 32px;
+
+$ngx-icon-size: 24px;
+
+$ngx-theBlackRoboto: 900;
+
+$ngx-close-icon-size: 30px;
+
+$ngx-input-color-onHover: $xpo-blue--100;
+$ngx-input-color-onActive--dark: $xpo-blue--400;
+$ngx-input-color-onActive--light: #FFF;
+$ngx-input-color-border: $xpo-grey--300;
+$ngx-input-color-disabled--dark: $xpo-grey--400;
+$ngx-input-color-disabled--light: $xpo-grey--300;
+
+$ngx-button-lineHeight: 32px;
+$ngx-button-animationDuration: 200ms;
+
+$ngx-header-height: 40px;
+// For use when a hover is needed on a white background.
+$ngx-whiteAffordance-onHover-color: $xpo-grey--100;
+
+$ngx-menu-backgroundColor: #FFF;
+
+
+$ngx-menu-backgroundColor-onHover: #FCFCFC;
+// Used as a spacer for flexed children
+// TODO: Move all instances to the utilities definition
+.flex--stretch {
+  flex: 1;
+}
+
+// --- Dialog ---
+$ngx-dialog-header-height: 48px;
+$ngx-dialog-footer-height: 64px;
+
+// Transitions
+$xpo-transition-200: all 200ms ease-out;
+
+// --- Contextual Header ---
+$ngx-ContextualHeader-separator--color: #BDBDBD;

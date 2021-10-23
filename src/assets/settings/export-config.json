@@ -1,0 +1,26 @@
+{
+    "QCFREPORT": [
+        {
+            "ControlType": "dropdown",
+            "PropertyName": "vendorId",
+            "DisplayName": "VendorId",
+            "Required": "Y",
+            "Options": "",
+            "value": ""
+        },
+        {
+            "ControlType": "date",
+            "PropertyName": "startDate",
+            "DisplayName": "Start Date",
+            "Required": "Y",
+            "value": null
+        },
+        {
+            "ControlType": "date",
+            "PropertyName": "endDate",
+            "DisplayName": "End Date",
+            "Required": "Y",
+            "value": null
+        }
+    ]
+}

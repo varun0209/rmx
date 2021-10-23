@@ -1,0 +1,42 @@
+﻿<div class="row mt-3">
+  <div class="col-md-6 col-sm-12">
+    <div class="form-group">
+      <rmlabel [label]="'BATCHDETAILS.BATCH' | translate"  [isAsterisk]="masterPageService.hideControls.controlProperties?.serialNumberBatch?.Required"></rmlabel>
+      <rmtextbox [(ngModel)]="serialNumberBatch" #serialNumberBatchInput [id]="'batch'"  [placeholder]="''" [disabled]="isbatchDetailDisabled"
+        [disabled]="isdisabledBatchSerialNumber" (enter)="getBatchDetails(serialNumberBatchInput,$event)" (onChangeVal)="changeInput(serialNumberBatchInput)"
+        [requiredIf]="masterPageService.hideControls.controlProperties?.serialNumberBatch?.Required" [uiData]="uiData" [isSerialNumber]="true"
+        [textBoxPattern]="controlConfig?.barCodePattern"></rmtextbox>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-12 d-flex align-items-end mb-3">
+    <rmbutton [class]="'btn btn-round-black'" [id]="'Clear'" [disabled]="isClearDisabled" [buttonname]="'COMMON.CLEAR' | translate" (onclick)="Clear()"
+      [iconstyle]="'fas fa-times-circle'"></rmbutton>
+  </div>
+</div>
+<div *ngIf="batchSerialNumberList">
+  <!-- <rmgrid [(gridproperties)]="batchSerialNumberList"></rmgrid> -->
+
+  <div class="row py-2">
+    <div class="col-4">{{'COMMON.BATCHID' | translate}}<strong class="px-2">{{batchSerialNumberList.BatchId}}</strong></div>
+    <div class="col-4">{{'BATCHDETAILS.RECEIPTKEY' | translate}} <strong class="px-2">{{batchSerialNumberList.ReceiptKey}}</strong></div>
+    <div class="col-4">{{'BATCHDETAILS.CONTAINERID' | translate}}<strong class="px-2">{{batchSerialNumberList.ContainerId}}</strong></div>
+  </div>
+  <div class="row  py-2">
+    <div class="col-1">{{'BATCHDETAILS.STATUS' | translate}}</div>
+    <div class="col-11">
+      <div class="progress scroll-x slime-scroll">
+        <ng-container *ngFor="let item of batchSerialNumberList.BatchStatus;last as isLast">
+          <div [ngClass]="{'bg-success progress-bar-striped progress-bar-animated' : item.Done == 'True', 'border-right':!isLast}" class="progress-bar px-1"
+            role="progressbar">
+            <span >{{item.Status}}</span>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="row py-2">
+    <div class="col-12">{{'BATCHDETAILS.REMARKS' | translate}}<span><rmbadge [badgenumber]="batchSerialNumberList.Remarks" class="mt-0 px-2"></rmbadge></span></div>   
+  </div>
+
+</div>
+

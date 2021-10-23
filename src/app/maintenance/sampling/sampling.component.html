@@ -1,0 +1,379 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+        <fieldset class="rm-card mt-2">
+            <tabset #staticTabs>
+                <tab heading="{{'SAMPLING.SAMPLINGMATRIX' | translate}}" id="samplingSetup" active="true">
+                    <div class="tab-pane">
+                        <div class="container-fluid px-0">
+                            <form>
+                                <fieldset ngModelGroup="samplingRuleControls" #samplingRuleControls="ngModelGroup">
+
+                                    <div class="d-flex justify-content-end">
+                                        <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Reset'"
+                                            [disabled]="isResetDisabled" (onclick)="reset(true)"
+                                            [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+                                        </rmbutton>
+                                        <rmbutton [class]="'btn btn-round-black'" [id]="'Save'"
+                                            [disabled]="(isSaveDisabled || enableRule())"
+                                            (onclick)="saveSamplingMatrix()" [buttonname]="'COMMON.SAVE' | translate"
+                                            [iconstyle]="'far fa-save'">
+                                        </rmbutton>
+                                    </div>
+
+
+                                    <div class="row ">
+                                        <div class="form-group col-md-4 col-sm-12 mb-2">
+
+                                            <rmlabel [label]="'SAMPLING.RULEID' | translate" [hidden]="!isEnableTextBox"
+                                                [isAsterisk]="masterPageService.hideControls.controlProperties?.ruleId?.Required">
+                                            </rmlabel>
+                                            <rmlabel [label]="'SAMPLING.DESCRIPTION' | translate"
+                                                [hidden]="isEnableTextBox"
+                                                [isAsterisk]="masterPageService.hideControls.controlProperties?.ruleId?.Required">
+                                            </rmlabel>
+                                            <div class="d-flex">
+                                                <rmbutton [class]="'btn btn-outline-secondary'"
+                                                    [disabled]="isDisableAddSearchIcon" (click)="onAddSearchClick()"
+                                                    [iconstyle]="isEnableTextBox ? 'fa fa-plus' : 'fa fa-search'">
+                                                </rmbutton>
+                                                <ng-multiselect-dropdown class="w-100" [placeholder]="''"
+                                                    [settings]="dropdownSettings"[data]="ruleList" 
+                                                    [hidden]="!isEnableTextBox"
+                                                    [requiredIf]="masterPageService.hideControls.controlProperties?.ruleId?.Required"
+                                                    [(ngModel)]="samplingRuleId" name="ruleId" id="ruleId"
+                                                    (onSelect)="getRuleList()" [disabled]="isRuleIdDisabled"
+                                                    (onDeSelect)="reset();">
+                                                </ng-multiselect-dropdown>
+
+                                                <rmtextarea [rows]="1" [id]="'description'" class="w-100"
+                                                    [name]="'description'" [hidden]="isEnableTextBox"
+                                                    [(ngModel)]="samplingRule.RULEDESCRIPTION" [placeholder]="''"
+                                                    (onChangeVal)="enableRuleReset()" [disabled]="isDescriptionDisable"
+                                                    [requiredIf]="masterPageService.hideControls.controlProperties?.description?.Required"
+                                                    [maxlength]="appConfig.sampling.descriptionLength"
+                                                    [allowMaxlengthTextarea]="false">
+                                                </rmtextarea>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="form-group col-md-3 col-sm-12 mb-2">
+                                            <rmtoggle [label]="'SAMPLING.RULEACTIVE' | translate"
+                                                [togglelblClassLabel]="'pr-5 pl-1 pt-2 pb-2'" [togglelblClass]="''"
+                                                class="my-1 ml-0" [id]="'ruleActive'" [disabled]="isRuleToggleDisable"
+                                                (onChangeVal)="onRuleToggleChange($event); enableRuleReset();"
+                                                name="'ruleActive'"
+                                                [toggleval]="samplingRule.ACTIVE == 'Y'? true:false">
+                                            </rmtoggle>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <form class="mb-2">
+
+                                                <div class="d-flex justify-content-end mb-3">
+                                                    <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Clear'"
+                                                        [disabled]="isClearDisabled" (onclick)="clear()"
+                                                        [buttonname]="'COMMON.CLEAR'| translate"
+                                                        [iconstyle]="'far fa-times-circle'"></rmbutton>
+
+                                                    <rmbutton [class]="'btn btn-round-black add-btn-padding'"
+                                                        [id]="'Add'" *ngIf="samplingMatrixControls"
+                                                        [disabled]="(!samplingMatrixControls.valid || enableRule())"
+                                                        (onclick)="addToGrid()"
+                                                               [buttonname]="'COMMON.ADD' | translate"
+                                                        [iconstyle]="'fas fa-plus'">
+                                                    </rmbutton>
+                                                </div>
+
+                                                <div class="row" ngModelGroup="samplingMatrixSetup"
+                                                    #samplingMatrixControls="ngModelGroup">
+
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <rmlabel [label]="'SAMPLING.LOTSIZEMIN' | translate"
+                                                            [isAsterisk]="masterPageService.hideControls.controlProperties?.lotSizeMin?.Required">
+                                                        </rmlabel>
+                                                        <input type="number" id="lotSizeMin" name="lotSizeMin"
+                                                            [(ngModel)]="samplingMatrix.LOTSIZEMIN"
+                                                            (input)="enableMatrixClear()"
+                                                            [class]="'form-control pl-1 pr-0'"
+                                                            [numberPattern]="lotMinMaxPattern"
+                                                            [requiredIf]="masterPageService.hideControls.controlProperties?.lotSizeMin?.Required"
+                                                            numbersOnly>
+                                                    </div>
+
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <rmlabel [label]="'SAMPLING.LOTSIZEMAX' | translate"
+                                                            [isAsterisk]="masterPageService.hideControls.controlProperties?.lotSizeMax?.Required">
+                                                        </rmlabel>
+                                                        <input type="number" id="lotSizeMax" name="lotSizeMax"
+                                                            [(ngModel)]="samplingMatrix.LOTSIZEMAX"
+                                                            (input)="enableMatrixClear()"
+                                                            [class]="'form-control pl-1 pr-0'"
+                                                            [numberPattern]="lotMinMaxPattern"
+                                                            [requiredIf]="masterPageService.hideControls.controlProperties?.lotSizeMax?.Required"
+                                                            numbersOnly>
+                                                    </div>
+
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <rmlabel [label]="'SAMPLING.REGULARSAMPLESIZE' | translate"
+                                                            [isAsterisk]="masterPageService.hideControls.controlProperties?.regularSampleSize?.Required">
+                                                        </rmlabel>
+                                                        <input type="number" id="regularSampleSize"
+                                                            name="regularSampleSize"
+                                                            [(ngModel)]="samplingMatrix.REGULARSAMPLESIZE"
+                                                            [class]="'form-control pl-1 pr-0'"
+                                                            (input)="enableMatrixClear()"
+                                                            [numberPattern]="quantityPattern"
+                                                            [requiredIf]="masterPageService.hideControls.controlProperties?.regularSampleSize?.Required"
+                                                            numbersOnly>
+                                                    </div>
+
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <rmlabel [label]="'SAMPLING.REGULARACCEPTQTY' | translate"
+                                                            [isAsterisk]="''">
+                                                        </rmlabel>
+                                                        <input type="number" id="regularAcceptQty"
+                                                            name="regularAcceptQty"
+                                                            [(ngModel)]="samplingMatrix.REGULARACCEPTQTY"
+                                                            [class]="'form-control pl-1 pr-0'"
+                                                            (input)="enableMatrixClear()"
+                                                            [numberPattern]="quantityPattern" numbersOnly>
+                                                    </div>
+
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <rmlabel [label]="'SAMPLING.REGULARREJECTQTY' | translate"
+                                                            [isAsterisk]="masterPageService.hideControls.controlProperties?.regularRejectQty?.Required">
+                                                        </rmlabel>
+                                                        <input type="number" id="regularRejectQty"
+                                                            name="regularRejectQty"
+                                                            [(ngModel)]="samplingMatrix.REGULARREJECTQTY"
+                                                            [class]="'form-control pl-1 pr-0'"
+                                                            (input)="enableMatrixClear()"
+                                                            [numberPattern]="quantityPattern"
+                                                            [requiredIf]="masterPageService.hideControls.controlProperties?.regularRejectQty?.Required"
+                                                            numbersOnly>
+                                                    </div>
+
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <rmlabel [label]="'SAMPLING.TIGHTENDSAMPLESIZE' | translate"
+                                                            [isAsterisk]="''">
+                                                        </rmlabel>
+                                                        <input type="number" id="tightendSampleSize"
+                                                            name="tightendSampleSize"
+                                                            [(ngModel)]="samplingMatrix.TIGHTENEDSAMPLESIZE"
+                                                            [class]="'form-control pl-1 pr-0'"
+                                                            (input)="enableMatrixClear()"
+                                                            [numberPattern]="quantityPattern" numbersOnly>
+                                                    </div>
+
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <rmlabel [label]="'SAMPLING.TIGHTENDACCEPTQTY' | translate"
+                                                            [isAsterisk]="''">
+                                                        </rmlabel>
+                                                        <input type="number" id="tightendAcceptQty"
+                                                            name="tightendAcceptQty"
+                                                            [(ngModel)]="samplingMatrix.TIGHTENEDACCEPTQTY"
+                                                            [class]="'form-control pl-1 pr-0'"
+                                                            (input)="enableMatrixClear()"
+                                                            [numberPattern]="quantityPattern" numbersOnly>
+                                                    </div>
+
+                                                    <div class="col-md-3 col-sm-12 mb-2">
+                                                        <rmlabel [label]="'SAMPLING.TIGHTENDREJECTQTY' | translate"
+                                                            [isAsterisk]="''">
+                                                        </rmlabel>
+                                                        <input type="number" id="tightendRejectQty"
+                                                            name="tightendRejectQty"
+                                                            [(ngModel)]="samplingMatrix.TIGHTENEDREJECTQTY"
+                                                            [class]="'form-control pl-1 pr-0'"
+                                                            (input)="enableMatrixClear()"
+                                                            [numberPattern]="quantityPattern" numbersOnly>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-sm-12 d-flex">
+                                                        <rmtoggle [label]="'SAMPLING.REGULARPERCENTAGEYN' | translate"
+                                                            [togglelblClassLabel]="'pr-5 pl-1 pt-2 pb-2'"
+                                                            [togglelblClass]="''" class="my-1 ml-0"
+                                                            [id]="'regularPercentAgeYN'"
+                                                            (onChangeVal)="onRegularPercentAgeYNToggleChange($event); enableMatrixClear();"
+                                                            name="'regularPercentAgeYN'"
+                                                            [toggleval]="samplingMatrix.REGULARPERCENTAGEYN == 'Y'? true:false">
+                                                        </rmtoggle>
+                                                        <rmtoggle [label]="'SAMPLING.TIGHTENDPERCENTAGEYN' | translate"
+                                                            [togglelblClassLabel]="'pr-5 pl-1 pt-2 pb-2'"
+                                                            [togglelblClass]="''" class="my-1 ml-0"
+                                                            [id]="'tightendPercentAgeYN'"
+                                                            (onChangeVal)="onTightendPercentAgeYNToggleChange($event); enableMatrixClear();"
+                                                            name="'tightendPercentAgeYN'"
+                                                            [toggleval]="samplingMatrix.TIGHTENEDPERCENTAGEYN == 'Y'? true:false">
+                                                        </rmtoggle>
+                                                        <rmtoggle [label]="'SAMPLING.MATRIXACTIVE' | translate"
+                                                            [togglelblClassLabel]="'pr-5 pl-1 pt-2 pb-2'"
+                                                            [togglelblClass]="''" class="my-1 ml-0"
+                                                            [id]="'matrixActive'"
+                                                            (onChangeVal)="onMatrixToggleChange($event); enableMatrixClear();"
+                                                            name="'ruleActive'"
+                                                            [toggleval]="samplingMatrix.ACTIVE == 'Y'? true:false">
+                                                        </rmtoggle>
+                                                    </div>
+
+                                                </div>
+
+                                                <div *ngIf="samplingMatrixList" class="mt-2">
+                                                    <rmgrid [(gridproperties)]="samplingMatrixList"
+                                                        (emitEditDetails)="editSamplingMatrixDetailRow($event)"
+                                                        (emitChildEditDetails)="emitChildSamplingMatrixDetails($event)"
+                                                        [isCancelIconShow]="false"></rmgrid>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </tab>
+
+
+                <tab heading="{{'SAMPLING.SAMPLINGCONFIG' | translate}}" id="samplingConfigSetup"
+                    (selectTab)="resetSamplingConfig(); getSamplingRuleIDsList(commonEnum.yes);">
+                    <div class="tab-pane">
+                        <div class="container-fluid px-0">
+                            <form>
+                                <fieldset ngModelGroup="samplingConfigSetup" #samplingConfigControls="ngModelGroup">
+                                    <div class="d-flex justify-content-end">
+                                        <div class="form-group">
+                                            <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'configReset'"
+                                                [disabled]="isSamplingConfigResetDisabled"
+                                                (onclick)="resetSamplingConfig()"
+                                                [buttonname]="'COMMON.RESET'| translate"
+                                                [iconstyle]="'far fa-times-circle'">
+                                            </rmbutton>
+                                            <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'configSave'"
+                                                [disabled]="!samplingConfigControls.valid"
+                                                *ngIf="samplingConfigControls" [buttonname]="samplingConfigBtnName"
+                                                (onclick)="addOrUpdateSamplingConfigInfo()"
+                                                [iconstyle]="samplingConfigBtnName == commonEnum.add ?'fas fa-plus':'far fa-save'">
+                                            </rmbutton>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-sm-12 mb-2">
+                                            <div class="form-group">
+                                                <rmlabel [label]="'SAMPLING.RULEID' | translate"
+                                                    [isAsterisk]="masterPageService.hideControls.controlProperties?.ruleId?.Required">
+                                                </rmlabel>
+                                                <rmmultiselect [placeHolder]="''" [data]="ruleIdOptionsList"
+                                                    [dropdownSettings]="dropdownSettings" [name]="'configRuleId'"
+                                                    [id]="'configRuleId'" [disabled]="isConfigRuleIdDisabled"
+                                                    [selectedItems]="samplingConfigRuleId"
+                                                    [(ngModel)]="samplingConfig.RULEID"
+                                                    (onSelectedItem)="getConfigList('RULEID', $event); enableConfigReset();"
+                                                    [requiredIf]="masterPageService.hideControls.controlProperties?.ruleId?.Required"
+                                                    (onDeSelectItem)="resetSamplingConfig()">
+                                                </rmmultiselect>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-1 col-md-1 col-sm-12">
+                                            <rmtoggle [label]="'COMMON.ACTIVE' | translate"
+                                                [togglelblClassLabel]="'pr-5 pl-1 pt-2 pb-2'" [togglelblClass]="''"
+                                                class="my-1 ml-0" [id]="'ruleActive'"
+                                                (onChangeVal)="onConfigToggleChange($event); enableConfigReset();"
+                                                name="'ruleActive'"
+                                                [toggleval]="samplingConfig.ACTIVE == 'Y'? true:false">
+                                            </rmtoggle>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+
+                                        <div class="col-md-3 col-sm-12 mb-2">
+                                            <rmlabel [label]="'SAMPLING.ROUTEID' | translate"
+                                                [isAsterisk]="masterPageService.hideControls.controlProperties?.configRouteId?.Required">
+                                            </rmlabel>
+                                            <rmdropdown [name]="'configRouteId'" [id]="'configRouteId'"
+                                                [class]="'form-control'" [showSearchIcon]="true"
+                                                [disabled]="isRouteDisabled"
+                                                [searchIconBtnDisabled]="isSearchConfigRouteIdDisabled"
+                                                [(ngModel)]="samplingConfig.ROUTEID" [value]="samplingConfig.ROUTEID"
+                                                (onChangeVal)="changeConfigRouteId($event); enableConfigReset();"
+                                                (searchEventEmit)="getConfigList('ROUTEID', samplingConfig.ROUTEID); enableConfigReset();"
+                                                [dpOptions]="configRouteIdOptions"
+                                                [requiredIf]="masterPageService.hideControls.controlProperties?.configRouteId?.Required">
+                                            </rmdropdown>
+                                        </div>
+
+                                        <div class="col-md-3 col-sm-12 mb-2">
+                                            <rmlabel [label]="'SAMPLING.OPERATIONID' | translate"
+                                                [isAsterisk]="masterPageService.hideControls.controlProperties?.configOperationId?.Required">
+                                            </rmlabel>
+                                            <rmdropdown [name]="'configOperationId'" [id]="'configOperationId'"
+                                                [class]="'form-control'" [showSearchIcon]="true"
+                                                [searchIconBtnDisabled]="isSearchConfigOperationIdDisabled"
+                                                [(ngModel)]="samplingConfig.OPERATIONID"
+                                                [disabled]="isOperationDisabled" 
+                                                        [value]="samplingConfig.OPERATIONID"
+                                                (onChangeVal)="changeConfigOperationId($event); enableConfigReset();"
+                                                (searchEventEmit)="getConfigList('OPERATIONID',samplingConfig.OPERATIONID); enableConfigReset();"
+                                                [dpOptions]="configOperationIdOptions"
+                                                [requiredIf]="masterPageService.hideControls.controlProperties?.configOperationId?.Required">
+                                            </rmdropdown>
+                                        </div>
+
+                                        <div class="col-md-3 col-sm-12 mb-2">
+                                            <rmlabel [label]="'SAMPLING.VENDOR' | translate"
+                                                [isAsterisk]="masterPageService.hideControls.controlProperties?.configVendorId?.Required">
+                                            </rmlabel>
+                                            <rmtextbox [(ngModel)]="samplingConfig.VENDOR" [name]="'configVendorId'"
+                                                [class]="'form-control'" numbersOnly [id]="'configVendorId'"
+                                                [isAllowEmptyValue]="true" (onChangeVal)="enableConfigReset()"
+                                                [placeholder]="''" [divClass]="'input-group'"
+                                                [requiredIf]="masterPageService.hideControls.controlProperties?.configVendorId?.Required">
+                                            </rmtextbox>
+                                        </div>
+
+                                        <div class="col-md-3 col-sm-12 mb-2">
+                                            <rmlabel [label]="'SAMPLING.OEMMODEL' | translate" [isAsterisk]="''">
+                                            </rmlabel>
+                                            <div class="d-flex">
+                                                <rmmultiselect class="w-100" [placeHolder]="''" [name]="'configOEMModelId'" 
+                                                    [id]="'configOEMModelId'"  [data]="configOEMModelIdOptions"
+                                                    [(ngModel)]="samplingConfig.OEMMODEL"
+                                                    [selectedItems]="selectedOEMModels"
+                                                    (onSelectedItem)="changeConfigOEMModelId($event); enableConfigReset();"
+                                                    [dropdownSettings]="dropdownSettings" 
+                                                    [disabled]="isConfigRuleIdDisabled">
+                                                </rmmultiselect>
+                                                <rmbutton [class]="'btn btn-outline-secondary'"
+                                                    [disabled]="isSearchConfigOEMModelIdDisabled"
+                                                    (click)="getConfigList('OEMMODEL',samplingConfig.OEMMODEL); enableConfigReset();"
+                                                    [iconstyle]="'fa fa-search'">
+                                                </rmbutton>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="form-group" *ngIf="samplingConfigList">
+                                        <rmgrid [(gridproperties)]="samplingConfigList"
+                                            (emitEditDetails)="editSamplingConfigDetailRow($event)"
+                                            [isCancelIconShow]="false"></rmgrid>
+                                    </div>
+
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </fieldset>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="modal-header bgheader">
+    <h4 class="modal-title pull-left">
+        {{'SELECTSKU' | translate}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="closePopup()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<!-- <div class="row m-0" *ngIf="catalogList"> -->
+<div class='container-fluid p-3 sku-lookup-popup'>
+    <div class="sku-lookup-popup">
+        <div class="row m-0" *ngIf="catalogList && catalogList?.Elements.length">
+            <div class="col-12 p-1">
+                <rmgrid [(gridproperties)]="catalogList" (emitEditDetails)="editCatalogList($event)"
+                    [isCancelIconShow]="false">
+                </rmgrid>
+            </div>
+        </div>
+    </div>
+</div>

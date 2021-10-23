@@ -1,0 +1,233 @@
+<div class="row operations">
+
+  <div class="col-2 mb-3 form-group">
+    <rmlabel [label]="'OPERATION.OPERATIONID' | translate"></rmlabel>
+    <rmtextbox [class]="'form-control'" [(ngModel)]="operationData.OPERATIONID" [disabled]="true"></rmtextbox>
+  </div>
+
+  <div class="col-3 mb-3 form-group">
+    <rmlabel [label]="'OPERATION.CATEGORY' | translate"></rmlabel>
+    <rmtextbox [name]="'category'" [class]="'form-control'" [divClass]="'input-group'"
+      [(ngModel)]="operationData.OperationConfigs.CATEGORY" [disabled]="true">
+    </rmtextbox>
+  </div>
+  <div class="col mb-3 form-group">
+
+    <rmlabel [label]="'OPERATION.RANK' | translate"></rmlabel>
+    <input type="number" [class]="'form-control pl-1 pr-0'" [name]="'rank'" #rank [id]="'rank321'"
+      [(ngModel)]="operationData.OperationConfigs.RANK" [numberPattern]="operationRankPattern" numbersOnly>
+  </div>
+  <div class="col-4 mb-6 form-group">
+    <rmlabel [label]="'OPERATION.DESCRIPTION' | translate"></rmlabel>
+    <rmtextarea [maxlength]="appConfig.operation.operationDescription" [rows]="'1'" [placeholder]="''"
+      [(ngModel)]="operationData.DESCRIPTION" [allowMaxlengthTextarea]="false" [id]="'operationDescription'"
+      name="'operationDescription'"></rmtextarea>
+  </div>
+  <div class="col mb-3 form-group">
+    <rmlabel [label]="'OPERATION.MAXCONTAINERS' | translate"></rmlabel>
+    <input type="number" [class]="'form-control pl-1 pr-0'" [name]="'MaxContainers'" #MaxContainers
+      [id]="'MaxContainers'" numbersOnly [(ngModel)]="operationData.OperationConfigs.MAXCONTAINERS">
+  </div>
+</div>
+<div class="row operations">
+  <div class="col mb-3 form-group d-flex">
+    <rmtoggle [label]="'OPERATION.ROUTEELIGIBLE' | translate" [togglelblClass]="'mt-1'" class="my-1 mr-5"
+      [id]="'RouteEligible'" [toggleval]="operationData.OperationConfigs.ROUTE_ELIGIBLE == commonEnum.yes? true:false"
+      (onChangeVal)="onRouteEligibleChange($event)"></rmtoggle>
+    <rmtoggle [label]="'OPERATION.FORCEMOVEELIGIBLE' | translate" [togglelblClass]="'mt-1'" class="my-1 mx-5"
+      [id]="'ForceMoveEligible'"
+      [toggleval]="operationData.OperationConfigs.FORCEMOVEELIGIBLE == commonEnum.yes? true:false"
+      (onChangeVal)="onForceMoveEligibleChange($event)"></rmtoggle>
+    <rmtoggle [label]="'OPERATION.ACTIVE' | translate" [togglelblClass]="'mt-1'" class="my-1 mx-5" [id]="'Active'"
+      [toggleval]="operationData.OperationConfigs.ACTIVE == commonEnum.yes? true:false"
+      (onChangeVal)="onActiveChange($event)">
+    </rmtoggle>
+    <rmtoggle [label]="'OPERATION.PARSER' | translate" [togglelblClass]="'mt-1'" class="my-1 mx-5" [id]="'Parser'"
+      [toggleval]="operationData.IsParserExists == commonEnum.yes? true:false" (onChangeVal)="onParserChange($event)">
+    </rmtoggle>
+    <rmtoggle [label]="'OPERATION.SURVEY' | translate" [togglelblClass]="'mt-1'" class="my-1 mx-5" [id]="'Survey'"
+      [toggleval]="operationData.IsSurveryExists == commonEnum.yes ? true:false" (onChangeVal)="onSurveyChange($event)"
+      [disabled]=""></rmtoggle>
+  </div>
+</div>
+<div class="row operations" *ngIf="operationData.IsParserExists == commonEnum.yes">
+  <div class="col">
+    <mat-accordion aria-expanded="true">
+      <mat-expansion-panel class="group-name parser-setup-expansion">
+        <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px">
+          <mat-panel-title class="justify-content-between w-100">{{'OPERATION.PARSERSETUP' | translate}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="row">
+          <div class="col-4 mb-3 form-group">
+            <rmlabel [label]="'OPERATION.PARSERDESCRIPTION' | translate"></rmlabel>            
+            <rmtextarea [maxlength]="appConfig.operation.parserDescription" [rows]="'1'" [placeholder]="''"
+              [(ngModel)]="operationData.ParserHeader.DESCRIPTION" [allowMaxlengthTextarea]="false"
+              [id]="'ParserDescription'" name="'ParserDescription'">
+            </rmtextarea>
+          </div>
+          <div class="col-2 mb-3 form-group">
+            <rmlabel [label]="'OPERATION.TYPE' | translate"></rmlabel>
+            <rmtextbox [name]="'Type'" [class]="'form-control'" [divClass]="'input-group'"
+              [maxlength]="appConfig.operation.parserType" [(ngModel)]='operationData.ParserHeader.TYPE'
+              [textBoxPattern]="namePattern" [textCase]="textCase.nocase" [placeholder]="''">
+            </rmtextbox>
+          </div>
+          <div class="col-2 mb-3 form-group d-flex">
+            <rmtoggle [label]="'OPERATION.AUTOPROCESS' | translate" [togglelblClass]="'mt-1'" class="my-1 mx-4"
+              [toggleval]="operationData.ParserHeader.AUTO_PROCESS == commonEnum.yes? true:false"
+              (onChangeVal)="onParserAutoProcessChange($event)"></rmtoggle>
+          </div>          
+          <div class="col-2 mb-3 form-group">
+            <rmlabel [label]="'OPERATION.PARSERGROUP' | translate"></rmlabel>
+            <rmtextbox [name]="'ParserGroup'" [class]="'form-control'" [divClass]="'input-group'" [disabled]="true"
+              [(ngModel)]='operationData.ParserHeader.PARSER_GROUP' [placeholder]="''"
+              [textBoxPattern]="namePattern" [textCase]="textCase.nocase">
+            </rmtextbox>
+          </div>          
+          <div class="col form-group align-self-center mb-0">            
+          </div>
+          <rmbutton [class]="'btn btn-round-black mr-1'" [iconstyle]="'far fa-plus'"   [buttonname]="'OPERATION.ADDPARSERDETAIL'| translate" [id]="'addparserdetail'"
+          (click)="addParserDetail()" ></rmbutton>
+        </div>
+        <div class="row">
+          <fieldset class="rm-card mt-2 w-100 mx-2">
+
+            <mat-tab-group mat-align-tabs="start" (selectedTabChange)="tabChanged($event)" [(selectedIndex)]='tabIndex'>
+              <mat-tab *ngFor="let parserdetail of tabArray" [label]="'File Format' + ': ' + parserdetail.FILE_FORMAT + '-' + parserdetail.PARSER_TYPE">
+                <ng-template matTabContent>
+                  <div class="row">
+                    <div class="col-4 form-group mt-3">
+                      <div class="">
+                        <rmlabel [label]="'OPERATION.FILEFORMAT' | translate"></rmlabel>                       
+                        <rmdropdown [name]="'FileFormat'" #FileFormat [class]="'form-control'"
+                          (onChangeVal)="onFileFormatChange($event)" [value]="parserdetail.FILE_FORMAT"
+                          [(ngModel)]="parserdetail.FILE_FORMAT" [dpOptions]="this.fileFormatOptions">
+                        </rmdropdown>
+                      </div>
+                      <div class="">
+                        <rmlabel [label]="'OPERATION.FILEDIR' | translate"></rmlabel>
+                        <rmtextbox [name]="'FileDir'" [class]="'form-control'"
+                          [maxlength]="appConfig?.operation?.fileDir" [divClass]="'input-group'"
+                          [(ngModel)]="parserdetail.RX_PARSER_SERVICE_CONFIGs.FILE_DIR" [textBoxPattern]="namePattern"
+                          [textCase]="textCase.nocase" [placeholder]="''">
+                        </rmtextbox>
+                      </div>
+                      <div class="">
+                        <rmlabel [label]="'OPERATION.ARCHIVEDIR' | translate"></rmlabel>
+                        <rmtextbox [name]="'ArchiveDir'" [class]="'form-control'"
+                          [maxlength]="appConfig.operation.archiveDir" [divClass]="'input-group'"
+                          [(ngModel)]="parserdetail.RX_PARSER_SERVICE_CONFIGs.ARCHIVE_DIR"
+                          [textBoxPattern]="namePattern" [textCase]="textCase.nocase" [placeholder]="''">
+                        </rmtextbox>
+                      </div>
+                      <div class="d-flex">
+                        <div class="col pl-0">
+                          <rmlabel [label]="'OPERATION.POLLINTERVEL' | translate"></rmlabel>                          
+                          <input type="number" [class]="'form-control pl-1 pr-0'" [name]="'pollintervel'" #pollintervel
+                            [id]="'pollintervel'" numbersOnly [numberPattern]="operationIDPattern"
+                            [(ngModel)]="parserdetail.RX_PARSER_SERVICE_CONFIGs.POLL_INTERVAL">
+                        </div>
+                        <div class="form-group d-flex col">
+                          <rmtoggle [label]="'OPERATION.ACTIVE' | translate" [togglelblClass]="'mt-1'" class="my-1 mx-4"
+                            [toggleval]="operationData.ParserHeader.RX_PARSER_DETAILs[this.tabIndex].RX_PARSER_SERVICE_CONFIGs.ACTIVE == commonEnum.yes? true:false"
+                            (onChangeVal)="onActiveParserService($event)"></rmtoggle>
+                        </div>
+                      </div>
+                      <div class="">
+                        <rmlabel [label]="'OPERATION.PARSERTYPE' | translate"></rmlabel>
+                        <rmtextbox [name]="'ParserType'" [class]="'form-control'"
+                          [maxlength]="appConfig?.operation?.parsertype" [divClass]="'input-group'"
+                          [(ngModel)]="parserdetail.PARSER_TYPE" [textBoxPattern]="namePattern"
+                          [textCase]="textCase.nocase" [placeholder]="''">
+                        </rmtextbox>
+                      </div>
+
+                    </div>
+                    <div class="col-8 mt-3" >
+                      <table mat-table class="w-100"  [dataSource]="jsonDataSource">
+
+                        <ng-container matColumnDef="key">
+                          <th mat-header-cell *matHeaderCellDef>{{'OPERATION.KEY' | translate }}</th>
+                          <td mat-cell *matCellDef="let item">{{ item.key }}</td>
+                          <td mat-footer-cell *matFooterCellDef>
+                            <rmtextbox class="grid-input" [(ngModel)]='newJsonKey' [textBoxPattern]="textBoxPattern"
+                              placeholder="New Key" [errorMessage]="errMessage" [class]="'form-control'" [textCase]="textCase.nocase">
+                            </rmtextbox>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="value">
+                          <th mat-header-cell *matHeaderCellDef>{{'OPERATION.VALUE' | translate }}</th>
+                          <td mat-cell *matCellDef="let item">
+                            <rmtextbox class="grid-input" [disabled]="!item.IsEditing" [(ngModel)]='item.value'
+                              [textBoxPattern]="textBoxPattern" [placeholder]="''" [errorMessage]="errMessage"
+                              [class]="'form-control'" [textCase]="textCase.nocase">
+                            </rmtextbox>
+                          </td>
+                          <td mat-footer-cell *matFooterCellDef>
+                            <rmtextbox class="grid-input" [(ngModel)]='newJsonValue' [textBoxPattern]="textBoxPattern"
+                              placeholder="New Value" [errorMessage]="errMessage" [class]="'form-control'" [textCase]="textCase.nocase">
+                            </rmtextbox>
+                          </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                          <th mat-header-cell *matHeaderCellDef>{{'OPERATION.ACTIONS' | translate }}</th>
+                          <td mat-cell *matCellDef="let item">
+
+                            <span *ngIf="!item.IsEditing">
+                              <button mat-icon-button (click)="onEditClick(item)">
+                                <i class='fas fa-pen m-fa-pen'></i>
+                              </button>
+
+                              <button mat-icon-button (click)="onDeleteRowClick(item)">
+                                <i class="fas fa-trash-alt"></i>
+                              </button>
+                            </span>
+
+                            <span *ngIf="item.IsEditing">
+                              <button mat-icon-button color="primary" (click)="onSaveJsonItem(item)"
+                                [disabled]="item.EditDisabled">
+                                <i class="fas fa-save"></i>
+                              </button>
+                              <button mat-icon-button color="warn" (click)="onCancelClick(item)"
+                                [disabled]="item.EditDisabled">
+                                <i class="fas fa-times-circle"></i>
+                              </button>
+                            </span>
+                          </td>
+
+                          <td mat-footer-cell *matFooterCellDef>
+                            <button mat-raised-button color="primary" [disabled]="!newJsonKey || !newJsonValue"
+                              (click)="addJsonItem()">
+                              <i class="fas fa-plus"></i>
+                              {{'OPERATION.ADD' | translate}}
+                            </button>
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedJSONColumns"></tr>
+                        <tr mat-row *matRowDef="let myRowData; columns: displayedJSONColumns">
+                        </tr>
+                        <tr mat-footer-row *matFooterRowDef="displayedJSONColumns"></tr>
+                      </table>
+                      <!-- <mat-paginator [id]="parserdetail.paginatorId"  [pageSize]="appConfig.operation.parserDetailPageSize" showFirstLastButtons>
+                      </mat-paginator> -->
+                    </div>
+                  </div>
+                </ng-template>
+              </mat-tab>
+
+            </mat-tab-group>
+          </fieldset>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+
+</div>
+<div class="col text-right my-2">
+  <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [disabled]="" [buttonname]="'COMMON.SAVE'| translate"
+    [id]="'save'" [iconstyle]="'far fa-save'" (onclick)=submit()></rmbutton>
+</div>

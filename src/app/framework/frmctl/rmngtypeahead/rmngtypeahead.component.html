@@ -1,0 +1,14 @@
+<ng-select [items]="bufferSKU" [virtualScroll]="true" [bindLabel]="label" [bindValue]="value"
+    [placeholder]="placeholder" (scroll)="onScroll($event)" (scrollToEnd)="onScrollToEnd()"
+    (search)="search.next($event.term);" (change)="onChange($event)" [id]="id" name="name" dropdownPosition="bottom" (blur)="clear();" 
+    #typeAhead [editableSearchTerm]="true" [multiple]="false"
+    (clear)="clear();" [readonly]="disabled">
+        <ng-template ng-header-tmp >
+            <small class="form-text text-muted"> {{ "COMMON.LOADED" | translate}} {{bufferSKU.length}} {{ "COMMON.OF" | translate}} 
+                {{skus.length}}</small>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-index="index">
+            <span>{{item.Sku}}</span><span class="float-right skumodel"> {{item.Model}}</span>
+          </ng-template>
+          
+</ng-select>

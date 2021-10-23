@@ -1,0 +1,43 @@
+{
+    "comUrl":"http://fdcvm01011:8010/",
+    "utlUrl":"http://fdcvm01011:8015/",
+    "secUrl":"http://fdcvm01011:8020/",
+    "recUrl":"http://fdcvm01011:8025/",
+    "tstUrl":"http://fdcvm01011:8030/",
+    "wtUrl":"http://fdcvm01011:8035/",
+    "rmcUrl":"http://fdcvm01011:8887/",
+    "conUrl":"http://fdcvm01011:8017/",
+    "mntUrl":"http://fdcvm01011:8013/",
+    "env":"SMOKE",
+    "errorMsg":"7320011: Site configuration is missing in RMX",
+    "invalidUser":"Different user already loggedin.",
+    "sharedSecurity":{
+       "DataType":"WAREHOUSE",
+       "Application":"RMX"
+    },
+    "clients":[
+       {
+          "clientName":"VERIZON",
+          "siteIds":[
+                  "UFT001"
+  
+          ]
+       },
+       {
+          "clientName":"WHIRLPOOL",
+          "siteIds":[
+             "MDW001",
+             "SEA002",
+             "DFW001",
+             "SJC001",
+             "MDT001",
+             "LAX001",
+             "EWR003",
+             "ATL002",
+             "MEM005",
+             "SLC001",
+             "MCO001"
+          ]
+       }
+    ]
+  }

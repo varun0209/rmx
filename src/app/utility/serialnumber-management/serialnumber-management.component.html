@@ -1,0 +1,76 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3 col-sm-12">
+        <rmlabel [label]="'COMMON.SERIALNUMBER' | translate"></rmlabel>
+        <div class="mb-2">
+          <rmtextbox [(ngModel)]="serialnum" #serialNo [disabled]="iscurrentSerialnoDisabled" [placeholder]="''" [id]="'serialNum'"></rmtextbox>
+        </div>
+      </div>
+    </div>
+    <div class="row pt-2">
+      <div class="col-md-3 col-sm-12">
+        <rmlabel [label]="'SERIALNUMBERMANAGEMENT.OPTIONS' | translate"></rmlabel>
+        <div class="mb-2">
+          <rmdropdown [name]="'Rollback'" [id]="'dropdown'" #rollbackdropdown [class]="'form-control'" [disabled]="isRollbackDisabled"
+            [(ngModel)]="rollback" [dpOptions]="dropdownList"></rmdropdown>
+        </div>
+      </div>
+    </div>
+    <div class="row pt-2">
+      <div class="col-md-3 col-sm-12">
+        <rmlabel [label]="'SERIALNUMBERMANAGEMENT.REASON' | translate"></rmlabel>
+        <div class="mb-2">
+          <!--  <textarea  class="form-control" [name]="reason"  [id]="'reason'" [rows]="3" [placeholder]="'Reason'"
+              [disabled]="isResoanDisabled"> -->
+          <rmtextarea  #resoan (enter)="getReason($event,resoan)" [rows]="3" [id]="'Reason'" [name]="'Reason'"  [(ngModel)]="reason" [placeholder]="'SERIALNUMBERMANAGEMENT.REASON' | translate"  [disabled]="false">
+          </rmtextarea>
+        </div>
+      </div>
+    </div>
+    <div class="row pt-2">
+        <div class="col-md-12 col-sm-12">
+                <table class="table testTable table-bordered scrollbar" id="style-4">
+                  <thead>
+                    <tr class="test-header-bg">
+                      <th>#</th>
+                      <th>Operaton Id</th>
+                      <th>Properties</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <rmcheckbox [disabled]="isCheckboxDisabled"></rmcheckbox>
+                      </td>
+                      <td>3500</td>
+                      <td>Properties</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <rmcheckbox></rmcheckbox>
+                      </td>
+                      <td>4100</td>
+                      <td>Properties</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <rmcheckbox></rmcheckbox>
+                      </td>
+                      <td>5110</td>
+                      <td>Properties</td>
+                    </tr>
+                  </tbody>
+                </table>
+          </div>
+    </div>
+   <div class="row pt-2">
+      <div class="col-sm-12 col-lg-12 col-md-12 col-12 mb-2 mt-3">
+          <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled" [buttonname]="'COMMON.CLEAR' | translate"
+            [iconstyle]="'fas fa-times-circle'" (onclick)="Clear()"></rmbutton>
+          <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'addSerialNumber'" [disabled]="isAddDisabled" [buttonname]="'COMMON.SAVE' | translate"
+            [iconstyle]="'fas fa-plus'"></rmbutton>
+        </div>
+   </div>
+  </div>
+</div>

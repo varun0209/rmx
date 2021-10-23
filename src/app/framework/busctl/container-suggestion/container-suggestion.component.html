@@ -1,0 +1,37 @@
+﻿
+    <!-- <div class="form-group">
+      <rmlabel [label]="csLabel" [isAsterisk]="isAsterisk"></rmlabel>
+      <div class="input-group position-relative" >
+          <div class="input-group-prepend" *ngIf="showPrint">
+              <button class="btn btn-outline-secondary" type="button" [disabled]="iconBtnDisabled" (click)="onContainerPrint()"><i class="fas fa-print"></i></button>
+            </div>
+        <input #containerInput type="search" [id]="id" class="form-control searchIcon" [ngClass]="class"  [readonly]="isContainerDisabled" [(ngModel)]="ContainerID" (keydown)="app.omit_special_char($event)"
+               [value]="containerInput.value.toUpperCase()" autocomplete="off" spellcheck="false" (input)="checkContainer()" (focus)="emitGetSuggestContainer()" [placeholder]="placeholder"
+               (keyup.enter)="emitValidateContainer()"  (paste)="checkContainer()">
+        <span class="move-badge">
+        </span>
+        <span class="suggested-conatiner-badge">
+          <span class="mr-1 suggested-container"><rmbadge [isblink]="blinkStyle" [badgenumber]="suggestedContainer"></rmbadge></span>
+          <span class="category"><rmbadge [badgenumber]="categoryName"></rmbadge></span>
+        </span>
+        <div class="input-group-append">
+          <rmbutton [class]="'btn btn-outline-secondary ml-1'" [disabled]="isClearContainerDisabled" (onclick)="refreshContainer()" [iconstyle]="'fa fa-sync-alt'"></rmbutton>
+        </div>
+      </div>
+    </div> -->
+    <rmlabel [label]="csLabel" [isAsterisk]="isAsterisk"></rmlabel>
+    <mat-form-field class="" floatLabel="always">
+      <input  #containerInput  type="search" matInput [id]="id"  [placeholder]="placeholder"  [(ngModel)]="ContainerID" (keydown)="app.omit_special_char($event)"
+        (input)="checkContainer()" spellcheck="false" (keyup.enter)="emitValidateContainer()" (focus)="emitGetSuggestContainer()"
+        [value]="containerInput.value.toUpperCase()" (paste)="checkContainer()" autocomplete="off" [disabled]="isContainerDisabled"
+        >
+        <span class="suggested-conatiner-badge">
+          <span class="mr-1 suggested-container"><rmbadge [isblink]="blinkStyle" [badgenumber]="suggestedContainer"></rmbadge></span>
+          <span class="category"><rmbadge [badgenumber]="categoryName"></rmbadge></span>
+        </span>
+        <xpo-icon matPrefix color="warn" [ngClass]="{'disable': iconBtnDisabled}" *ngIf="showPrint" [id]="prependBtnId"
+        iconName="print" (click)="onprePendiIconClick()"></xpo-icon>    
+        <xpo-icon matSuffix iconName="auto-renew" color="warn" [ngClass]="{'disable': isClearContainerDisabled}" 
+        (click)="refreshContainer()"></xpo-icon>
+        
+    </mat-form-field>

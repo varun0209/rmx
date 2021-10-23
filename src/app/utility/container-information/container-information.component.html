@@ -1,0 +1,187 @@
+﻿<div class="mx-auto mt-3" *ngIf="showAlert && !appErrService.specialCharErrMsg">
+    <rmalert [class]="'w-50'" [text]="text"></rmalert>
+</div>
+<div class="mx-auto mt-3" *ngIf="appErrService.specialCharErrMsg">
+    <rmalert [class]="'w-50'" [text]="appErrService.specialCharErrMsg"></rmalert>
+</div>
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div [ngClass]="tittle ? 'popup-container' : 'container-fluid'">
+        <div class="row mb-lg-3 mb-1">
+            <div class="col-12 col-lg-5 col-xl-4 margin-bottom popup-content">
+                <rmlabel [label]="'COMMON.CONTAINERID' | translate"></rmlabel>
+                <div class="row">
+                    <div class="col-9 col-lg-9 col-md-6">
+                        <rmtextbox [(ngModel)]="containerId" name="containerId" [class]="'form-control'"
+                            [isAllowEmptyValue]="false" (isInputValueEmpty)="isInputValueEmpty()" [flag]="flag"
+                            (onChangeVal)="changeContainerInput()" #containerInput [id]="'containerId'"
+                            [placeholder]="''" [disabled]="isContainerDisabled" (enter)="getContainerInfo($event)"
+                            [showCloseIcon]="!(controlConfig?.closeBtn?.Hidden)"
+                            [closeIconBtnDisabled]="isCloseDisabled" [divClass]="'input-group'"
+                            [closeTooltip]="'Close Container'"
+                            (closeEventEmit)="validateCloseContainer(closeConfirmation)"
+                            [emptyContainerIcon]="!(controlConfig?.emptyBtn?.Hidden)"
+                            [emptyContainerBtnDisabled]="isContainerEmptyButtonDisable"
+                            (emptyContainerEmit)="emptyContainerPopup(popTemplate)"></rmtextbox>
+                    </div>
+                    <div class="pt-1 pt-lg-0">
+                        <rmbutton [class]="'btn btn-round-black mr-1 btn-block'" [id]="'Reset'"
+                            [disabled]="isResetDisabled" [buttonname]="'COMMON.RESET' | translate" (onclick)="reset()"
+                            [iconstyle]="'fas fa-redo'">
+                        </rmbutton>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--log out Confirmation-->
+        <ng-template #closeConfirmation>
+            <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+                {{'Container Close' | translate}}
+                <button mat-icon-button (click)="dialogRef.close()">
+                    <xpo-icon iconName="clear"></xpo-icon>
+                </button>
+            </h1>
+            <xpo-dialog-content>
+                <span>
+                    <i class="fas fa-question-circle ques-icon"></i> {{'COMMON.CONTAINERCLOSE' | translate}}
+                </span>
+            </xpo-dialog-content>
+            <mat-dialog-actions>
+                <button mat-button type="button" (click)="dialogRef.close()">Close</button>
+                <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'"
+                    (onclick)="closeContainer()"></rmbutton>
+            </mat-dialog-actions>
+        </ng-template>
+  
+        <div class="d-flex flex-wrap borderColor no-gutters  py-1 mb-lg-2 mb-1 text-lg-center"
+            *ngIf="!isContainerEmpty()">
+            <div class="flexBasis">
+                <div class="row no-gutters paddingLeft  py-md-2">
+                    <div class="col-7">{{'COMMON.CONTAINERID' | translate}}<span class="float-right pr-1">:</span>
+                    </div>
+                    <div class="col-5 negativeMargin">
+                        <rmbadge [badgenumber]="containerInfo.ContainerID"></rmbadge>
+                    </div>
+                </div>
+            </div>
+            <div class="flexBasis">
+                <div class="row no-gutters paddingLeft pl-2 py-md-2">
+                    <div class="col-8">{{'CONTAINERINFORMATION.CONTAINERCYCLE' | translate}}<span
+                            class="float-right pr-1">:</span></div>
+                    <div class="col-4 negativeMargin">
+                        <rmbadge [badgenumber]="containerInfo.ContainerCycle"></rmbadge>
+                    </div>
+                </div>
+            </div>
+            <div class="flexBasis">
+                <div class="row no-gutters paddingLeft  py-md-2">
+                    <div class="col-7">{{'CONTAINERINFORMATION.TYPE' | translate}}<span
+                            class="float-right pr-1">:</span>
+                    </div>
+                    <div class="col-5 negativeMargin">
+                        <rmbadge [badgenumber]="containerInfo.ContainerType"></rmbadge>
+                    </div>
+                </div>
+            </div>
+            <div class="flexBasis">
+                <div class="row no-gutters paddingLeft pl-2 py-md-2">
+                    <div class="col-8">{{'CONTAINERINFORMATION.CATEGORY' | translate}}<span
+                            class="float-right pr-1">:</span></div>
+                    <div class="col-4 negativeMargin">
+                        <rmbadge [badgenumber]="containerInfo.CategoryName"></rmbadge>
+                    </div>
+                </div>
+            </div>
+            <div class="flexBasis">
+                <div class="row no-gutters paddingLeft  py-md-2">
+                    <div class="col-7">{{'CONTAINERINFORMATION.STATUS' | translate}}<span
+                            class="float-right pr-1">:</span>
+                    </div>
+                    <div class="col-5 negativeMargin">
+                        <rmbadge [badgenumber]="containerInfo.StatusText"></rmbadge>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flexBasis">
+                <div class="row no-gutters paddingLeft pl-2 py-md-2">
+                    <div class="col-8">{{'CONTAINERINFORMATION.LOCATION' | translate}}<span
+                            class="float-right pr-1">:</span></div>
+                    <div class="col-4 negativeMargin">
+                        <rmbadge [badgenumber]="containerInfo.Location"></rmbadge>
+                    </div>
+                </div>
+            </div>
+            <div class="flexBasis">
+                <div class="row no-gutters paddingLeft pl-2 py-md-2">
+                    <div class="col-7">{{'CONTAINERINFORMATION.QUANTITY' | translate}}<span
+                            class="float-right pr-1">:</span></div>
+                    <div class="col-5 negativeMargin">
+                        <rmbadge
+                            [badgenumber]="containerInfo.Quantity+'/'+ ((containerInfo.ContainerCapacity == 0 ) || (containerInfo.ContainerCapacity == undefined)? '--' : containerInfo.ContainerCapacity)">
+                        </rmbadge>
+                    </div>
+                </div>
+            </div>
+            <div class="flexBasis" *ngIf="containerInfo.ParentContainer">
+                <div class="row no-gutters  py-md-2">
+                    <div class="col-sm-8 col-auto">{{'CONTAINERINFORMATION.PARENTCONTAINER' | translate}}<span
+                            class="float-right">:</span></div>
+                    <div class="col-4">
+                        <span class="linkStyle"
+                            (click)="getContainerInfo(containerInfo.ParentContainer)">{{containerInfo.ParentContainer}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *showItBootstrap="['lg','xl','md','sm']">
+            <div class="row pt-3 " *ngIf="detailInfoList">
+                <div class="col-12">
+                    <rmgrid [(gridproperties)]="detailInfoList" [isHyperLink]="isHyperLinkRequired"
+                        (emitColumnValue)="getContainerInfo($event)"></rmgrid>
+                </div>
+            </div>
+        </div>
+        <div *showItBootstrap="['xs']">
+            <fieldset class="containerinfo-fieldset m-0" *ngIf="mobileData">
+                <legend class="containerinfo-legend" *ngIf="containerInfo.ContainerType">
+                    {{containerInfo.ContainerType}}</legend>
+                <div class="row pl-3">
+                    <div class="d-flex align-content-end flex-wrap pl-2" *ngFor="let singleInfo of mobileDataList">
+                        <div class="py-lg-1 negativeMargin">
+                            {{singleInfo}} : <rmbadge [badgenumber]="mobileData[singleInfo]"></rmbadge>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<!-- Container empty confirmation popup -->
+<ng-template #popTemplate>
+    <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+        <h4>{{'Container Empty' | translate}}</h4>
+        <button mat-icon-button (click)="dialogRef.close()">
+            <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+    </h1>
+    <xpo-dialog-content>
+        <div class="modal-body m-body">
+            <span>
+                <i class="fas fa-question-circle ques-icon emp-center"></i>
+                {{'EMPTYCONTAINERCONFIMRATION' | translate}}
+            </span>
+            <div class="d-flex justify-content-center log-btn-position">
+                <div class="pr-2">
+                    <rmbutton [buttonname]="'COMMON.YES' | translate" [class]="'btn btn-round-black'"
+                        (onclick)="emptyContainerConfirmation()"></rmbutton>
+                </div>
+                <div>
+                    <rmbutton [buttonname]="'COMMON.NO' | translate" [class]="'btn btn-round-black'"
+                        (onclick)="dialogRef.close()"></rmbutton>
+                </div>
+            </div>
+        </div>
+    </xpo-dialog-content>
+</ng-template>

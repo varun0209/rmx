@@ -1,0 +1,146 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="container-fluid padding-bottom">
+
+  <form #autoFailForm="ngForm">
+
+    <div class="row">
+      <div class="col-md-12 mb-3 col-sm-12">
+
+        <div class="float-right">
+
+          <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'search'" [buttonname]="'COMMON.SEARCH' | translate"
+            [iconstyle]="'fas fa-search'" (click)="getAutoFailList()"></rmbutton>
+
+          <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'" (onclick)="clearAutofail()"
+            [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+          </rmbutton>
+          <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'" [disabled]="!autoFailForm.valid || isValidateAddBtnFlag"
+            (onclick)="addOrUpdateAutoFail()" [buttonname]="btnName"
+            [iconstyle]="btnName==commonButton.add ?'fas fa-plus':'far fa-save'">
+          </rmbutton>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'AUTOFAILCONFIG.OEMCODE' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.oemcd?.Required"></rmlabel>
+        <rmdropdown [name]="'oemCode'" [id]="'oemCode'" #oemCodeDropDown [class]="'form-control'"
+          [dpOptions]="oemCodesList" [(ngModel)]="autoFailConfig.OEM_CD" [value]="autoFailConfig.OEM_CD"
+          (onChangeVal)="onPropertyDropdownChange($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.oemcd?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-2">
+        <rmlabel [label]="'AUTOFAILCONFIG.OEMMODELS' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.model?.Required"></rmlabel>
+        <rmdropdown [name]="'oemModels'" [id]="'oemModels'" #oemModelsDropDown [class]="'form-control'"
+          [dpOptions]="oemModels" (onChangeVal)="changeOemModel($event.value)" [(ngModel)]="autoFailConfig.MODEL"
+          [value]="autoFailConfig.MODEL"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.model?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-2">
+        <rmlabel [label]="'DISPOSITIONENGINECONFIG.PROGRAMNAME' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.programname?.Required"></rmlabel>
+        <!-- masterPageService.hideControls.controlProperties?.programName?.Required -->
+        <rmdropdown [name]="'programName'" [id]="'programName'" #programNameDropDown [class]="'form-control'"
+          [dpOptions]="programNamesList" [disabled]="isProgramNameDisabled" [(ngModel)]="autoFailConfig.PROGRAM_NAME"
+          [value]="autoFailConfig.PROGRAM_NAME" (onChangeVal)="changeProgramName($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.programname?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-2">
+        <rmlabel [label]="'DISPOSITIONENGINECONFIG.PROGRAMINDICATOR' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.programindicator?.Required"></rmlabel>        
+        <rmdropdown [name]="'ProgramIndicator'" [id]="'programIndicator'" #ProgramIndicatorDropDown
+          [class]="'form-control'" [dpOptions]="programIndicatorsList" [(ngModel)]="autoFailConfig.PROGRAM_INDICATOR"
+          [value]="autoFailConfig.PROGRAM_INDICATOR" (onChangeVal)="changeProgramIndicator($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.programindicator?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-1">
+        <rmlabel [label]="'DISPOSITIONENGINECONFIG.CONDITIONCODE' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.conditioncd?.Required"></rmlabel>        
+        <rmdropdown [name]="'conditionCode'" [id]="'conditionCode'" #conditionCodeDropDown [class]="'form-control'"
+          [dpOptions]="conditionCodesList" [(ngModel)]="autoFailConfig.CONDITION_CD"
+          [value]="autoFailConfig.CONDITION_CD" (onChangeVal)="changeConditionCode($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.conditioncd?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-2 d-flex">
+        <div class="form-group col pr-0">
+          <rmlabel [label]="'AUTOFAILCONFIG.RANK' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.rank?.Required">            
+          </rmlabel>
+          <input type="number" [class]="'form-control'" [name]="'newrank'" #rank [id]="'newrank'"
+            [(ngModel)]="autoFailConfig.RANK" [numberPattern]="rankPattern" numbersOnly
+            [requiredIf]="masterPageService.hideControls.controlProperties?.rank?.Required">          
+        </div>
+        <div class="d-flex col">
+          <rmtoggle [label]="'COMMON.ACTIVE' | translate" [togglelblClassLabel]="'pr-5 pb-2'" [togglelblClass]="''"
+            [id]="'active'" name="disposEngineConfigActive" [(ngModel)]="autoFailConfig.ACTIVE"
+            (onChangeVal)="onActiveChange($event)" [toggleval]="autoFailConfig.ACTIVE == 'Y'? true:false">
+          </rmtoggle>
+        </div>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'AUTOFAILCONFIG.TRIGGERLEVELS' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.triggerlevel?.Required"></rmlabel>       
+        <rmdropdown [name]="'triggerLevels'" [id]="'triggerLevels'" #triggerLevelsDropDown [class]="'form-control'"
+          [dpOptions]="triggerLevels" [(ngModel)]="autoFailConfig.TRIGGER_LEVEL" [value]="autoFailConfig.TRIGGER_LEVEL"
+          (onChangeVal)="changeTriggerLevels($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.triggerlevel?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-2">
+        <rmlabel [label]="'AUTOFAILCONFIG.TRIGGERATTR' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.triggerattr?.Required"></rmlabel>        
+        <rmdropdown [name]="'triggerAttr'" [id]="'triggerAttr'" #triggerAttrDropDown [class]="'form-control'"
+          [dpOptions]="triggerAttr" [(ngModel)]="autoFailConfig.TRIGGER_ATTR" [value]="autoFailConfig.TRIGGER_ATTR"
+          (onChangeVal)="changeTriggerAttr($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.triggerattr?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-2">
+        <rmlabel [label]="'AUTOFAILCONFIG.TRANSID' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.autofailtransid?.Required"></rmlabel>
+        <rmdropdown [name]="'transId'" [id]="'transId'" #triggerAttrDropDown [class]="'form-control'"
+          [disabled]="isTransIDDisable" [dpOptions]="transId" [(ngModel)]="autoFailConfig.AUTOFAIL_TRANSID"
+          [value]="autoFailConfig.AUTOFAIL_TRANSID" (onChangeVal)="changeTransId($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.autofailtransid?.Required">
+        </rmdropdown>
+      </div>
+      <div class="form-group col-lg-2">
+        <rmlabel [label]="'AUTOFAILCONFIG.IVCCATEGORYOVERRIDE' | translate"></rmlabel>
+
+        <ng-multiselect-dropdown id="ivcCategory" name="ivcCategory" [placeholder]="''" [settings]="dropdownSettings" 
+           [data]="ivcCategory" [(ngModel)]="categoryPropertySelectedItem" [disabled]="isTransIDDisable">
+        </ng-multiselect-dropdown>
+      </div>
+      <div class="form-group col-lg-3">
+        <rmlabel [label]="'AUTOFAILCONFIG.LOADIVCCODES' | translate"
+          [isAsterisk]="masterPageService.hideControls.controlProperties?.ivccode?.Required"></rmlabel>
+        <rmdropdown [name]="'loadIveCodes'" [id]="'loadIveCodes'" #triggerAttrDropDown [class]="'form-control'"
+          [dpOptions]="loadIvcCodes" [(ngModel)]="autoFailConfig.IVCCODE" [value]="autoFailConfig.IVCCODE"
+          (onChangeVal)="changeLoadIvcCodes($event.value)"
+          [requiredIf]="masterPageService.hideControls.controlProperties?.ivccode?.Required">
+        </rmdropdown>
+      </div>
+    </div>
+
+  </form>
+  <div class="row">
+    <div class="col-12">
+      <app-rule-setup [ruleSetupObject]="ruleSetupObject" [editruleSetup]="editruleSetup"
+        (emitEnableAddOrSave)="emitEnableAddOrSave($event)"></app-rule-setup>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-12" *ngIf="autoFailList">
+      <rmgrid [(gridproperties)]="autoFailList" (emitEditDetails)="editAutoFail($event)" [isCancelIconShow]="false">
+      </rmgrid>
+    </div>
+  </div>
+</div>

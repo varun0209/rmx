@@ -1,0 +1,112 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-1'" class="padding-bottom">
+  <div class="container-fluid">
+    <div class="form-row mb-1">
+      <div class="col-md-4 col-xs-12">
+        <div class="form-group">
+          <rmlabel [label]="'SNROUTE.SNORROUTE' | translate">
+          </rmlabel>
+          <rmtextbox [(ngModel)]="serialNumberorRoute" [name]="'snorroute'" [id]="'snorroute'" [placeholder]="''"
+            [textBoxPattern]="textboxPattern" (enter)="loadSerialRouteInfo()" (searchEventEmit)="loadSerialRouteInfo()"
+            [disabled]="isSerialorRouteSearchSuccess" [uiData]="uiData" [isSerialNumber]="true"
+            [textBoxPattern]="controlConfig?.barCodePattern">
+          </rmtextbox>
+        </div>
+      </div>
+      <div class="col-md-4 mt-2 align-self-center">
+        <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.SEARCH' | translate"
+          [iconstyle]="'fas fa-search'" [disabled]="isSerialorRouteSearchSuccess" (click)="loadSerialRouteInfo()">
+        </rmbutton>
+      </div>
+      <div class="col-md-4 align-self-cente text-right">
+        <rmbutton [class]="'btn btn-round-black mr-1'" [buttonname]="'COMMON.RESET' | translate" [disabled] = "!this.serialNumberorRoute"
+          [iconstyle]="'fas fa-redo'" (click)="resetSerialRouteInfo()">
+        </rmbutton>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <mat-accordion aria-expanded="true">
+          <mat-expansion-panel class="group-name route-path" *ngIf="isSerialNumberPathHistoryVisible">
+            <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px" class="group-name">
+              <mat-panel-title class="justify-content-between w-100">
+                <span>{{'SNROUTE.ROUTEPATHHISTORY' | translate}} </span>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="col-md-12 p-0">              
+              <table class="table table-md table-striped">
+                <thead class="thead-dark">
+                  <tr>
+                    <th scope="col">{{'SNROUTE.STEP' | translate}}</th>
+                    <th scope="col">{{'SNROUTE.ROUTE' | translate}}</th>
+                    <th scope="col">{{'SNROUTE.RULE' | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let pathHist of serialNumberPathHistory">
+                    <td>{{pathHist.STEP}}</td>
+                    <td>{{pathHist.ROUTE}}</td>
+                    <td>{{pathHist.ROUTE_RULE}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+    <div class="list row no-gutters">
+      <div class="routeFlow col-12" *ngIf="isSerialorRouteSearchSuccess">
+        <h4 class="current-route">{{'SNROUTE.CURRENTROUTE' | translate}} {{serialorRouthOperationinfo.ROUTEID}} - {{serialorRouthOperationinfo.DESCRIPTION}}</h4>
+        <div #routeFlow class="wizard-inner d-flex align-content-center flex-wrap">
+          <ul>
+            <li class="active" *ngFor="let oprdata of serialorRouthOperationinfo.OperationCodes">
+              <div class="items-align-center">
+                <div class="items-id-size">{{oprdata.ID}}</div>
+                <div class="items-text-size">{{oprdata.TEXT}}</div>
+                <!-- <span class="route-info" (click) = "onOperationInfoClick(oprdata)" [xpoPopoverTriggerFor]="popover"><i class="fas fa-info-circle"></i></span> -->
+                <span class="route-info"  tooltip="Click here for Operation Info" data-placement="bottom" (click)="onOperationInfoClick(oprdata)" [xpoPopoverTriggerFor]="popover"><i
+                    class="fas fa-info-circle"></i></span>
+              </div>
+            </li>
+          </ul>
+          <div class="positionAbsolute cursorPointer">
+            <span class="pr-2">
+              <i class="fas fa-chevron-circle-left fa-2x iconColor" aria-hidden="true" (click)="scrollLeft()"></i>
+            </span>
+            <span>
+              <i class="fas fa-chevron-circle-right fa-2x iconColor" aria-hidden="true" (click)="scrollRight()"></i>
+            </span>
+          </div>
+        </div>
+      </div>
+      <xpo-popover class="route-info-custom" #popover="xpoPopover" [position]="position" [color]="color" [caretPosition]="caretPosition">
+        <xpo-popover-title>{{currentOperationid}} - {{currentOperationName}}</xpo-popover-title>
+        <xpo-popover-content>
+          <div *ngFor="let opedevrou of operationDeviatedRoutes">
+            <mat-accordion aria-expanded="true">
+              <mat-expansion-panel class="group-name">
+                <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px" class="group-name">
+                  <mat-panel-title class="justify-content-between w-100">{{opedevrou.rX_ROUTE.ROUTEID}} - 
+                    {{opedevrou.rX_ROUTE.DESCRIPTION}}</mat-panel-title>
+                </mat-expansion-panel-header>
+                <div class="col-md-12 mb-3">
+                  <div class="form-row">
+                    <div class="col-12 d-flex p-0 mb-2">
+                      <strong class="mr-2">{{'SNROUTE.ROUTE' | translate}}:</strong> 
+                      <span class="popover-route" *ngFor="let oprcode of opedevrou.rX_ROUTE.OperationCodes">
+                        <span class="next-route">{{oprcode.ID}}</span>
+                      </span>
+                    </div>
+                    <div class="col-6 p-0"><strong>{{'SNROUTE.RULE' | translate}}</strong></div>
+                    <div class="col-6 p-0 mb-2 text-right"><strong>{{'SNROUTE.RANK' | translate}}:</strong> {{opedevrou.RANK}}</div>
+                    <div class="col-12 rule-content">{{opedevrou.RULE}}</div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </xpo-popover-content>
+      </xpo-popover>
+    </div>
+  </div>
+</div>

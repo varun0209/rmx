@@ -1,0 +1,141 @@
+.padding-bottom {
+    padding-bottom: 22px;
+  }
+  
+  
+  .rm-card{
+    border: 1px solid rgba(0,0,0,.125);
+    background-color: #ffffff;
+  }
+
+  .nci-fieldset{
+    display: block;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+    min-inline-size: min-content;
+    border: 2px solid #cccccc;
+    box-shadow: 2px 2px 8px #cccccc;  
+}
+    
+  .nci-legend{
+    display: block;
+    width: unset;
+    max-width: 100%;
+    padding: 2px 4px;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    color: rgb(255,255,255);
+    white-space: normal;
+    border-radius: 5px;
+    background-color: rgb(8,104,172);
+
+  }
+  .container-noalert{
+    margin-top: 2%;
+  }
+   .container-onalert{
+    margin-top: 1%;
+  } 
+
+  .form-row>.qty{
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .form-row>.nci-print{
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  .nci-print {
+    flex: 0 1 8.333333%;
+    max-width: 7.333333%;
+  }
+
+  .div-readonly-date{
+    width: 235px;
+    padding: 0px 2px 4px;
+  }
+  .readonly-date{
+    position: relative;    
+    width: 100%;
+    height: 45px;
+    padding: 2px;
+    border: 1px solid rgba(8, 104, 172, 0.55);
+    border-radius: 25px;
+    box-shadow: 2px 2px rgb(8,104,172);
+  }
+
+  .readonly-date span:nth-child(1){
+    position: absolute;    
+    left: 13px;
+  }
+  .readonly-date span:nth-child(2){
+    position: absolute;
+    top: 24px;
+    left: 13px;
+  }
+
+  .addDate-position{
+    top:13px
+  }
+  
+  @media (min-width: 360px) and (max-width: 767.98px) { 
+    .col{
+      flex-basis: unset;
+    }
+
+    .qty{
+      flex-basis:0;
+      flex-grow: 1;
+      max-width: 30%;
+    }
+  }
+
+  /*large Screens*/
+@media (max-width: 1280px) {
+  .container-noalert{
+    margin-top: 3%;
+    }
+    
+  .nci-print {
+    flex: 0 0 10.333333%;
+    max-width: 13.333333%;
+}
+ 
+}
+@media (max-width: 1024px) {
+  .container-noalert{
+    margin-top: 3.5%;
+    }
+  
+  .nci-print {
+    flex: 0 0 13.333333%;
+    max-width: 13.333333%;
+}
+ 
+}
+
+@media (max-width: 768px) {
+
+  .nci-print {
+    flex: 0 0 18.333333%;
+    max-width: 20.333333%;
+  }
+}
+
+@media (max-width: 360px) {
+  .container-noalert{
+    margin-top: 8.5%;
+  }
+ 
+}
+
+/* input[type=number]::-webkit-outer-spin-button, 
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: inner-spin-button !important;
+} */

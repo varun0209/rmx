@@ -1,0 +1,60 @@
+<ng-container>
+    <div [ngClass]="!appErrService.alertFlag ? 'main-container-noalert' : 'main-container-onalert'"
+        class="container-fluid container-mb">
+
+        <div class="d-flex justify-content-end">
+
+            <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Clear'" [buttonname]="'COMMON.CLEAR'| translate"
+                [iconstyle]="'far fa-times-circle'" [disabled]="isResetBtnDisabled" (click)="reset()">
+            </rmbutton>
+            <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Close'" [disabled]="isCloseButtonDisabled"
+                (onclick)="onCloseReceipt()"
+                buttonname="{{'COMMON.CLOSE' | translate }}  {{ 'COMMON.RECEIPT' | translate }}"
+                [iconstyle]="'far fa-times-close'">
+            </rmbutton>
+
+
+        </div>
+
+        <div class="form-group">
+            <rmlabel [label]="'Search key' | translate"></rmlabel>
+            <rmtextbox [(ngModel)]="searchInput" #searchKey [id]="'searchKey'"
+                [placeholder]="'carrier reference name/receipt key/auth key/extern key'" [name]="'searchKey'"
+                (isInputValueEmpty)="changeInput(searchKey)" (onChangeVal)="changeInput(searchKey)"
+                (enter)="searchInputKey(searchKey)"></rmtextbox>
+        </div>
+        <div *ngIf="authListDetails">
+            <rmgrid [(gridproperties)]="authListDetails"
+                (emitDeleteDetails)="deleteDetailRow(utilitymodal, $event, 'modal-md modal-dialog-centered')"
+                (emitCheckboxDetails)="checkboxDetailRow($event)"></rmgrid>
+        </div>
+    </div>
+</ng-container>
+
+
+<ng-template #utilitymodal>
+    <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+        {{modeltitle | translate}}
+        <button mat-icon-button (click)="modelClose()">
+            <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+    </h4>
+    <xpo-dialog-content>
+        <div class="modal-body">
+            <div class="form-group position-relative">
+                <p class="mb-2">There are already some Serial Numbers exist in this receipt, please recover first before
+                    closing this receipt.</p>
+                <div class="serial-numbers-section">
+                    <span class="serial-number" *ngFor="let data of serialnumberList"> {{ data.SerilNumber }} </span>
+                </div>
+                <div class="row mx-auto">
+                    <div class="container-fluid p-0">
+                        <serialnumber-recover (deleteSerialNumberData)="deleteSerialNumberData($event)"
+                            [tittle]="modeltitle" [receiptkey]="receiptkey" [uiData]="uiData">
+                        </serialnumber-recover>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </xpo-dialog-content>
+</ng-template>

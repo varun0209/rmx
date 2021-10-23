@@ -1,0 +1,107 @@
+<div *ngIf="showGridList">
+  <ul class="list-group mb-list-grid border list-group-scroll" [hidden]="hideListGroupScroll">
+    <li class="list-group-item align-items-center" *ngFor="let data of listGroupItems;" [ngClass]="{'list-group-item-success':data.ExternLineno  == listGroupselectedRow.ExternLineno}">
+      <div class="row">
+        <div class="col-11 mb-list-item">
+          <div class=" list-group-custom-item float-left" *ngFor="let headingli of headingsobj">
+            <div class="onetwo">
+              <span>
+                <b *ngIf="headingli.length >= 4"> {{headingli | slice:0:4 }}:</b>
+              </span>
+              <span>
+                <b *ngIf="headingli.length < 4"> {{headingli }} :</b>
+              </span>
+              <span *ngIf="headingli !== 'Qty'"> {{ data[headingli] }} </span>
+              <span *ngIf="headingli === 'Qty'" class="badge-pill badge-success f12">{{ data[headingli] }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 px-0">
+          <span class="cursor-pointer d-block p-2" (click)="showListDetails(data)" [@listState]="state" *ngIf="displayCarret">
+            <i class="fas fa-chevron-circle-right"></i>
+          </span>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+
+
+<ng-container *ngIf="showDetail">
+  <div *xs class="container mt-3 list-details-wrap" [id]="listDetailsWrap">
+    <a class="mb-2" (click)="showListDetails()">
+      <i class="fa fa-chevron-circle-left"></i>
+    </a>
+    <span class="ml-4">
+      <b>{{listDetailsHeading }} :</b>{{listDetailsHeadingValue}}</span>
+    <ng-container *ngIf="ESNList.length>0">
+      <ul class="list-group mb-list-grid" *ngFor="let data of ESNList;let i=index">
+        <li class="list-group-item align-items-center">
+          <div class="row">
+            <div class="mb-list-item pr-0 pl-1">
+              <div class="col-12 list-details-item" *ngFor="let headingli of headingsList">
+                <span *ngIf="headingli !== 'ExternLineno'">
+                  <b>{{headingli}}:</b>{{data[headingli] }} </span>
+              </div>
+                <button type="button" #listDeletePop="bs-popover" class="btn btn-sm btn-round-outline-black" container="body" popoverTitle="title"
+                                  [outsideClick]="true" (click)="clearData()" [popover]="popTemplate" popoverTitle="Are you sure?" placement="left">
+                              <i class="far fa-trash-alt"></i>
+                </button>
+            </div>
+            <div class="col-12">
+              <ng-template #popTemplate>
+                <label>Serial Number</label>
+                <rmtextbox #inputSerialDelete [(ngModel)]="deletedData" (onChangeVal)="changeInput(inputSerialDelete)" [id]="'deleteInput_Serial'" [placeholder]="''"></rmtextbox>
+                <div class="text-center my-3">
+                  <button type="button" class="btn btn-sm btn-round-black mr-2" (click)="deleteESNItem(data, inputSerialDelete)">
+                    <i class="fas fa-trash-alt text-success mr-1"></i> Delete</button>
+                  <button type="button" class="btn btn-sm btn-round-black" (click)="listDeletePop.hide()">
+                    <i class="fas fa-times-circle text-danger mr-1"></i>Cancel</button>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </ng-container>
+    <ng-container *ngIf="ESNList.length==0||ESNList==undefined">
+      <div class="alert alert-danger">
+        <strong>No Data Found with {{listDetailsHeadingValue}}</strong>
+      </div>
+    </ng-container>
+    <div id="demo" hidden>
+      <div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row div-scorerange">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="control-label">
+                    From</label>
+                  <input placeholder="Low Score" type="text" class="form-control" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="control-label">
+                    To</label>
+                  <input placeholder="High Score" type="text" class="form-control" />
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-md-6 col-md-offset-6">
+                <button class="btn-dark-grey btn">
+                  CANCEL</button>
+                <button class="btn btn-red">
+                  SAVE</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

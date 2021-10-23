@@ -1,0 +1,297 @@
+﻿[
+    {
+        "name": "Alabama",
+        "shortname": "AL",
+        "country_id": "1"
+    },
+    {
+        "name": "Alaska",
+        "shortname": "AK",
+        "country_id":"1"
+    },
+    {
+        "name": "American Samoa",
+        "shortname": "AS",
+        "country_id":"1"
+    },
+    {
+        "name": "Arizona",
+        "shortname": "AZ",
+        "country_id":"1"
+    },
+    {
+        "name": "Arkansas",
+        "shortname": "AR",
+        "country_id":"1"
+    },
+    {
+        "name": "California",
+        "shortname": "CA",
+        "country_id":"1"
+    },
+    {
+        "name": "Colorado",
+        "shortname": "CO",
+        "country_id":"1"
+    },
+    {
+        "name": "Connecticut",
+        "shortname": "CT",
+        "country_id":"1"
+    },
+    {
+        "name": "Delaware",
+        "shortname": "DE",
+        "country_id":"1"
+    },
+    {
+        "name": "District Of Columbia",
+        "shortname": "DC",
+        "country_id":"1"
+    },
+    {
+        "name": "Federated States Of Micronesia",
+        "shortname": "FM",
+        "country_id":"1"
+    },
+    {
+        "name": "Florida",
+        "shortname": "FL",
+        "country_id":"1"
+    },
+    {
+        "name": "Georgia",
+        "shortname": "GA",
+        "country_id":"1"
+    },
+    {
+        "name": "Guam Gu",
+        "shortname": "GU",
+        "country_id":"1"
+    },
+    {
+        "name": "Hawaii",
+        "shortname": "HI",
+        "country_id":"1"
+    },
+    {
+        "name": "Idaho",
+        "shortname": "ID",
+        "country_id":"1"
+    },
+    {
+        "name": "Illinois",
+        "shortname": "IL",
+        "country_id":"1"
+    },
+    {
+        "name": "Indiana",
+        "shortname": "IN",
+        "country_id":"1"
+    },
+    {
+        "name": "Iowa",
+        "shortname": "IA",
+        "country_id":"1"
+    },
+    {
+        "name": "Kansas",
+        "shortname": "KS",
+        "country_id":"1"
+    },
+    {
+        "name": "Kentucky",
+        "shortname": "KY",
+        "country_id":"1"
+    },
+    {
+        "name": "Louisiana",
+        "shortname": "LA",
+        "country_id":"1"
+    },
+    {
+        "name": "Maine",
+        "shortname": "ME",
+        "country_id":"1"
+    },
+    {
+        "name": "Marshall Islands",
+        "shortname": "MH",
+        "country_id":"1"
+    },
+    {
+        "name": "Maryland",
+        "shortname": "MD",
+        "country_id":"1"
+    },
+    {
+        "name": "Massachusetts",
+        "shortname": "MA",
+        "country_id":"1"
+    },
+    {
+        "name": "Michigan",
+        "shortname": "MI",
+        "country_id":"1"
+    },
+    {
+        "name": "Minnesota",
+        "shortname": "MN",
+        "country_id":"1"
+    },
+    {
+        "name": "Mississippi",
+        "shortname": "MS",
+        "country_id":"1"
+    },
+    {
+        "name": "Missouri",
+        "shortname": "MO",
+        "country_id":"1"
+    },
+    {
+        "name": "Montana",
+        "shortname": "MT",
+        "country_id":"1"
+    },
+    {
+        "name": "Nebraska",
+        "shortname": "NE",
+        "country_id":"1"
+    },
+    {
+        "name": "Nevada",
+        "shortname": "NV",
+        "country_id":"1"
+    },
+    {
+        "name": "New Hampshire",
+        "shortname": "NH",
+        "country_id":"1"
+    },
+    {
+        "name": "New Jersey",
+        "shortname": "NJ",
+        "country_id":"1"
+    },
+    {
+        "name": "New Mexico",
+        "shortname": "NM",
+        "country_id":"1"
+    },
+    {
+        "name": "New York",
+        "shortname": "NY",
+        "country_id":"1"
+    },
+    {
+        "name": "North Carolina",
+        "shortname": "NC",
+        "country_id":"1"
+    },
+    {
+        "name": "North Dakota",
+        "shortname": "ND",
+        "country_id":"1"
+    },
+    {
+        "name": "Northern Mariana Islands",
+        "shortname": "MP",
+        "country_id":"1"
+    },
+    {
+        "name": "Ohio",
+        "shortname": "OH",
+        "country_id":"1"
+    },
+    {
+        "name": "Oklahoma",
+        "shortname": "OK",
+        "country_id":"1"
+    },
+    {
+        "name": "Oregon",
+        "shortname": "OR",
+        "country_id":"1"
+    },
+    {
+        "name": "Palau",
+        "shortname": "PW",
+        "country_id":"1"
+    },
+    {
+        "name": "Pennsylvania",
+        "shortname": "PA",
+        "country_id":"1"
+    },
+    {
+        "name": "Puerto Rico",
+        "shortname": "PR",
+        "country_id":"1"
+    },
+    {
+        "name": "Rhode Island",
+        "shortname": "RI",
+        "country_id":"1"
+    },
+    {
+        "name": "South Carolina",
+        "shortname": "SC",
+        "country_id":"1"
+    },
+    {
+        "name": "South Dakota",
+        "shortname": "SD",
+        "country_id":"1"
+    },
+    {
+        "name": "Tennessee",
+        "shortname": "TN",
+        "country_id":"1"
+    },
+    {
+        "name": "Texas",
+        "shortname": "TX",
+        "country_id":"1"
+    },
+    {
+        "name": "Utah",
+        "shortname": "UT",
+        "country_id":"1"
+    },
+    {
+        "name": "Vermont",
+        "shortname": "VT",
+        "country_id":"1"
+    },
+    {
+        "name": "Virgin Islands",
+        "shortname": "VI",
+        "country_id":"1"
+    },
+    {
+        "name": "Virginia",
+        "shortname": "VA",
+        "country_id":"1"
+    },
+    {
+        "name": "Washington",
+        "shortname": "WA",
+        "country_id":"1"
+    },
+    {
+        "name": "West Virginia",
+        "shortname": "WV",
+        "country_id":"1"
+    },
+    {
+        "name": "Wisconsin",
+        "shortname": "WI",
+        "country_id":"1"
+    },
+    {
+        "name": "Wyoming",
+        "shortname": "WY",
+        "country_id":"1"
+    }
+]

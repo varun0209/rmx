@@ -1,0 +1,44 @@
+.sampling-details{
+    background: #f3f3f3;
+    padding: 7px 5px;
+    border-radius: 3px;
+    border: 1px #d2d2d2 solid;
+    display: grid;
+    text-align: center;
+    margin-bottom: 7px;
+}
+.sampling-details label{
+    color: #000;
+    margin-bottom: 0;
+}
+.sampling-details span{
+background: none;
+font-size: 16px;
+color: #000;
+}
+.sampling-details-card{
+    display: grid;
+}
+@media (min-width: 1024px) and (max-width: 1440px) { 
+    .sampling-details-card{
+        min-width: 33.3% !important;
+    }
+    .sampling-details-card:nth-child(3), .sampling-details-card:nth-child(6), .sampling-details-card:nth-child(9), .sampling-details-card:nth-child(12){
+        padding-right: 15px !important;
+        padding-left: 8px !important;
+    }
+    .sampling-details-card:nth-child(4), .sampling-details-card:nth-child(7), .sampling-details-card:nth-child(10){
+        padding-right: .5rem!important;
+        padding-left: 15px !important;
+    }
+    .sampling-details-card:nth-child(5), .sampling-details-card:nth-child(8), .sampling-details-card:nth-child(11){
+        padding-left:  .5rem!important;
+        padding-right: .5rem !important;
+    }
+  }
+  @media (min-width: 768px) and (max-width: 1023.98px) { 
+    .sampling-details-card{
+        min-width: 50% !important;
+        padding: 0 15px !important;
+    }
+  }

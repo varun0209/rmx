@@ -1,0 +1,40 @@
+  
+  .lblName{
+  color: #0868ac;
+  font-size: 13px;
+    font-weight: 400;
+  display: block;
+  }
+  
+  .lblValue{
+  display: block;
+  text-align: center;
+  font-size: 15px;
+  color: #2d3238;
+  font-weight: 600;
+  }
+.edit-label-value {
+    position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 17px;
+  }
+
+.edit-label-value:hover {
+      cursor: pointer;
+  }
+
+.btn {
+  border: none !important;
+}
+
+.btn-link {
+  color: #474a4e !important;
+}
+  @media (min-width: 320px) and (max-width: 640px) {
+    .readOnlyDiv{     
+      max-width: 250px;
+     
+    }
+  }
+ 

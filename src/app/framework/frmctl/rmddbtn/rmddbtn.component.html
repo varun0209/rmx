@@ -1,0 +1,12 @@
+<div [ngClass]="ddBtnClass" class="btn-group">
+  <button type="button" class="btn  btn-round-black" (click)="optionBtnEvent(selectedBtnOption)" id='Release'
+    [disabled]="isEnableDynamicBtn">{{(selectedBtnOption == '') ? 'Select' : selectedBtnOption}}</button>
+  <button type="button" class="btn  btn-round-black dropdown-toggle dropdown-toggle-split" data-toggle="dropdown"
+    aria-haspopup="true" aria-expanded="false" id="ddBtnId" [disabled]="isDdBtnDisabled">
+  </button>
+  <ul class="dropdown-menu  dropdown-menu-right">
+    <li *ngFor="let btnOption of ddBtnOptionsList">
+      <a class="dropdown-item" (click)="changeDdBtnOptions(btnOption)">{{btnOption}}</a>
+    </li>
+  </ul>
+</div>

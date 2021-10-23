@@ -1,0 +1,167 @@
+    <xpo-dialog-title>
+      {{'ROUTESETUP.ROUTESETUP' | translate}}
+  </xpo-dialog-title>
+  <xpo-dialog-content>
+  <form #routeForm="ngForm">
+    <fieldset class="p-0">
+    <div class="modal-body mx-3 m-body ">
+      <div class="row">
+        <div class="col-md-12 mb-2 col-sm-12 pr-1 mt-1 mr-1 ">
+          <div class="float-right">
+            <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'routeReset'" [disabled]="isRouteResetBtnDisabled"
+              (onclick)="resetRoute()" [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'">
+            </rmbutton>
+            <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'routeAdd'"
+              [disabled]="!routeForm.valid || isValidateAddBtnFlag" (onclick)="addOrUpdateRoute()"
+              [buttonname]="routeBtnName" [iconstyle]="routeBtnName == commonEnum.add ?'fas fa-plus':'far fa-save'">
+            </rmbutton>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-md-6 col-lg-5 col-sm-12 pb-2">
+          <rmlabel [label]="'ROUTESETUP.ROUTEID' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.routeId?.Required">
+          </rmlabel>
+          <typeahead [(ngModel)]="selectedRoute.ROUTEID" [typeaheadOptionField]="'TEXT'" [id]="'routeId'" name="routeID"
+            [typeaheadOptions]="eligibleRoutes" #routeID=ngModel
+            [requiredIf]="masterPageService.hideControls.controlProperties?.routeId?.Required"
+            [typeaheadDisabled]="isRouteIdDisabled" [waitTime]="appConfig.route.routeIDWaitTime" [placeholder]="''"
+            (inputEvent)="onRouteIDChangeVal($event)" [typeaheadOption]="selectedRoute.ROUTEID"
+            (keyup.enter)="getRouteList()" (typeaheadResponse)="typeaheadResponse($event)">
+          </typeahead>
+
+        </div>
+        <div class="form-group col-auto px-lg-0 mt-md-4 pb-2">
+          <rmbutton [class]="'btn btn-round-black'" [id]="'generateRouteID'"
+            [buttonname]="'ROUTESETUP.GENROUTEID' | translate" [disabled]="isGenerateRouteIdBtnDisabled"
+            [iconstyle]="'fas fa-sync mx-1'" (click)="generateRouteID()">
+          </rmbutton>
+        </div>
+        <div class="form-group col-md-6 col-lg-2 col-sm-12 pb-2">
+          <rmlabel [label]="'ROUTESETUP.ROUTETYPE' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.routeType?.Required">
+          </rmlabel>
+          <rmdropdown [name]="'routeType'" [id]="'routeType'" #routeTypeDropDown [class]="'form-control'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.routeType?.Required"
+            [dpOptions]="routeTypeList" [disabled]="isRouteTypeDisabled" [(ngModel)]="selectedRoute.RouteType"
+            [value]="selectedRoute.RouteType" (onChangeVal)="changeRouteType($event)">
+          </rmdropdown>
+        </div>
+        <div class="form-group col-md-6 col-lg-4 col-sm-12 pb-2">
+          <rmlabel [label]="'COMMON.DESCRIPTION' | translate"
+            [isAsterisk]="masterPageService.hideControls.controlProperties?.description?.Required">
+          </rmlabel>
+          <rmtextarea [(ngModel)]="selectedRoute.DESCRIPTION" [name]="'description'"
+            [requiredIf]="masterPageService.hideControls.controlProperties?.description?.Required"
+            [disabled]="isRouteDescriptionDisabled" [id]="'description'" (onChangeVal)="onDescriptionChange()"
+            [placeholder]="''" [rows]="1" [maxlength]="appConfig.route.descriptionLength"
+            [allowMaxlengthTextarea]="false">
+          </rmtextarea>
+        </div>
+        <div class="form-group col-auto px-lg-0" *ngIf="false">
+          <rmtoggle [label]="'COMMON.ACTIVE' | translate" [togglelblClassLabel]="'pr-5 pb-2'" [togglelblClass]="''"
+            [id]="'routeActive'" name="routeActive" [(ngModel)]="selectedRoute.ACTIVE"
+            (onChangeVal)="onRouteActiveChange($event)" [toggleval]="selectedRoute.ACTIVE == 'Y'? true:false"
+            [disabled]="isRoutetoggleActive">
+          </rmtoggle>
+        </div>
+
+      </div>
+
+      <br>
+      <div class="list row no-gutters" *ngIf="routeAllOperationCodes && routeAllOperationCodes.length">
+        <div class="left col-5 col-lg-3 col-md-6">
+          <div class="row no-gutters">
+            <div class="col-md-10 col-8 border rounded" [ngClass]="{'div-disabled' :isInActiveRouteSelected}">
+              <ul class="list-group scrollbar" id="style-4">
+                <li class="list-group-item border-0 cursorPointer" (click)="getMainItem(i)"
+                  *ngFor="let item of routeAllOperationCodes;index as i"
+                  [ngClass]="isRouteMainSelected && i == selectedRouteMainIndex ? 'bg-color': ''">
+                  <div class="row ">
+                    <div class="col-auto col-md-4">
+                      {{item.ID}}
+                    </div>
+                    <div class="col-5 col-md-8" *showItBootstrap="['lg','xl','md','sm']">
+                      {{item.TEXT}}
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="col-4 col-md-2 m-auto px-md-2 px-lg-auto text-center">
+              <rmbutton [class]="'btn btn-round-black align-middle'" [id]="'id'" [disabled]="isMoveRightDisabled"
+                [buttonname]="''" (onclick)="moveRight()" [iconstyle]="'fa fa-arrow-right fa-lg'">
+              </rmbutton>
+            </div>
+          </div>
+        </div>
+
+        <div class="right col-7 col-lg-3 col-md-6 pr-3">
+          <div class="row no-gutters">
+            <div class="col-11 col-md-10 border rounded"
+              [ngClass]="{'borderGrey' : !(selectedRoute.OperationCodes && selectedRoute.OperationCodes.length) , 'div-disabled' :isInActiveRouteSelected }">
+              <ul class="list-group scrollbar" id="style-4">
+                <li class="list-group-item border-0 cursorPointer" (click)="getTempItem(i)"
+                  *ngFor="let item of selectedRoute.OperationCodes; index as i"
+                  [ngClass]="isRouteTempSelected && i == selectedRouteTempIndex ? 'bg-color': ''">
+                  <div class="row">
+                    <div class="col-1 ">
+                      {{i+1}}
+                    </div>
+                    <div class="col-auto col-md-3">
+                      {{item.ID}}
+                    </div>
+                    <div class="col-4 col-md-6" *showItBootstrap="['lg','xl','md','sm']">
+                      {{item.TEXT}}
+                    </div>
+                    <div class="col-2 col-md-1 px-1" *ngIf="!(defaultOprtationSelect && i == 0)">
+                      <span class="pointer margin-right-p" (click)="deleteItem(item,i)" *ngIf="item">
+                        <i class="fa fa-fw fa-trash-alt"></i>
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+
+            </div>
+            <div class="col-1 col-md-2 m-auto px-1 px-md-3">
+              <span class="pb-3 d-block">
+                <i class="fa fa-arrow-up fa-lg" aria-hidden="true" (click)="moveUp()"></i>
+              </span>
+              <span class="d-block">
+                <i class="fa fa-arrow-down fa-lg" aria-hidden="true" (click)="moveDown()"></i>
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="routeFlow col-12 col-lg-6 col-md-12 "
+          *ngIf="selectedRoute.OperationCodes && selectedRoute.OperationCodes.length">
+          <div #routeFlow class="wizard-inner d-flex align-content-center flex-wrap">
+            <ul>
+              <li class="active" *ngFor="let item of selectedRoute.OperationCodes; index as i">
+                <div class="items-align-center">
+                  <div class="items-id-size">{{item.ID}}</div>
+                  <div class="items-text-size">{{item.TEXT}}</div>
+                </div>
+
+              </li>
+            </ul>
+            <div class="positionAbsolute cursorPointer">
+              <span class="pr-2">
+                <i class="fas fa-chevron-circle-left fa-2x iconColor" aria-hidden="true" (click)="scrollLeft()"></i>
+              </span>
+              <span>
+                <i class="fas fa-chevron-circle-right fa-2x iconColor" aria-hidden="true" (click)="scrollRight()"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </fieldset>
+</form>
+</xpo-dialog-content>

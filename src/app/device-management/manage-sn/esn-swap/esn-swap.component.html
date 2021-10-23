@@ -1,0 +1,28 @@
+<div class="col-md-12 col-sm-12 p-0">
+  <fieldset class="esn-fieldset m-0">
+    <legend class="esn-legend">{{'DEVICEMANAGEMENT.SERIALNUMBERSWAP' | translate}}</legend>
+    <div class="row">
+      <div class="col-md-6">
+        <rmlabel [label]="'DEVICEMANAGEMENT.TOSERIALNUMBER' | translate"></rmlabel>
+        <div class="mb-2">
+          <rmtextbox [(ngModel)]="toSerialNumber" #transferSerialNumberInput [disabled]="isDisabledToSerialNumber" [id]="'transferSerialNumber'"
+            [placeholder]="''" [name]="'transferSerialNumber'" (enter)="validateSwapSerialNumber($event,transferSerialNumberInput)"
+            [uiData]="uiData" [isSerialNumber]="true" [textBoxPattern]="controlConfig?.barCodePattern"
+            [requiredIf]="true" >
+          </rmtextbox>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <div class="row mt-3 mb-4">
+    <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+      <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled" [buttonname]="'COMMON.CLEAR' | translate"
+        [iconstyle]="'fas fa-times-circle'" (onclick)="esnClear(); serialNumberFocus();"></rmbutton>
+    </div>
+    <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+      <rmbutton [class]="'btn btn-round-black  float-right'" [id]="'Swap'" (onclick)="esnTransfer()" [disabled]="isSwapDisabled"
+        [buttonname]="'Swap'" [iconstyle]="'far fa-save'"></rmbutton>
+    </div>
+
+  </div>
+</div>

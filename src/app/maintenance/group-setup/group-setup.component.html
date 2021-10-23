@@ -1,0 +1,117 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+        <form>
+            <div>
+                <div class="mb-3 d-flex justify-content-end">
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'clear'"
+                        [buttonname]="'COMMON.CLEAR'| translate" [iconstyle]="'far fa-times-circle'"
+                        [disabled]="isClearBtnDisabled" (click)="clear()">
+                    </rmbutton>
+                    <rmbutton [class]="'btn btn-round-black ml-1'" [id]="'add'" *ngIf="sapCtrls"
+                        [disabled]=" !(sapCtrls.valid)" (onclick)="addOrUpdateGroupValue()"
+                        [buttonname]="groupTypeBtnName"
+                        [iconstyle]="groupTypeBtnName == commonEnum.add ?'fas fa-plus':'far fa-save'">
+                    </rmbutton>
+                </div>
+
+                <div class="form-row" ngModelGroup="groupSetupRef" #sapCtrls="ngModelGroup">
+
+                    <div class="col mb-3">
+                        <rmlabel [label]="'GROUPSETUP.TYPE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.type?.Required">
+                        </rmlabel>
+                        <rmdropdown [name]="'Type'" [id]="'Type'" [class]="'form-control'" #Type
+                            [(ngModel)]="groupSetup.TYPE" (onChangeVal)="ongrouptypeSelect(Type.value); changeInput();"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.type?.Required"
+                            [disabled]="isTypeDisabled" [dpOptions]="groupTypeOptions" [value]="groupSetup.TYPE">
+                        </rmdropdown>
+                    </div>
+
+                    <div class="col mb-3">
+                        <rmlabel [label]="'GROUPSETUP.GROUPID' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.groupID?.Required">
+                        </rmlabel>
+                        <rmdropdown [name]="'GroupID'" [id]="'GroupID'" [class]="'form-control'" #GroupID
+                            [(ngModel)]="groupSetup.GROUPID" [disabled]="isGroupIDDisabled"
+                            (onChangeVal)="onGroupNameSelect(GroupID.value); changeInput();"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.groupID?.Required"
+                            [dpOptions]="groupIDs" [value]="groupSetup.GROUPID"></rmdropdown>
+                    </div>
+
+                    <div class="col-auto mb-3 align-self-center mt-4">
+                        <rmbutton [class]="'btn btn-round-black ml-1'" [id]="'addGroupID'" *ngIf="sapCtrls"
+                            [buttonname]="groupSetupBtnName" (click)="openGroupValue(groupValue)"
+                            [disabled]="isGenGroupIDDisabled">
+                        </rmbutton>
+                    </div>
+
+                    <div class="col mb-3">
+                        <rmlabel [label]="'GROUPSETUP.VALUE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.value?.Required">
+                        </rmlabel>
+                        <rmdropdown [hidden]="groupSetup.TYPE === 'DEFAULT'" [name]="'Value'" [id]="'Value'"
+                            [class]="'form-control'" #Value [(ngModel)]="groupSetup.VALUE"
+                            [disabled]="isGroupValueDisabled"
+                            (onChangeVal)="onGroupValueSelect(Value.value); changeInput();"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.value?.Required"
+                            [dpOptions]="valueList" [value]="groupSetup.VALUE"></rmdropdown>
+
+                        <rmtextbox [hidden]="groupSetup.TYPE !== 'DEFAULT'" [(ngModel)]="groupSetup.VALUE"
+                            [textBoxPattern]="textBoxPattern"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.Value?.Required"
+                            [name]="'Value'" [class]="'form-control'" [id]="'Value'" (onChangeVal)="changeInput()"
+                            [placeholder]="''" [maxlength]="appConfig?.groupValueSetup?.groupIDTextboxLength">
+                        </rmtextbox>
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+                    <div class="col mb-3" *ngIf="groupValueList">
+                        <rmgrid [(gridproperties)]="groupValueList" [isCancelIconShow]="false"
+                            (emitEditDetails)="editGroupValueRow($event)"
+                            (emitDeleteDetails)="deleteDockDetailRow($event, deleteModal)"></rmgrid>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<ng-template #groupValue>
+    <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+        Generate Group ID
+        <button mat-icon-button (click)="hideModal()">
+            <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+    </h4>
+    <xpo-dialog-content>
+        <div class="modal-body">
+            <app-group-value [groupType]="groupSetup.TYPE" [clientData]="clientData" [uiData]="uiData"
+                (newGroupValueEmit)="ongrouptypeSelect(groupSetup.TYPE); hideModal();"></app-group-value>
+        </div>
+    </xpo-dialog-content>
+</ng-template>
+
+<ng-template #deleteModal>
+    <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+        {{modeltitle | translate}}
+        <button mat-icon-button (click)="hideModal()">
+            <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+    </h4>
+    <xpo-dialog-content>
+        <div class="modal-body m-body">
+            <span>
+                <i class="fas fa-question-circle ques-icon"> </i> {{'COMMON.DELETECONFIRMRECORD' | translate }}
+            </span>
+        </div>
+    </xpo-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button type="button" (click)="hideModal()">Close</button>
+        <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="deleteGroupValue()">
+        </rmbutton>
+    </mat-dialog-actions>
+
+</ng-template>

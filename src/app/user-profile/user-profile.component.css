@@ -1,0 +1,79 @@
+﻿ /*user profile css start here*/
+
+ .config-container{
+  width:500px;
+  margin: 0 auto;
+ }
+ .user-photo{
+   text-align: center;
+     margin-bottom: -98px;
+     font-size: 20px !important;
+ }
+ .sidebar{
+  margin-top:4%;
+ }
+ .user-details{
+   margin-top: 70px;
+ }
+ .user-img{
+  width: 100px;
+  height: 100px;
+ }
+ .userprofile-panel{
+   margin-top: 40px;
+ }
+ /*user profile mobile view changes*/
+ @media (min-width: 320px) and (max-width: 640px) { 
+   .config-container{
+     width: 340px;
+     margin: 0px auto;
+    }
+    .profile-mb-titile{
+     padding-right: 15px;
+     padding-left: 15px !important;
+    }
+    .main-card{
+     border-style:none !important;
+      padding-right: 15px !important;
+      padding-left: 15px !important;
+      margin-top: -7px;
+       }
+    
+    .card-border{
+     border-left: 1px solid rgba(0,0,0,.125) !important;
+     border-top: 1px solid rgba(0,0,0,.125) !important;
+     border-right: 1px solid #00000020 !important;
+    }
+    .common-settings{
+     border-left: 1px solid rgba(0,0,0,.125) !important;
+     border-top: 1px solid rgba(0,0,0,.125) !important;
+     border-right: 1px solid rgba(0,0,0,.125) !important;
+    }
+    .userprofile-panel{
+     padding-right: 15px !important;
+     padding-left: 15px !important;
+    }
+    
+    .scrollbar {
+     margin: auto;
+     overflow-x: hidden;
+   }
+ 
+ }
+ .rm-card{
+   border: 1px solid rgba(124, 124, 124, 0.125);
+   background-color: #ffffff
+ }
+  @media (min-width: 768px ) and (max-width: 1024px){
+ 
+   .user-img {
+       width: 87px !important;
+       height: 82px !important;
+   }
+ } 
+ @media (min-width: 1280px) and (max-width:1439.98px) {
+   .userprofile-tab .col-md-5{
+     max-width: 58.333333%;
+   }
+ }
+ /*user profile css end here*/

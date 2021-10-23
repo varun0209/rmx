@@ -1,0 +1,87 @@
+<div class="" [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'">
+  <mat-tab-group animationDuration="0ms" (selectedTabChange)="onTabChange()">
+
+    <mat-tab [label]="'PROGRAMCRITERIA.TAB' | translate">
+      <fieldset>
+        <div class="col text-right my-2">
+          <rmbutton [class]="'btn btn-round-black'" (click)='onNewProgramRuleClick()'
+            [buttonname]="'PROGRAMCRITERIA.NEWBUTTON' | translate" [iconstyle]="'fas fa-plus-circle'"></rmbutton>
+        </div>
+        <rmgrid [(gridproperties)]="rmGrid_ProgramRuleData" [isCancelIconShow]="false"
+          (emitEditDetails)="addEditProgramRuleDetails($event)" (emitDeleteDetails)="deleteProgramRuleDetails($event)">
+        </rmgrid>
+      </fieldset>
+    </mat-tab>
+
+    <mat-tab [label]="'PROGRAMNAMEMAINT.TAB' | translate">
+      <fieldset>
+        <div class="col text-right my-2">
+          <rmbutton [class]="'btn btn-round-black'" (click)='onNewProgramNameClick(addEditDialog)'
+            [buttonname]="'PROGRAMNAMEMAINT.NEWBUTTON' | translate" [iconstyle]="'fas fa-plus-circle'"></rmbutton>
+        </div>
+        <rmgrid [(gridproperties)]="rmGrid_ProgramNameData" [isCancelIconShow]="false"
+          (emitEditDetails)="addEditNameGroupDetails($event, addEditDialog)"></rmgrid>
+      </fieldset>
+    </mat-tab>
+
+    <mat-tab [label]="'PROGRAMGROUPMAINT.TAB' | translate">
+      <fieldset>
+        <div class="col text-right my-2">
+          <rmbutton [class]="'btn btn-round-black'" (click)='onNewProgramGroupClick(addEditDialog)'
+            [buttonname]="'PROGRAMGROUPMAINT.NEWBUTTON' | translate" [iconstyle]="'fas fa-plus-circle'"></rmbutton>
+        </div>
+        <rmgrid [(gridproperties)]="rmGrid_ProgramGroupData" [isCancelIconShow]="false"
+          (emitEditDetails)="addEditNameGroupDetails($event, addEditDialog)"></rmgrid>
+      </fieldset>
+    </mat-tab>
+
+  </mat-tab-group>
+</div>
+
+<ng-template #addEditDialog>
+  <h1 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+    <h4 *ngIf="DialogData.IsGroup === false" class="modal-title pull-left">{{'PROGRAMNAMEMAINT.TITLE' | translate }}
+    </h4>
+    <h4 *ngIf="DialogData.IsGroup === true" class="modal-title pull-left">{{'PROGRAMGROUPMAINT.TITLE' | translate }}
+    </h4>
+    <button mat-icon-button (click)="modalRef.close()">
+      <xpo-icon iconName="clear"></xpo-icon>
+    </button>
+  </h1>
+  <xpo-dialog-content>
+    <div class="modal-body">
+      <div class="form-group position-relative">
+        <div class='container-fluid'>
+          <div class="row">
+            <div class="col mb-3 form-group">
+              <!-- Change col to col-9 if enabling the Active toggle below -->
+              <rmlabel *ngIf="DialogData.IsGroup === false" [label]="'PROGRAMNAMEMAINT.TAB' | translate"
+                [isAsterisk]='true'></rmlabel>
+              <rmlabel *ngIf="DialogData.IsGroup === true" [label]="'PROGRAMGROUPMAINT.TAB' | translate"
+                [isAsterisk]='true'></rmlabel>
+              <rmtextarea [allowMaxlengthTextarea]="false" [rows]="'1'" [placeholder]="''" [(ngModel)]="DialogData.Text"
+                [textAreaPattern]='textboxPattern' [allowUppercase]='true'
+                [maxlength]="DialogData.IsGroup ? appConfig.programCriteria.programGroup_maxLength : appConfig.programCriteria.programName_maxLength"
+                [id]="'description'" name="'description'" (onChangeVal)="changedName()"></rmtextarea>
+            </div>
+
+            <!-- <div class="col mb-3 form-group">
+            <rmlabel *ngIf="DialogData.IsGroup === false" [label]="'PROGRAMNAMEMAINT.ACTIVE' | translate" [isAsterisk]="true"></rmlabel>
+            <rmlabel *ngIf="DialogData.IsGroup === true"  [label]="'PROGRAMGROUPMAINT.ACTIVE' | translate" [isAsterisk]="true"></rmlabel>
+            <rmtoggle [toggleDivClass]="'d-flex py-2'" [toggleval]="DialogData.Active === 'Y' ? true : false"
+                      (onChangeVal)="onToggleChange($event)"></rmtoggle>
+          </div> -->
+          </div>
+
+          <div class="row">
+            <div class="col text-right">
+              <rmbutton [disabled]="!DialogData.Text || !DialogData.Active" [buttonname]="'COMMON.SAVE' | translate"
+                [class]="'btn btn-round-black'" (onclick)="saveNameGroup()"></rmbutton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </xpo-dialog-content>
+
+</ng-template>

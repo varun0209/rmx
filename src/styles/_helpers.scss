@@ -1,0 +1,10 @@
+@import './variables';
+
+/*
+  Used to make convert pixels to rems
+  Usage:
+    margin-bottom: remy(16);
+ */
+@function remy($in-pixels) {
+  @return ($in-pixes/$xpo-fontSize--root) + rem;
+}

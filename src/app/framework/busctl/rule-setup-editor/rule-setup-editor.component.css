@@ -1,0 +1,82 @@
+thead {
+    background-color: rgba(0,0,0,.05) !important;
+  }
+
+  .rm-card{
+    border: 1px solid rgba(0,0,0,.125);
+    background-color: #fff;
+}
+
+  thead tr th{
+    width: 3%;
+  }
+
+  .ruleSetup-fieldset{
+    display: block;
+    margin-inline-start: 2px;
+    margin-inline-end: 2px;
+    padding-block-start: 0.35em;
+    padding-inline-start: 0.75em;
+    padding-inline-end: 0.75em;
+    padding-block-end: 0.625em;
+    min-inline-size: min-content;
+    border: 2px solid #cccccc;
+    box-shadow: 2px 2px 8px #cccccc;
+    }
+
+  .ruleSetup-legend{
+    display: block;
+    width: unset;
+    max-width: 100%;
+    padding: 2px 4px;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+    color: rgb(255,255,255);
+    white-space: normal;
+    border-radius: 5px;
+    background-color: rgb(8,104,172);
+  }
+  .formula-grid{
+    min-height: 73px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px #ddd solid;
+  }
+
+  .formula-grid tr{
+    border-bottom: 1px #e2e2e2 solid;
+  }
+  .formula-grid tr:nth-last-child(1){
+    border-bottom: none;
+  }
+  .formula-grid .fa-trash-alt{
+    color: #ff2222;
+    font-size: 14px;
+  }
+  .formula-grid-header{
+    background: #f3f3f3;
+    border: 1px #ddd solid;
+    border-bottom: none;
+    margin: 0 15px;
+  }
+
+  @keyframes highLight {
+    0%{    background-color:  rgb(227, 15, 15) !important;}
+    30%{    background-color:transparent;}
+    50%{   background-color:  rgb(227, 15, 15) !important;}
+    100%{  background-color:  rgb(227, 15, 15) !important;}
+  }
+
+  .highlight {
+    background: rgb(8 104 172 / 24%) !important;
+  }
+  .highlight .fa-trash-alt{
+    color:#ff2222;
+  }
+
+  .warning{
+    background: rgb(248 215 218) !important;
+    -webkit-animation: highLight ease-in 1s infinite;
+    animation: highLight ease-in 1s infinite;
+    color: #842323;
+  }

@@ -1,0 +1,38 @@
+<div class="table-responsive ">
+  <table class="table testTable table-bordered  scrollbar" id="style-4">
+    <thead>
+      <tr class="test-header-bg">
+        <th>#</th>
+        <th *ngFor="let head of headingsobj; index as i"
+          [ngClass]="{'selectedOption':head=='selected','canrollback':head=='CanRollback' }">
+          <span *ngIf="head== 'Step'">{{'COMMON.OPERATIONID' | translate}}</span>
+          <span *ngIf="head!= 'Step'">{{head}}</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let grid of gridProperties; index as i">
+        <td class="checkbox-position">
+          <rmcheckbox (onChangeVal)="getCheckId(i,$event)" [disabled]="!grid.CanRollback" [value]="grid.Step"
+            [checked]="grid.selected"></rmcheckbox>
+        </td>
+        <td *ngFor="let head of headingsobj; index as i"
+          [ngClass]="{'selectedOption':head=='selected','canrollback':head=='CanRollback'}">{{grid[head]}}</td>
+      </tr>
+    </tbody>
+
+  </table>
+</div>
+<div class="row mt-3 mb-4">
+    <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+      <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'"
+        [buttonname]="'COMMON.CLEAR' | translate" [iconstyle]="'fas fa-times-circle'"
+        (onclick)="serialNumberClear(); serialNumberFocus();"></rmbutton>
+    </div>
+    <div class="col-sm-6 col-lg-6 col-md-6 col-6">
+        <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'rollBack'" (onclick)="saveOperation()"
+        [disabled]="isRollbackDisabled" [buttonname]="buttonName | translate" [iconstyle]="'fas fa-plus'">
+      </rmbutton>
+    </div>
+
+  </div>

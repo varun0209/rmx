@@ -1,0 +1,45 @@
+<div class="container px-3 bg-video">
+  <video [muted]="true" autoplay playsinline loop id="myVideo">
+    <source [src]="'assets/images/login-bg-video.mp4'" type="video/mp4">
+  </video>
+  <div class="row mr-0 ml-0 h-100">
+    <div class="col set-marginauto">
+      <div class="login-wrap">
+        <div class="header-country-secect">
+          <div class="col text-right">
+            <mat-form-field>
+              <mat-select [(value)]="masterPageService.langData.selected" (selectionChange)="setLang($event)">
+                <mat-select-trigger>
+                  <!-- <xpo-icon iconName="{{masterPageService.langData.selected}}"></xpo-icon> -->
+                  <img width=24 height=24 src="assets/xpo-icons/{{masterPageService.langData.selected}}.svg"> &nbsp; {{masterPageService.langData.selectedLanguage}}
+                </mat-select-trigger>
+                <mat-option *ngFor="let language of masterPageService.langData.list" [value]="language.value">
+                  <!-- <xpo-icon iconName="{{language.value}}"></xpo-icon> -->
+                   <img width=24 height=24  src="assets/xpo-icons/{{language.value}}.svg"> &nbsp; {{language.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="login-xpo-logo text-center mb-0">
+          <img [src]="'assets/images/GXO-logo.svg'">
+        </div>
+        <router-outlet></router-outlet>
+        <div class="col text-right">
+          <span class="rmx-release mr-1">{{'LOGIN.RELEASE' | translate}}: {{release}} ({{env}})</span>
+        </div>
+        <footer class="rmlogin-footer">
+          <div class="rmlogin-footer-mailTel">
+            <div class="col text-center footer-text"><span>@ {{copyRightYear()}} {{'LOGIN.ALLRIGHTSRESERVED' | translate}}</span>
+            </div>
+            <div class="col text-center mt-2 helpdesk-xposc-com">
+              <a href="mailto:helpdesk@gxo.com"><i class="fa fa-envelope"></i> helpdesk@gxo.com</a>
+              <a class="rmlogin-footer-tel ml-3" href="tel:+18776243577"><i class="fa fa-phone"></i> +1.877.624-3577</a>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+</div>
+<ngx-spinner type="ball-spin" size="medium" loadingText="Loading..."></ngx-spinner>

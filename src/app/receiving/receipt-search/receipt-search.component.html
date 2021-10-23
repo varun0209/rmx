@@ -1,0 +1,11 @@
+<ng-container>
+  <div [ngClass]="!appErrService.alertFlag ? 'main-container-noalert' : 'main-container-onalert'"  class="container-fluid container-mb">
+    <div class="form-group">
+      <rmlabel [label]="'Receipt Search' | translate"></rmlabel>     
+        <rmtextbox [(ngModel)]="searchInput" #searchKey [id]="'searchKey'" [placeholder]="''" [name]="'searchKey'" (onChangeVal)="changeInput(searchKey)"   (enter)=" searchInputKey()" [disabled]="issearchKeyDisabled"></rmtextbox>    
+    </div>
+    <div *ngIf="receiptListDetails?.Elements.length > 0">
+        <rmgrid [(gridproperties)]="receiptListDetails" (emitEditDetails)="editReceiptDetailRow($event)"></rmgrid>
+    </div>
+  </div> 
+  </ng-container>

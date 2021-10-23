@@ -1,0 +1,21 @@
+.text-bg-color{
+    background: #cccccc;
+    padding:5px;
+  }
+  
+
+  
+.dot-on-box {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    border-radius: 50px;
+    border: 1px #bdbdbd solid;
+    margin-top: 10px;
+  }
+
+  @media(max-width: 767.98px) and (min-width: 360px){
+  .process-btn{
+    text-align: right;
+  }
+}

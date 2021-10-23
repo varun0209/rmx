@@ -1,0 +1,37 @@
+﻿<div class="container db-mt padding-bottom">
+  <div class="container">
+    <div class="mx-auto mt-3" *ngIf="showAlert && !appErrService.specialCharErrMsg">
+      <rmalert [class]="'w-50'" [text]="text"></rmalert>
+    </div>
+    <div class="mx-auto mt-3" *ngIf="appErrService.specialCharErrMsg">
+      <rmalert [class]="'w-50'" [text]="appErrService.specialCharErrMsg"></rmalert>
+    </div>
+    <form #trackingNumForm="ngForm">
+      <section>
+        <div class="row mt-4">
+          <div class="col-md-12 mb-3">
+            <label>{{'COMMON.TRACKINGNUMBER' | translate}}</label>
+            <rmtextbox [(ngModel)]="trackingObj.TrackingNum" #trackingInput [placeholder]="''" name='trackingNumber'
+                       [disabled]="isTrackingNumberDisabled" (enter)="validateMoveTrackingNumber(trackingInput,$event)"
+                       (onChangeVal)="changeInput(trackingInput)" [id]="'trackingNumber'" [flag]="true"></rmtextbox>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label>{{'COMMON.CONTAINERID' | translate}}</label>
+            <rmtextbox [(ngModel)]="container.ContainerID" #containerId [disabled]="isContainerDisabled"
+                       [placeholder]="''" (enter)="validateMoveContainer(containerId,$event)" name='containerId'
+                       (onChangeVal)="changeInput(containerId)" [id]="'containerId'" [flag]="true"></rmtextbox>
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="mt-3 clearfix">
+          <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [id]="'moveContainer'" [disabled]="isMoveDisabled"
+                    [buttonname]="'COMMON.MOVE' | translate" (onclick)="moveContainer()" [iconstyle]="'fa fa-plus'"></rmbutton>
+          <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled"
+                    [buttonname]="'COMMON.CLEAR' | translate" (onclick)="Clear()" [iconstyle]="'fas fa-times-circle'">
+          </rmbutton>
+        </div>
+      </section>
+    </form>
+  </div>
+</div>

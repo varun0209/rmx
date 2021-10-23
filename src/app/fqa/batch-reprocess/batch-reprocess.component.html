@@ -1,0 +1,25 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+  <div class="container-fluid">
+    <div class="row pt-2">
+      <div class="col-md-3 col-sm-12">
+        <div class="form-group">
+          <rmlabel  [label]="'COMMON.BATCHID' | translate"></rmlabel>
+          <rmtextbox [(ngModel)]="batchId" #batchIdInput [disabled]="isbatchIddisabled" [id]="'batchId'" (enter)="batchIdVerification(batchIdInput,$event)"
+            [placeholder]="''" (onChangeVal)="changeInput(batchIdInput)"></rmtextbox>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="batchDetailsList">
+      <rmgrid [(gridproperties)]="batchDetailsList"></rmgrid>
+    </div>
+  </div>
+
+  <div class="container-fluid mt-3 mb-5" *ngIf="batchDetailsList">
+    <div class="mt-4 clearfix">
+      <rmbutton [class]="'btn btn-round-black mr-1 float-right'" [buttonname]="'COMMON.REPROCESS' | translate" [id]="'Reprocess'" (onclick)="saveReprocess()"
+        [iconstyle]="'far fa-save'"></rmbutton>
+      <rmbutton [class]="'btn btn-round-black mr-1 float-left'" [id]="'Clear'" [disabled]="isClearDisabled" [buttonname]="'COMMON.CLEAR' | translate"
+        (onclick)="reprocessClear()" [iconstyle]="'fas fa-times-circle'"></rmbutton>
+    </div>
+  </div>
+</div>

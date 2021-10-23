@@ -1,0 +1,140 @@
+<xpo-dialog-title>
+  {{'TRACESETUP.MODELTITLE' | translate}}
+</xpo-dialog-title>
+<xpo-dialog-content>
+  <div class="row ">
+    <div class="col-lg-12 col-sm-12">
+      <div class="row no-gutters">
+        <div class="col-md-3 col-6 font-weight-bolder blackColor">
+          {{'TRACESETUP.TRACETYPE' | translate}}<span class="float-right pr-2">:</span>
+        </div>
+        <div class="col-md-9 col-6 ">
+          {{traceInfo.TraceType}}
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-sm-12  mt-2">
+      <div class="row no-gutters">
+        <div class="col-md-3 col-6 font-weight-bolder blackColor">
+          {{'TRACESETUP.TRACEVALUE' | translate}}   <span class="float-right pr-2">:</span>
+        </div>
+        <div class="col-md-9 col-6 ">
+          {{traceInfo.TraceValue}}
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12 col-sm-12 mt-2">
+      <div class="row no-gutters">
+        <div class="col-md-3 col-6 font-weight-bolder blackColor">
+          {{'TRACESETUP.REASONCODE' | translate}}<span class="float-right pr-2">:</span>
+        </div>
+        <div class="col-md-6 col-6 ">
+          {{traceInfo.ReasonCode}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col">
+      <div class="row no-gutters">
+        <div class="col-md-3 col-6">
+          <rmlabel [label]="'TRACESETUP.INSTRUCTIONS' | translate" [lblStyle]="'font-weight-bolder labelBlack'">
+          </rmlabel>
+          <span class="float-right pr-2 font-weight-bolder">:</span>
+        </div>
+        <div class="col-md-9 col-12 ">
+          <rmtextarea [rows]="2" [id]="'instructions'" [placeholder]="''" [name]="'instructions'" [disabled]="true"
+            [(ngModel)]="traceInfo.Instructions">
+          </rmtextarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col">
+      <div class="row no-gutters">
+        <div class="col-md-3 col-6">
+          <rmlabel [label]="'Notes'" [lblStyle]="'font-weight-bolder labelBlack'"></rmlabel>
+          <span class="float-right pr-2 font-weight-bolder">:</span>
+        </div>
+        <div class="col-md-9 col-12">
+          <rmtextarea [rows]="2" [id]="'Notes'" [placeholder]="''" [name]="'Notes'"
+            [disabled]="traceInfo.Status == 'FOUND'? true: false" [(ngModel)]="traceInfo.FoundNotes"
+            (onChangeVal)="changeNotesInput($event)">
+          </rmtextarea>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-3 " *ngIf="traceInfo.Status == 'FOUND'">
+    <div class="card mx-3 border-blue">
+      <div class="card-header border-blue text-blue font-weight-bolder blackColor">
+        <strong>{{'TRACESETUP.FOUNDDETAILS' | translate}}</strong>
+      </div>
+      <div class="card-body fixedHeight">
+        <div class="row">
+          <div class="col-lg-12 col-sm-12">
+            <div class="row no-gutters">
+              <div class="col-md-4 col-6 font-weight-bolder blackColor">
+                {{'TRACESETUP.FOUNDMODULE' | translate}} <span class="float-right pr-2">:</span>
+              </div>
+              <div class="col-md-8 col-6">
+                {{traceInfo.FoundModule}}
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-sm-12 mt-2">
+            <div class="row no-gutters">
+              <div class="col-md-4 col-6 font-weight-bolder blackColor">
+                {{'TRACESETUP.FOUNDREFERENCE' | translate}} <span class="float-right pr-2">:</span>
+              </div>
+              <div class="col-md-8 col-6">
+                {{traceInfo.FoundLocReference}}
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-sm-12 mt-2">
+            <div class="row no-gutters">
+              <div class="col-md-4 col-6 font-weight-bolder blackColor">
+                {{'TRACESETUP.FOUNDDATE' | translate}} <span class="float-right pr-2">:</span>
+              </div>
+              <div class="col-md-8 col-6">
+                {{traceInfo.FoundDate}}
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-12 col-sm-12 mt-2">
+            <div class="row no-gutters">
+              <div class="col-md-4 col-6 font-weight-bolder blackColor">
+                {{'TRACESETUP.FOUNDUSERID' | translate}} <span class="float-right pr-2">:</span>
+              </div>
+              <div class="col-md-8 col-6">
+                {{traceInfo.FoundUser}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row no-gutters mt-2" *ngIf="traceInfo.FoundDetailMsg">
+          <div class="col-md-4 col-6 font-weight-bolder blackColor">
+            {{'TRACESETUP.FOUNDDETAILMSG' | translate}}  <span class="float-right pr-2">:</span>
+          </div>
+          <div class="col-md-8 col-12">
+            {{traceInfo.FoundDetailMsg}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex mt-3 log-btn-position">
+    <div *ngIf="traceInfo.Status == traceStatus.active">
+      <rmbutton [class]="'btn btn-round-black'" [id]="'Clear'" [disabled]="traceInfo.FoundNotes ? false: true"
+        [buttonname]="'COMMON.CLEAR'| translate" (onclick)="Clear()" [iconstyle]="'fas fa-times-circle'"></rmbutton>
+    </div>
+    <div class="ml-auto">
+      <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" [disabled]="traceInfo.FoundNotes ? false: true"
+        [iconstyle]="'fas fa-check-square'" (onclick)="updateCheck()"></rmbutton>
+    </div>
+
+  </div>
+</xpo-dialog-content>

@@ -1,0 +1,10 @@
+﻿<div class="date">
+  <div class="input-group input-append date" id="datePicker" >
+    <input type="text" name="date" class="form-control" [ngClass]="" #dp="bsDatepicker"  [value]="DateValue | date:'yyyy-MM-dd h:mm:ss a '" bsDatepicker  [(bsValue)]="DateValue" [disabled]="disabled"
+       [minDate]="minDate" [maxDate]="maxDate" [outsideClick]="true"   (bsValueChange)="onValueChange($event)"  [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD  h:mm:ss a', containerClass: 'theme-dark-blue' }">
+    <div class="input-group-append" >
+      <fieldset class="btn btn-sm input-group-text" [disabled]="datePickerDisabled" (click)="dp.show()"><a><i class="fas fa-calendar-alt" ></i></a></fieldset>
+    </div>    
+  </div>
+</div>
+

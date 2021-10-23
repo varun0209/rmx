@@ -1,0 +1,121 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+  <fieldset class="rm-card mt-2">
+    <tabset #staticTabs>
+      <tab heading="{{'COMMON.MAIN' | translate}}" id="traceHold">
+        <div class="tab-pane">
+          <div class="container-fluid">
+            <form >
+              <fieldset ngModelGroup="traceHold" #traceHold="ngModelGroup">
+                <div class="row mt-1 mb-1">
+                  <div class="col col-sm-12 pr-0">
+                    <div class="float-right">
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'search'" [disabled]="isSearchBtnDisabled"
+                        [buttonname]="'COMMON.SEARCH' | translate" [iconstyle]="'fas fa-search'"
+                        (click)="searchTraceInfo()"></rmbutton>
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'reset'"
+                        [disabled]="isResetBtnDisabled" (onclick)="resetTraceInfo()"
+                        [buttonname]="'COMMON.RESET' | translate" [iconstyle]="'fas fa-redo'"></rmbutton>
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'Clear'" [buttonname]="'COMMON.CLEAR'| translate"
+                        [iconstyle]="'far fa-times-circle'" [disabled]="isClearBtnDisabled" (click)="clearTraceInfo()">
+                      </rmbutton>
+                      <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'add'"
+                        [disabled]=" !(traceHold.valid) || isValidateAddBtnFlag" (onclick)="addOrUpdateTraceInfo()"
+                        [buttonname]="traceBtnName" [iconstyle]="traceBtnName==commonButton.add ?'fas fa-plus':'far fa-save'">
+                      </rmbutton>
+                    </div>
+                  </div>
+                </div>
+                <div class="row mb-3 mt-4">
+                  <div class="col-sm-12 col-md-3 margin-bottom">
+                    <rmlabel [label]="'TRACESETUP.TRACETYPE' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.traceType?.Required"></rmlabel>
+                    <rmlock [lockMode]="traceTypeLockMode" [isInputValueExist]="rxTraceInfo.TRACETYPE? true: false"
+                      [isShowRmLock]="true" (onModeChange)="lockTraceType($event)"></rmlock>
+                    <rmdropdown [name]="'traceType'" [id]="'traceType'" #traceTypeDropDown [class]="'form-control'"
+                      [dpOptions]="traceTypesList" [disabled]="isTraceTypeDisabled" [(ngModel)]="rxTraceInfo.TRACETYPE"
+                      [value]="rxTraceInfo.TRACETYPE" (onChangeVal)="onChangeTraceType($event.value)"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.traceType?.Required">
+                    </rmdropdown>
+                  </div>
+                  <div class="col-sm-12 col-md-3 margin-bottom">
+                    <rmlabel [label]="'TRACESETUP.TRACEVALUE' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.traceValue?.Required"></rmlabel>
+                    <rmtextbox [(ngModel)]="rxTraceInfo.TRACEVALUE" name="traceValue" [class]="'form-control'"
+                      #traceValueInput [disabled]="isTraceValueDisabled" [id]="'traceValue'" [isAllowEmptyValue]="false"
+                      (isInputValueEmpty)="isInputValueEmpty()" [placeholder]="''"
+                      (onChangeVal)="changeTraceValueInput()" (enter)="validateTraceValue($event, traceHold.valid)"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.traceValue?.Required">
+                    </rmtextbox>
+                  </div>
+                  <div class="col-sm-12 col-md-3 margin-bottom">
+                    <rmlabel [label]="'TRACESETUP.STATUS' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.status?.Required"></rmlabel>
+                    <rmlock [lockMode]="traceStatusLockMode" [isInputValueExist]="rxTraceInfo.STATUS? true: false"
+                      [isShowRmLock]="true" (onModeChange)="lockTraceStatus($event)"></rmlock>
+                    <rmdropdown [name]="'status'" [id]="'status'" #statusDropDown [class]="'form-control'"
+                      [dpOptions]="traceStatusesList" [disabled]="isTraceStatusDisabled"
+                      [(ngModel)]="rxTraceInfo.STATUS" [value]="rxTraceInfo.STATUS"
+                      (onChangeVal)="changeStatus($event.value)"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.status?.Required">
+                    </rmdropdown>
+                  </div>
+                  <div class="col-sm-12 col-md-3">
+                    <rmlabel [label]="'TRACESETUP.HOLDMESSAGEID' | translate"
+                      [isAsterisk]="(isValidTraceSerialNum == validTraceSerialNum.yes )? masterPageService.hideControls.controlProperties?.holdReason?.Required : ''">
+                    </rmlabel>
+                    <rmlock [lockMode]="traceHoldReasonLockMode"
+                      [isInputValueExist]="rxTraceInfo.REASONCODE? true: false" [isShowRmLock]="true"
+                      (onModeChange)="lockTraceHoldReason($event)"></rmlock>
+
+                    <rmmulticoldropdown [id]="'holdReason'" [name]="'holdReason'" #holdReasonDropDown [value]="rxTraceInfo.REASONCODE"  [disabled]="isHoldReasonsDisabled"
+                    (onChangeVal)="changeHoldReason($event)" [dpOptions]="holdReasonsList" [(ngModel)]="rxTraceInfo.REASONCODE"
+                    [requiredIf]="(isValidTraceSerialNum == validTraceSerialNum.yes )? masterPageService.hideControls.controlProperties?.holdReason?.Required: false">
+                    </rmmulticoldropdown>
+                  </div>
+                </div>
+                <div class="row d-flex margin-bottom" [ngClass]="rxTraceInfo.STATUS == 'FOUND' ? 'mb-3' : 'mb-5'">
+                  <div class="col-sm-12 ">
+                    <rmlabel [label]="'TRACESETUP.INSTRUCTIONS' | translate"
+                      [isAsterisk]="masterPageService.hideControls.controlProperties?.instructions?.Required"></rmlabel>
+                    <rmlock [lockMode]="traceInstructionsLockMode"
+                      [isInputValueExist]="rxTraceInfo.INSTRUCTIONS? true: false" [isShowRmLock]="true"
+                      (onModeChange)="lockTraceInstructions($event)"></rmlock>
+                    <rmtextarea [rows]="2" [id]="'instructions'" [placeholder]="''" [name]="'instructions'"
+                      [disabled]="isInstructionsDisabled" [(ngModel)]="rxTraceInfo.INSTRUCTIONS"
+                      (onChangeVal)="changeInstructionsInput($event)"
+                      [requiredIf]="masterPageService.hideControls.controlProperties?.instructions?.Required">
+                    </rmtextarea>
+                  </div>
+                  <input name='temp' [(ngModel)]="temp" hidden>
+                </div>
+                <div class="row mb-5 d-flex margin-bottom" *ngIf="rxTraceInfo.STATUS == traceStatus.found && isEditTraceMode ? true: false">
+                  <div class="col-sm-12">
+                    <rmlabel [label]="'TRACESETUP.NOTES' | translate"
+                    [isAsterisk]="rxTraceInfo.STATUS == traceStatus.found && isEditTraceMode ? true: false"></rmlabel>
+                    <rmtextarea [rows]="2" [id]="'Notes'" [placeholder]="''" [name]="'Notes'" [(ngModel)]="rxTraceInfo.FOUNDNOTES"
+                      (onChangeVal)="changeNotesInput()" [requiredIf]="rxTraceInfo.STATUS == traceStatus.found && isEditTraceMode ? true: false"
+                      [disabled]="tempRxTraceInfo.FOUNDNOTES">
+                    </rmtextarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 pr-0 pl-0">
+                    <div class="card-body pt-0 pb-0">
+                      <div class="row" *ngIf="rxTraceInfoList">
+                        <div class="col-12 pl-1 pr-1">
+                          <rmgrid [(gridproperties)]="rxTraceInfoList" (emitEditDetails)="editTraceInfo($event)">
+                          </rmgrid>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </tab>
+    </tabset>
+  </fieldset>
+</div>

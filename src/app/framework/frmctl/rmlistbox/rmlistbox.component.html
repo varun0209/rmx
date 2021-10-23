@@ -1,0 +1,3 @@
+<select class="form-control inputstl" [id]="id" size="5" [(ngModel)]="value" (change)="changeData()"  [disabled]="disabled">
+     <option *ngFor="let item of listGroupItems" [ngValue]="item">{{item.Text}}</option>
+</select>

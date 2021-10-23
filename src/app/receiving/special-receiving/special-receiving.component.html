@@ -1,0 +1,312 @@
+﻿<div [ngClass]="!appErrService.alertFlag ? '' : 'mt-n3'"
+    class="padding-bottom mt-26 col-lg-4 col-md-5 col-sm-6 mx-auto px-0">
+    <div class="container-fluid">
+        <div id="msnImeiSearchSection" *ngIf="isMsnImeiSection">
+            <div class="row">
+                <div class="col-sm-12 mt-3 mb-3 text-center">
+                    <div class="custom-btn">
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" [iconstyle]="'fas fa-chevron-left'"
+                            [disabled]="true"></rmbutton>
+                        <rmbutton [class]="'btn btn-link btn-done'"></rmbutton>
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'"
+                            [iconstyle]="'fas fa-chevron-right'" [disabled]="msnImeiSectionNextBtn()"
+                            (onclick)="showSkuSection()"></rmbutton>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isSearchText">
+                <rmtextbox [divClass]="'input-group'" name="searchtext" [id]="'searchtext'"
+                    [placeholder]="'SPL_INBOUND.MSN_IMEI' | translate" [(ngModel)]="searchText"
+                    (enter)="asnSNValidation()">
+                </rmtextbox>
+            </div>
+            <div>
+                <div class="divStyle" *ngIf="isSearchTextReadonly">
+                    <rmcontrol-display [label]="'SPL_INBOUND.MSN_IMEI' | translate" [value]="searchText"
+                        (iconEventEmit)="editMSN()" [isIconDisabled]="false">
+                    </rmcontrol-display>
+                </div>
+            </div>
+        </div>
+        <div id="skuSection" *ngIf="isSkuSection">
+            <div class="row">
+                <div class="col-sm-12 mt-3 mb-3 text-center">
+                    <div class="custom-btn">
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" [iconstyle]="'fas fa-chevron-left'"
+                            [disabled]="" (onclick)="showMsnImeiSection()"></rmbutton>
+                        <rmbutton [class]="'btn btn-link btn-done'"></rmbutton>
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'"
+                            [iconstyle]="'fas fa-chevron-right'" [disabled]="skuSectionNextBtn()"
+                            (onclick)="skuSectiontoswVersion()"></rmbutton>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" *ngIf="!isSkuReadOnly">
+                <rmtypeahead name="skuInput" [typeaheadOptionField]="'Sku'" [(ngModel)]="selectedSKU" [id]="'skuInput'"
+                    [waitTime]="appConfig.receiving.skuwaitTime" [errorMessage]="appService.getErrorText('2660078')"
+                    [placeholder]="'SPL_INBOUND.SKU' | translate" [skus]="skuList" [SKU]="selectedSKU"
+                    [typeaheadPattern]="controlConfig.SKuPattern" (inputEvent)="getEligibleSKUs($event)"
+                (typeaheadResponse)="typeaheadResponse($event)">
+             </rmtypeahead>
+            </div>
+            <div class="form-group" *ngIf="isConditionCode">
+                <rmlabel [for]="'conditionType'" [label]="'SPL_INBOUND.CONDTIONTYPE' | translate"></rmlabel>
+                <rmdropdown name="conditionType" [(ngModel)]="conditionCode" [id]="'conditionType'"
+                    [value]="conditionCodeId" (onChangeVal)="changeConditionCode($event)"
+                    [dpOptions]="conditionCodeOptions" [disabled]=""></rmdropdown>
+            </div>
+            <div>
+                <div class="divStyle" *ngIf="isSkuReadOnly">
+                    <rmcontrol-display [label]="'SPL_INBOUND.SKU' | translate" [value]="selectedSKU">
+                    </rmcontrol-display>
+                </div>
+                <div class="divStyle" *ngIf="isConditionCodeReadOnly">
+                    <rmcontrol-display [label]="'SPL_INBOUND.CONDTIONTYPE' | translate" [value]="conditionCode">
+                    </rmcontrol-display>
+                </div>
+            </div>
+        </div>
+        <div id="SwVersionSection" *ngIf="isSwVersionSection">
+            <div class="row">
+                <div class="col-sm-12  mt-3 mb-3 text-center">
+                    <div class="custom-btn">
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" [iconstyle]="'fas fa-chevron-left'"
+                            [disabled]="" (onclick)="swVersionToSKUSection()"></rmbutton>
+                        <rmbutton [class]="'btn btn-link btn-done'"></rmbutton>
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'"
+                            (onclick)="swVersionToContainerSection()" [iconstyle]="'fas fa-chevron-right'"
+                            [disabled]="!isSwVersionReadOnly"></rmbutton>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group py-2 mb-0" *ngIf="!isSwVersionReadOnly">
+                <rmtextbox name="softwareVersion" [(ngModel)]="softwareVersion" [id]="'softwareVersion'"
+                    [errorMessage]="appService.getErrorText('2660079')" [textBoxPattern]="controlConfig.softwareVersion"
+                    [placeholder]="'M_RECEIVING.SOFTWAREVERSION' | translate" (enter)="validateSoftwareVersion()">
+                </rmtextbox>
+            </div>
+            <div *ngIf="isSwVersionReadOnly">
+                <div class="divStyle mt-0">
+                    <rmcontrol-display [label]="'M_RECEIVING.SOFTWAREVERSION' | translate" [value]="softwareVersion"
+                        (iconEventEmit)="editSWVersion()" [isIconDisabled]="false">
+                    </rmcontrol-display>
+                </div>
+            </div>
+
+            <ng-template #swVersionCheck>
+                <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+                    {{modeltitle | translate}}
+                    <button mat-icon-button (click)="masterPageService.hideDialog()">
+                        <xpo-icon iconName="clear"></xpo-icon>
+                    </button>
+                </h4>
+                <xpo-dialog-content>
+                <div class="modal-body m-body">
+                    <span>
+                        <i class="fas fa-question-circle ques-icon float-left"></i>{{swVersionMessage}}
+                    </span>
+                </div>
+            </xpo-dialog-content>
+                    <mat-dialog-actions>
+                        <button mat-button type="button" (click)="dialogRef.close()">Close</button>
+                            <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'"
+                                (onclick)="closeSWVersionConfirmation()"></rmbutton>
+                    </mat-dialog-actions>
+            </ng-template>
+
+                </div>
+        <div id="SerialNumberSection" *ngIf="isSerialNumberSection">
+            <div class="row">
+                <div class="col-sm-12  mt-3 mb-3 text-center">
+                    <div class="custom-btn">
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'" [iconstyle]="'fas fa-chevron-left'"
+                            (onclick)="serialNumberToSWVersion()" [disabled]=""></rmbutton>
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn btn-done'" [id]="'post'"
+                            [buttonname]="'COMMON.MOVE'| translate" [disabled]="isPostDisabled"
+                            (onclick)="addSerailNumber(); isPostDisabled = true"></rmbutton>
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn'"
+                            [iconstyle]="'fas fa-chevron-right'" [disabled]="true"></rmbutton>
+                    </div>
+                </div>
+            </div>
+            <div class="pb-1">
+                <div class="position-relative" *ngIf="showSerialNumber">
+                    <rmtextbox name="serialNumber" [(ngModel)]="serialNumber" [id]="'serialNumber'"
+                        [placeholder]="'SPL_INBOUND.MSN_IMEI' | translate" (enter)="validateSerialNumber()"
+                        [disabled]="" [uiData]="uiData" [isSerialNumber]="true"
+                        [textBoxPattern]="controlConfig?.barCodePattern">
+                    </rmtextbox>
+                </div>
+                <div class="position-relative" *ngIf="showMSNValue">
+                    <rmtextbox name="msn" [(ngModel)]="msn" [id]="'msn'" [placeholder]="'MSN'"
+                      (enter)="validateMSNValue()" >
+                    </rmtextbox>
+                  </div>
+                <container-suggestion *ngIf="isContainerInputId" [csLabel]="controlConfig?.containerInputId | translate"
+                    [showPrint]="masterPageService.hideControls.controlProperties?.containerPrint?.Show"
+                    [class]="'form-control'" [id]="'containerInputId'" (focusContainer)="getSuggestContainer($event)"
+                    (validateContainerValue)="validateContainer($event)" [iconBtnDisabled]="islpnContainerPrintDisabled"
+                    [isContainerDisabled]="isContainerDisabled"
+                    (getSuggestContainerResponse)="getSuggestContainerResponse($event)"
+                    [isClearContainerDisabled]="isClearContainerDisabled"
+                    (emitvalidateContainer)="validateContainerResponse($event)"
+                    (emitValidateContainerFailResponse)="emitValidateContainerFailResponse($event)"
+                    (emitCheckContainer)="checkContainer($event)" (errorEmit)="errorEmit($event)" [uiData]="uiData">
+                </container-suggestion>
+                <div *ngIf="receivingDevicesList.length>0" [ngClass]="receivingDevicesList.length>0 ? 'mt-4' : 'mt-1'"
+                    class="row position-relative">
+                    <div class="esn-msn-list">
+                        <span class="sku-badge-left">
+                            <rmbadge [badgenumber]="selectedSKU"></rmbadge>&nbsp;
+                            <rmbadge [badgenumber]="disposition"></rmbadge>
+                        </span>
+                        <span class="qtyWidth-under" *ngIf="expectedQty">
+                            <span class="qty-rec-under">{{receivedQty}}</span> <span
+                                class="qty-exp-under">{{expectedQty}}</span>
+                        </span>
+                        <ul class="list-group">
+                            <li class="list-group-item list-item" *ngFor="let receivingDevice of receivingDevicesList">
+                                <i class="far fa-check-circle fa-check-color mr-3"></i>{{receivingDevice.SerialNumber}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div *ngIf="isContainerIdReadonly">
+                    <div class="divStyle mt-0">
+                        <span class="float-right">{{categoryName}}</span>
+                        <rmcontrol-display [label]="controlConfig?.containerInputId | translate"
+                            [value]="containerReadonlyValue">
+                        </rmcontrol-display>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ColorCodeSection" *ngIf="isColorCodeSection">
+            <div class="row">
+                <div class="col-sm-12  mt-3 mb-3 text-center">
+                    <div class="custom-btn">
+                        <rmbutton [class]="'btn btn-link'"></rmbutton>
+                        <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn btn-done'" [buttonname]="'Done'"
+                            [disabled]="" (onclick)="doneReceiving()"></rmbutton>
+                        <rmbutton [class]="'btn btn-link'"></rmbutton>
+                    </div>
+                </div>
+            </div>
+            <!-- Showing Color Dot on Box -->
+            <p class="text-center" *ngIf="colorText">Place a <strong class="text-bg-color"
+                    [ngStyle]="{'color': colorCode}">{{colorText}}</strong> dot on this box
+            </p>
+            <div *ngIf="colorCode" [ngStyle]="{'background': colorCode}" class="dot-on-box"></div>
+            <div class="divStyle mt-3">
+                <div class="row align-middle pt-2">
+                    <ng-container>
+                        <div class="move-right ">
+                            <rmlabel [label]="'COMMON.CONTAINERID' | translate" class="mr-2"></rmlabel>:
+                        </div>
+                        <div class="move-left">
+                            <p class="ml-2 mb-0"><strong>{{container?.ContainerID}}</strong></p>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="divStyle mt-3" *ngIf="isSearchTextReadonly && !isColorCodeSection">
+            <div class="row align-middle" *ngIf="chkValue(searchText)">
+                <ng-container>
+                    <div class="move-right">
+                        <rmlabel [label]="'SPL_INBOUND.MSN_IMEI' | translate" class="mr-2"></rmlabel>:
+                    </div>
+                    <div class="move-left">
+                        <p class="ml-2 mb-0"><strong>{{searchText}}</strong></p>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="row align-middle" *ngIf="chkValue(msn) && !showMSNValue">
+                <ng-container>
+                    <div class="move-right">
+                        <rmlabel [label]="'SPL_INBOUND.MSN' | translate" class="mr-2"></rmlabel>:
+                    </div>
+                    <div class="move-left">
+                        <p class="ml-2 mb-0"><strong>{{msn}}</strong></p>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="row align-middle" *ngIf="chkValue(vendorId)">
+                <ng-container>
+                    <div class="move-right">
+                        <rmlabel [label]="'SPL_INBOUND.VENDORID' | translate" class="mr-2"></rmlabel>:
+                    </div>
+                    <div class="move-left">
+                        <p class="ml-2 mb-0"><strong>{{vendorId}}</strong></p>
+                    </div>
+                </ng-container>
+            </div>
+
+            <div class="row align-middle" *ngIf="chkValue(trackingNumber)">
+                <ng-container>
+                    <div class="move-right">
+                        <rmlabel [label]="'SPL_INBOUND.TRACKINGNUMBER' | translate" class="mr-2"></rmlabel>:
+                    </div>
+                    <div class="move-left">
+                        <p class="ml-2 mb-0"><strong>{{trackingNumber}}</strong></p>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="row align-middle pt-2" *ngIf="chkValue(asnnumber)">
+                <ng-container>
+                    <div class="move-right ">
+                        <rmlabel [label]="'SPL_INBOUND.ASNNUMBER' | translate" class="mr-2"></rmlabel>:
+                    </div>
+                    <div class="move-left">
+                        <p class="ml-2 mb-0"><strong>{{asnnumber}}</strong></p>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12  mt-3">
+                <rmbutton [class]="'btn btn-light-blue custom-rm-round-btn float-right'" [disabled]=""
+                    [buttonname]="'COMMON.CLEAR'| translate" (onclick)="clear()"></rmbutton>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12  mt-3">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header collapsedHeight="35px" expandedHeight="35px" class="bg-light">
+                        <mat-panel-title> {{'Available Containers' | translate}} </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div *ngIf="locationContainerList">
+                        <rmgrid [(gridproperties)]="locationContainerList"
+                        [closeVisibleTooltip]="'COMMON.CLOSECONTAINERCONFIRM' | translate"
+                        (emitCloseDetails)="closeContainerConfirm($event, closeContainerConfirmation)"></rmgrid>
+                    </div>
+                    <div class="text-center p-3" *ngIf="!locationContainerList">{{'COMMON.NOCONTAINERS' | translate}}
+                    </div>
+                </mat-expansion-panel>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--close Container Confirmation-->
+<ng-template #closeContainerConfirmation>
+    <h4 mat-dialog-title cdkDragRootElement=".cdk-overlay-pane" cdkDragBoundary=".cdk-overlay-container">
+        {{'COMMON.CLOSECONTAINERCONFIRM' | translate}}
+        <button mat-icon-button (click)="dialogRef.close()">
+            <xpo-icon iconName="clear"></xpo-icon>
+        </button>
+    </h4>
+    <xpo-dialog-content>
+    <div class="modal-body m-body">
+        <span>
+            <i class="fas fa-question-circle ques-icon"></i> {{'COMMON.CLOSECONTAINERALERT' | translate}}
+        </span>
+    </div>
+    </xpo-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-button type="button" (click)="dialogRef.close()">Close</button>
+        <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'" (onclick)="closeContainer()">
+        </rmbutton>
+    </mat-dialog-actions>
+</ng-template>

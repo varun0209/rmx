@@ -1,0 +1,22 @@
+<xpo-dialog-title>
+    {{'CONTAINERPROCESS.CONFIRMTRANSACTION' | translate}}
+</xpo-dialog-title>
+<xpo-dialog-content>
+    <div class="d-flex">
+        <i class="fas fa-question-circle ques-icon"></i>
+        <span class="text-center"> {{containerPopupMessage}}</span>
+    </div>
+</xpo-dialog-content>
+<div mat-dialog-actions>
+    <div class="d-flex justify-content-center log-btn-position">
+        <div class="pr-2">
+            <rmbutton [buttonname]="'COMMON.OK' | translate" [class]="'btn btn-round-black'"
+                (onclick)="masterPageService.hideDialog();">
+            </rmbutton>
+        </div>
+        <div>
+            <rmbutton [buttonname]="'COMMON.CANCEL' | translate" [class]="'btn btn-round-black'"
+                (onclick)="deSelectCheckBox(); masterPageService.hideDialog();"></rmbutton>
+        </div>
+    </div>
+</div>

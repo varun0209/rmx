@@ -1,0 +1,66 @@
+.background--color {
+    background-color: #f3f8fe;
+    border: 1px #9fc3eb;
+  }
+  
+  .uploadfilecontainer {
+    background-image: url("/assets/images/upload.png");
+    background-repeat: no-repeat;
+    background-size: 65px;
+    background-position: center;
+    height: 210px;
+    border: 2px dashed #9fc3eb;
+    border-radius: 5px;
+  }
+  
+  .file--contant {
+    position: absolute;
+    top: 70%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .underline {
+    text-decoration: underline !important;
+    color: rgb(8, 104, 172) !important;
+    cursor: pointer;
+  }
+  
+  .files-list {
+    display: flex;
+    justify-content: space-between;
+    word-break: break-all;
+    margin: 10px 0px;
+    border: 1px dashed #9fc3eb ;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
+  .rm-card{
+    border: 1px solid rgba(0,0,0,.125);
+    background-color: #ffffff
+  }
+  
+  .img--height {
+    min-height: 300px;
+    max-height: 300px;
+  }
+  
+  
+  .scrollbar {
+    max-height: 300px;
+    margin: auto;
+    overflow-x: hidden;
+  }
+  
+ .scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+ .scrollbar::-webkit-scrollbar-thumb {
+    background-color: #a8acb1;
+    border: 1px solid #a8acb1;
+    border-radius: 400px;
+  }

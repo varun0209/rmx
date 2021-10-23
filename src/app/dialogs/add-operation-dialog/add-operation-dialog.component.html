@@ -1,0 +1,11 @@
+<xpo-dialog-title>
+    {{'OPERATION.OPERATIONADDPOPUPNAME' | translate }}
+</xpo-dialog-title>
+<xpo-dialog-content>
+    <div class="modal-body">
+        <div class="form-group position-relative">
+            <app-addoperation [appConfig]="appConfig" (emitSubmitNewOperation)="addOperationData($event)">
+            </app-addoperation>
+        </div>
+    </div>
+</xpo-dialog-content>

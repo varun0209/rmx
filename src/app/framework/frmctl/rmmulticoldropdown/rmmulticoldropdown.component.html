@@ -1,0 +1,11 @@
+<div>
+  <select class="form-control" [name]="name"  [disabled]="disabled"  (change)="onChangeData($event)" [(ngModel)]="value" [id]="id"  required>
+          <!-- <option value="" selected disabled>Please select</option> -->
+          <option hidden ></option>
+          <!-- <option selected disabled class="text-hide">Title</option> -->
+          <option class='option' *ngFor="let option of options" [value]="option.Id">
+             {{option.Id}} &nbsp;&nbsp;&nbsp;
+             {{option.Text}}
+           </option>
+        </select>
+</div>

@@ -1,0 +1,57 @@
+﻿<div class="row" *ngIf="masterPageService.samplingBatchDeatil">
+  <div class="col-md-3 pr-2 sampling-details-card">
+    <div class="sampling-details">
+      <label>Batch Id</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.BatchID"></rmbadge>
+    </div>
+  </div>
+  <div class="col-md-3 pr-2 pl-2 sampling-details-card">
+    <div class="sampling-details">
+      <label>Batch Status</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.BatchStatus"></rmbadge>
+    </div>
+  </div>
+  <div class="col-md-3 pr-2 pl-2 sampling-details-card">
+    <div class="sampling-details">
+      <label>Rule Applied</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.RuleApplied"></rmbadge>
+    </div>
+  </div>
+  <div class="col-md-3 pl-2 sampling-details-card">
+    <div class="sampling-details"><label>Regular Sample Quantity</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.RegularSampleQty"></rmbadge>
+    </div>
+  </div>
+  <div class="col-md-3 pr-2 sampling-details-card">
+    <div class="sampling-details"><label>Tightened Sample Quantity</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.TightSampleQty"></rmbadge>
+    </div>
+  </div>
+  <div class="col-md-3 pr-2 pl-2 sampling-details-card">
+    <div class="sampling-details"><label>Regular Reject Quantity</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.RegularRejectQty"></rmbadge>
+    </div>
+  </div>
+  <div class="col-md-3 pr-2 pl-2 sampling-details-card">
+    <div class="sampling-details"><label>Tightened Reject Quantity</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.TightEndRejectQty"></rmbadge>
+    </div>
+  </div>
+
+  <div class="col-md-3 pl-2 sampling-details-card">
+    <div class="sampling-details">
+      <label>Pass Quantity</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.PassQty"></rmbadge>
+    </div>
+  </div>
+  <div class="col-md-3 pr-2 sampling-details-card">
+    <div class="sampling-details"><label>Fail Quantity</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.FailQty"></rmbadge>
+    </div>
+  </div>
+  <div class="col-md-3 pr-2 pl-2 sampling-details-card">
+    <div class="sampling-details"><label>Complete Quantity</label>
+      <rmbadge [badgenumber]="masterPageService.samplingBatchDeatil.CompletQty"></rmbadge>
+    </div>
+  </div>
+</div>

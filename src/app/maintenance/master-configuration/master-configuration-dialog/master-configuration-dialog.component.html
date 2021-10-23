@@ -1,0 +1,156 @@
+
+<xpo-dialog-title>
+ <h4> {{data.KeyValue2}} </h4>
+</xpo-dialog-title>
+<xpo-dialog-content>
+
+  <xpo-dialog-content>
+  <div class="row ">
+    <div class="col-lg-12 col-sm-12">
+      <div [ngSwitch]="data.ControlType">
+
+        <div *ngSwitchCase="masterConfigControlType.list">
+
+          <table mat-table [dataSource]="listDataSource">
+
+            <ng-container matColumnDef="value">
+              <th mat-header-cell *matHeaderCellDef>
+                <rmlabel [label]="'Value' | translate"></rmlabel>
+              </th>
+              <td mat-cell *matCellDef="let item">
+                <rmtextbox class="grid-input" [disabled]="!item.IsEditing" [(ngModel)]='item.value'
+                  [textBoxPattern]="configPattern" [placeholder]="''" [textCase]="textCase.nocase"
+                  [errorMessage]="errMessage" [class]="'form-control'">
+                </rmtextbox>
+              </td>
+
+              <td mat-footer-cell *matFooterCellDef>
+                <rmtextbox class="grid-input" [(ngModel)]='newListValue' [textBoxPattern]="configPattern"
+                  [placeholder]="''" [textCase]="textCase.nocase" [errorMessage]="errMessage" [class]="'form-control'">
+                </rmtextbox>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>
+                <rmlabel [label]="'Actions' | translate"></rmlabel>
+              </th>
+              <td mat-cell *matCellDef="let item">
+
+                <span *ngIf="!item.IsEditing">
+                  <span class="grid-edit-icon mr-2" (click)="onEditClick(item)">
+                    <i class="fa fa-pen"></i>
+                  </span>
+                  <span class="grid-delete-icon" (click)="onDeleteRowClick(item)">
+                    <i class="fa fa-trash-alt"></i>
+                  </span>
+                </span>
+
+                <span *ngIf="item.IsEditing">
+                  <span class="grid-save-icon mr-2" (click)="onSaveListItem(item)">
+                    <i class="fa fa-save"></i>
+                  </span>
+                  <span class="grid-cancel-icon" (click)="onCancelClick(item)">
+                    <i class="fa fa-times-circle"></i>
+                  </span>
+                </span>
+
+              </td>
+              <td mat-footer-cell *matFooterCellDef>
+                <rmbutton [class]="'btn-round-black btn-round'" [buttonname]="'Add' | translate" (click)="addListItem()"
+                  [iconstyle]="'fa fa-plus'"></rmbutton>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedLISTColumns"></tr>
+            <tr mat-row *matRowDef="let myRowData; columns: displayedLISTColumns"></tr>
+            <tr mat-footer-row *matFooterRowDef="displayedLISTColumns"></tr>
+
+          </table>
+          <mat-paginator #listPaginator [pageSize]="appConfig.masterConfigs.pageSize" showFirstLastButtons>
+          </mat-paginator>
+        </div>
+
+        <div *ngSwitchCase="masterConfigControlType.json">
+
+          <table mat-table [dataSource]=" jsonDataSource">
+
+            <ng-container matColumnDef="key">
+              <th mat-header-cell *matHeaderCellDef>
+                <rmlabel [label]="'Key' | translate"></rmlabel>
+              </th>
+              <td mat-cell *matCellDef="let item">{{ item.key }}</td>
+              <td mat-footer-cell *matFooterCellDef>
+                <rmtextbox class="grid-input" [(ngModel)]='newJsonKey' [textBoxPattern]="configPattern"
+                  placeholder="New Key" [textCase]="textCase.nocase" [errorMessage]="errMessage" [class]="'form-control'">
+                </rmtextbox>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="value">
+              <th mat-header-cell *matHeaderCellDef>
+                <rmlabel [label]="'Value' | translate"></rmlabel>
+              </th>
+              <td mat-cell *matCellDef="let item">
+                <rmtextbox class="grid-input" [disabled]="!item.IsEditing" [(ngModel)]='item.value'
+                  [textBoxPattern]="configPattern" [placeholder]="''" [textCase]="textCase.nocase"
+                  [errorMessage]="errMessage" [class]="'form-control'">
+                </rmtextbox>
+              </td>
+              <td mat-footer-cell *matFooterCellDef>
+                <rmtextbox class="grid-input" [(ngModel)]='newJsonValue' [textBoxPattern]="configPattern"
+                  placeholder="New Value" [textCase]="textCase.nocase" [errorMessage]="errMessage"
+                  [class]="'form-control'">
+                </rmtextbox>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef>
+                <rmlabel [label]="'Actions' | translate"></rmlabel>
+              </th>
+              <td mat-cell *matCellDef="let item">
+
+                <span *ngIf="!item.IsEditing">
+                  <span class="grid-edit-icon mr-2" (click)="onEditClick(item)">
+                    <i class="fa fa-pen"></i>
+                  </span>
+                  <span class="grid-delete-icon" (click)="onDeleteRowClick(item)">
+                    <i class="fa fa-trash-alt"></i>
+                  </span>
+                </span>
+
+                <span *ngIf="item.IsEditing">
+                  <span class="grid-save-icon mr-2" (click)="onSaveJsonItem(item)">
+                    <i class="fa fa-save"></i>
+                  </span>
+                  <span class="grid-cancel-icon" (click)="onCancelClick(item)">
+                    <i class="fa fa-times-circle"></i>
+                  </span>
+                </span>
+
+              </td>
+
+              <td mat-footer-cell *matFooterCellDef>
+                <rmbutton [class]="'btn-round-black btn-round'" [buttonname]="'Add' | translate" (click)="addJsonItem()"
+                  [iconstyle]="'fa fa-plus'"></rmbutton>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedJSONColumns"></tr>
+            <tr mat-row *matRowDef="let myRowData; columns: displayedJSONColumns"></tr>
+            <tr mat-footer-row *matFooterRowDef="displayedJSONColumns"></tr>
+          </table>
+          <mat-paginator #jsonPaginator [pageSize]="appConfig.masterConfigs.pageSize" showFirstLastButtons>
+          </mat-paginator>
+        </div>
+      </div>
+    </div>
+  </div>
+</xpo-dialog-content>
+
+<xpo-dialog-actions>
+  <rmbutton [class]="'btn btn-round-black'" [buttonname]="'Save' | translate" (click)='onSaveDialog()'
+              [iconstyle]="'fas fa-save'">Save</rmbutton>
+</xpo-dialog-actions>
+

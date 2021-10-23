@@ -1,0 +1,242 @@
+<span class="close-popup" (click)="hideModal()"><i class="far fa-times-circle"></i></span>
+<mat-horizontal-stepper class="image-process" linear (selectionChange)="selectionChange($event)" [linear]="true">
+  <mat-step [completed]="isNextBtnEnabled">
+    <ng-template matStepLabel>{{'IMAGECAPTURE.BOXIMAGES'|translate}}</ng-template>
+    <div class="row box-image-section">
+      <ng-container *ngIf="docTrackingImages.length; else noImages">
+        <ng-container *ngFor="let boxImage of docTrackingImages; let i = index">
+          <div  [ngClass]="getBase64Image(boxImage.ImageBytes) ? 'zoom-show' : '' " class="col" (click)="selectBoxView(boxImage, i)">
+            <div [ngClass]="i == selectedBoxImageIndex ? 'active-box-image' : ''" class="box-image">
+              <span class="box-type">{{getBoxView(boxImage.FILENAME)}}</span>
+              <img src="{{getBase64Image(boxImage.ImageBytes)}}">
+              <span *ngIf="i == selectedBoxImageIndex" [ngClass]="i == selectedBoxImageIndex ? 'active-check' : ''"><i
+                  class="fa fa-check" aria-hidden="true"></i></span>
+            </div>
+            <span class="zoom">
+              <img src="{{getBase64Image(boxImage.ImageBytes)}}" class="zoom-image" alt="adventure">
+            </span>
+          </div>
+        </ng-container>
+      </ng-container>
+      <ng-template #noImages>
+        <div class="no-box-image-data align-self-center d-flex">
+          <img class="d-block mb-3 mt-4" src="assets/images/box-image.png">
+          <span class="align-self-center ml-3">{{'IMAGECAPTURE.BOXERRTEXT'|translate}}</span>
+        </div>
+      </ng-template>
+    </div>
+    <div class="row box-image-text">
+      <div class="col-12">
+        <p>{{'COMMON.REVIEWIMAGE' |translate }}</p>
+         <ul class="list-style">
+            <li class="pl-2"> {{'COMMON.SELECTREASON' | translate}}</li>
+            <li class="pl-2"> {{'COMMON.SELECTNEXT' |translate }}</li>
+          </ul>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div *ngIf="showDoNotReject === commonEnum.yes" class="col  d-flex">
+      <div class="form-group col-lg-8">
+        <rmlabel [label]="'Reason'"></rmlabel>
+        <rmdropdown [name]="'reason'" [id]="'reason'" #reasonDropDown [class]="'form-control'"
+          [dpOptions]="reasonOptions" [value]="selectedReason" (onChangeVal)="reasonChange($event)">
+        </rmdropdown>
+      </div>
+      <div class="col-3  mt-1 align-self-center">
+        <rmbutton [buttonname]="'COMMON.DONOTREJECT' | translate" [class]="'btn btn-round-black ml-3 '"
+          [disabled]="isDontRejectDisabled" (onclick)="donotReject()"></rmbutton>
+      </div>
+      </div>
+      <div class="col  mt-1 align-self-center">
+        <button class="float-right" mat-flat-button matStepperNext [disabled]="!isNextBtnEnabled">{{'COMMON.NEXT' |
+          translate}}</button>
+      </div>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>{{'IMAGECAPTURE.CAPTUREIMAGES'|translate}}</ng-template>
+    <div class="row">
+      <div class="col-3">
+        <div class="verify-image-list">
+          <div class="row">
+            <div class="col-12 overflow-auto slime-scroll">
+              <table class="table px-1">
+                <thead>
+                  <tr>
+                    <!-- <th></th> -->
+                    <th>Title</th>
+                    <th>Perspective</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    [ngClass]="{'status-completed': imageType.Status === 'Completed', 'status-not-completed': i == imagesCaptured}"
+                    *ngFor="let imageType of imageTypes; let i = index">
+                    <!-- <td width="50"><i class="fas fa-check text-success" aria-hidden="true"></i></td> -->
+                    <td>{{imageType.ID}}</td>
+                    <td>{{imageType.TEXT}}</td>
+                    <td>{{imageType.Status}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <!-- <button >Snap Photo</button> -->
+            </div>
+          </div>
+          <div class="verify-image-footer d-flex">
+            <div class="capture-btn" id="snap" (click)="capture()" [ngClass]="{'disableDiv': isImageCaptureBtnDisable}">
+              <i class="fas fa-camera-retro"></i>
+              <span>{{'IMAGECAPTURE.CAPTUREIMAGE'|translate}}</span>
+            </div>
+            <div class="capture-btn" (click)="doneWithPictures()"
+              [ngClass]="{'disableDiv': !(imageTypes.length > 0 && imageTypes.length === captures.length)}">
+              <i class="fas fa-check verify-footer-done"></i>
+              <span>{{'IMAGECAPTURE.DONEWITHPICTURES'|translate}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 p-0 camera-section">
+        <div class="row">
+          <div class="col">
+            <div class="d-flex camera-selection">
+              <span class="align-self-center mr-3">Camera:</span>
+              <select class="form-control" id="camera" name="camera" (change)="changeCamera($event)"
+                [(ngModel)]="selectedCamera">
+                <option hidden></option>
+                <option *ngFor="let device of cameraList" value="{{device.deviceId}}">{{device.label}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-12">
+            <span class="camera-error" *ngIf="isCameraErrorText"><i
+                class="fas fa-exclamation-triangle"></i>{{isCameraErrorText}}</span>
+            <div class="spinner-grow" style="width: 3rem; height: 3rem;" role="status" *ngIf="isCameraLoading">
+              <span class="sr-only">Loading...</span>
+            </div>
+            <video class="camera-space" #video id="video" autoplay></video>
+          </div>
+          <div class="col-12">
+            <div class="camera-options">
+              <div class="option-items d-flex">
+                <div class="option-list" alt="zoom image" *ngIf="showZoom">
+                  <img width="25" src="assets/images/zoom-image.svg">
+                  <span class="option-name">{{'IMAGECAPTURE.ZOOM'|translate}} </span>
+                  <div class="expand">
+                    <div class="d-inline-grid">
+                      <span class="count-minus">{{zoomMax}}</span>
+                      <input #range type="range" name="zoom" [min]="zoomMin" [max]="zoomMax" [step]="rangeStep"
+                        [(ngModel)]="zoomValue" (change)="zoomInOut(range)">
+                      <span class="count-plus">{{zoomMin}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="option-list" alt="brightness" *ngIf="showBrightness">
+                  <img width="25" src="assets/images/brightness.svg">
+                  <span class="option-name">{{'IMAGECAPTURE.BRIGHTNESS'|translate}}</span>
+                  <div class="expand">
+                    <div class="d-inline-grid">
+                      <span class="count-minus">{{brightnessMax}}</span>
+                      <input #brightnessRange type="range" name="brightness" [min]="brightnessMin" [max]="brightnessMax"
+                        [step]="brightnessStep" [(ngModel)]="brightnessValue"
+                        (change)="brightnessChange(brightnessRange)">
+                      <span class="count-plus">{{brightnessMin}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="option-list" alt="sharpness" *ngIf="showSharpness">
+                  <img width="25" src="assets/images/sharpness.svg">
+                  <span class="option-name">{{'IMAGECAPTURE.SHARPNESS'|translate}}</span>
+                  <div class="expand">
+                    <div class="d-inline-grid">
+                      <span class="count-minus">{{sharpnessMax}}</span>
+                      <input #sharpnessRange type="range" name="sharpness" [min]="sharpnessMin" [max]="sharpnessMax"
+                        [step]="sharpnesStep" [(ngModel)]="sharpnessValue" (change)="sharpnessChange(sharpnessRange)">
+                      <span class="count-plus">{{sharpnessMin}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="option-list" alt="saturation" *ngIf="showSaturation">
+                  <img width="25" src="assets/images/saturation.svg">
+                  <span class="option-name">{{'IMAGECAPTURE.SATURATION'|translate}}</span>
+                  <div class="expand">
+                    <div class="d-inline-grid">
+                      <span class="count-minus">{{saturationMax}}</span>
+                      <input #saturationRange type="range" name="saturation" [min]="saturationMin" [max]="saturationMax"
+                        [step]="saturationStep" [(ngModel)]="saturationValue"
+                        (change)="saturationChange(saturationRange)">
+                      <span class="count-plus">{{saturationMin}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="option-list" alt="contrast" *ngIf="showContrast">
+                  <img width="25" src="assets/images/saturation.svg">
+                  <span class="option-name">{{'IMAGECAPTURE.CONTRAST'|translate}}</span>
+                  <div class="expand">
+                    <div class="d-inline-grid">
+                      <span class="count-minus">{{contrastMax}}</span>
+                      <input #contrastRange type="range" name="contrast" [min]="contrastMin" [max]="contrastMax"
+                        [step]="contrastStep" [(ngModel)]="contrastValue" (change)="constrastChange(contrastRange)">
+                      <span class="count-plus">{{contrastMin}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="option-list" alt="white balance" *ngIf="showColorTemperature">
+                  <img width="25" src="assets/images/saturation.svg">
+                  <span class="option-name">{{'IMAGECAPTURE.WHITEBALANCE'|translate}}</span>
+                  <div class="expand">
+                    <div class="d-inline-grid">
+                      <span class="count-minus">{{whiteBalanceMax}}</span>
+                      <input #colorTemperatureRange type="range" name="whiteBalance" [min]="whiteBalanceMin"
+                        [step]="whiteBalanceStep" [max]="whiteBalanceMax" [(ngModel)]="whiteBalanceValue"
+                        (change)="whiteBalanceChange(colorTemperatureRange)">
+                      <span class="count-plus">{{whiteBalanceMin}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Zoom <input #range type="range" (change)="zoomInOut(range)">
+              Brightness <input #brightnessRange type="range" (change)="brightnessChange(brightnessRange)"> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="image-info-section">
+          <tabset #staticTabs>
+            <tab heading="{{'IMAGECAPTURE.ALLIMAGES' |translate}}" id="imageList-tab1">
+              <div class="tab-pane pb-2">
+                <canvas #canvas id="canvas" width="640" height="480"></canvas>
+                <ul class="row m-0">
+                  <li class="col-6 list-item" *ngFor="let c of captures">
+                    <img class="scaned-img" src="{{getBase64Image(c.ImageBytes)}}">
+                  </li>
+                </ul>
+              </div>
+            </tab>
+            <!-- Another Tab -->
+            <tab heading="{{'IMAGECAPTURE.IMAGEINFO' |translate}}" id="imageInfo-tab1">
+              <div class="tab-pane pb-2">
+
+              </div>
+            </tab>
+          </tabset>
+          <div class="verify-image-footer d-flex">
+            <div class="capture-btn w-100" id="snap" (click)="clearImages()"
+              [ngClass]="{'disableDiv': !(captures.length)}">
+              <i class="fas fa-trash"></i>
+              <span>{{'IMAGECAPTURE.CLEARIMAGES'|translate}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row image-process-footer">
+      <div class="col">
+        <rmbutton [buttonname]="'COMMON.CLEAR' | translate" [class]="'btn btn-round-black mr-2'"
+          (onclick)="clearImages()" [disabled]="!(captures.length)"></rmbutton>
+        <rmbutton [buttonname]="'COMMON.DONE' | translate" [class]="'btn btn-round-black'"></rmbutton>
+      </div>
+    </div> -->
+  </mat-step>
+</mat-horizontal-stepper>

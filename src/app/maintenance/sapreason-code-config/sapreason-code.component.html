@@ -1,0 +1,86 @@
+<div [ngClass]="!appErrService.alertFlag ? 'db-mt' : 'pt-3'" class="padding-bottom">
+    <div class="container-fluid">
+        <form #configurationForm="ngForm">
+            <div ngModelGroup="sapCodeConfig" #sapCtrls="ngModelGroup">
+
+                <div class="mb-3 d-flex justify-content-end">
+
+                    <rmbutton [class]="'btn btn-round-black mr-1'" [id]="'clear'"
+                        [buttonname]="'COMMON.CLEAR'| translate" [iconstyle]="'far fa-times-circle'"
+                        [disabled]="isClearBtnDisabled" (click)="clear()">
+                    </rmbutton>
+                    <rmbutton [class]="'btn btn-round-black ml-1'" [id]="'add'" *ngIf="sapCtrls"
+                        [disabled]=" !(sapCtrls.valid)" (onclick)="addOrUpdateSAPCode()" [buttonname]="sapReasonBtnName"
+                        [iconstyle]="sapReasonBtnName == commonEnum.add ?'fas fa-plus':'far fa-save'">
+                    </rmbutton>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="col mb-3">
+                        <rmlabel [label]="'SAPREASON.GROUPNAME' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.groupName?.Required">
+                        </rmlabel>
+                        <rmdropdown [name]="'groupName'" [id]="'groupName'" [class]="'form-control'" #GroupName
+                            [(ngModel)]="sapCodeConfig.GROUP_NAME"  [disabled]="isGroupDisabled"
+                            (onChangeVal)="onGroupNameSelect(GroupName.value); changeInput();"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.groupName?.Required"
+                            [dpOptions]="groupNameOptions" [value]="sapCodeConfig.GROUP_NAME"></rmdropdown>
+                    </div>
+
+                    <div class="col mb-3">
+                        <rmlabel [label]="'SAPREASON.FROMVALUE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.fromValue?.Required">
+                        </rmlabel>
+                        <rmtextbox [(ngModel)]="sapCodeConfig.FROM_VALUE" [name]="'fromValue'" [class]="'form-control'"
+                            [disabled]="isFromLocDisabled" 
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.fromValue?.Required"
+                            [id]="'fromValue'" [isAllowEmptyValue]="true" (onChangeVal)="changeInput()"
+                            [placeholder]="''" [maxlength]="appConfig?.sapReason?.fromvalueTextboxLength">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col mb-3">
+                        <rmlabel [label]="'SAPREASON.TOVALUE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.toValue?.Required">
+                        </rmlabel>
+                        <rmtextbox [(ngModel)]="sapCodeConfig.TO_VALUE" [textBoxPattern]="textBoxPattern"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.toValue?.Required"
+                            [name]="'ToValue'" [class]="'form-control'" [id]="'ToValue'" [disabled]="isFromLocDisabled"
+                            (onChangeVal)="changeInput()" [placeholder]="''" [maxlength]="appConfig?.sapReason?.tovalueTextboxLength">
+                        </rmtextbox>
+
+                    </div>
+
+                    <div class="col mb-3">
+                        <rmlabel [label]="'SAPREASON.REASONCODE' | translate"
+                            [isAsterisk]="masterPageService.hideControls.controlProperties?.reasonCode?.Required">
+                        </rmlabel>
+                        <rmdropdown [name]="'ReasonCode'" [id]="'ReasonCode'" [class]="'form-control'" #ReasonCode
+                            [(ngModel)]="sapCodeConfig.REASONCODE"
+                            (onChangeVal)="onReasoncodeSelect(ReasonCode.value); changeInput();"
+                            [requiredIf]="masterPageService.hideControls.controlProperties?.reasonCode?.Required"
+                            [dpOptions]="reasoncodeOptions" [value]="sapCodeConfig.REASONCODE"></rmdropdown>
+                    </div>
+
+                    <div class="col mb-3">
+                        <rmtoggle class="mr-3" name="active" [label]="'COMMON.ACTIVE'| translate"
+                            [togglelblClass]="'mt-0'" [id]="'active'"
+                            [toggleval]="sapCodeConfig.ACTIVE == commonEnum.yes ? true:false"
+                            (onChangeVal)="onActiveChange($event)">
+                        </rmtoggle>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col mb-3" *ngIf="sapList">
+                        <rmgrid [(gridproperties)]="sapList" [isCancelIconShow]="false"
+                            (emitEditDetails)="editSAPCodeRow($event)"></rmgrid>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
